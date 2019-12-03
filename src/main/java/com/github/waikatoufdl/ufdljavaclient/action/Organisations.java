@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdljavaclient.action;
 
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdljavaclient.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdljavaclient.core.FailedRequestException;
 import com.github.waikatoufdl.ufdljavaclient.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -138,6 +139,10 @@ public class Organisations
           result.add(new Organisation(array.get(i).getAsJsonObject()));
       }
     }
+    else {
+      throw new FailedRequestException("Failed to list organisations!", response);
+    }
+
     return result;
   }
 }

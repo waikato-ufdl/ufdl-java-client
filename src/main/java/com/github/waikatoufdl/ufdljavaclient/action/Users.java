@@ -7,10 +7,12 @@ package com.github.waikatoufdl.ufdljavaclient.action;
 
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdljavaclient.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdljavaclient.core.FailedRequestException;
 import com.github.waikatoufdl.ufdljavaclient.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -174,6 +176,75 @@ public class Users
           result.add(new User(array.get(i).getAsJsonObject()));
       }
     }
+    else {
+      throw new FailedRequestException("Failed to list users!", response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific user.
+   *
+   * @return		the list of users
+   * @throws Exception	if request fails
+   */
+  public User load(int id) throws Exception {
+    User		result;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("loading user with id: " + id);
+
+    result   = null;
+    request  = newGet(PATH + id);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new User(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to load user: " + id, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * Creates the user.
+   *
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails or user already exists
+   */
+  public User create(String user, String password, String firstName, String lastName, String email) throws Exception {
+    User		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("creating user: " + user + "/" + password.replaceAll(".", "*"));
+
+    data = new JsonObject();
+    data.addProperty("username", user);
+    data.addProperty("password", password);
+    data.addProperty("first_name", firstName);
+    data.addProperty("last_name", lastName);
+    data.addProperty("email", email);
+    request = newPost(PATH)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new User(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to create user: " + user + "/" + password.replaceAll(".", "*"), response);
+
     return result;
   }
 }
