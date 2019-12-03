@@ -73,7 +73,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().get(url);
+    return m_Connection.session().get(url).allowRedirects(true);
   }
 
   /**
@@ -87,7 +87,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().post(url);
+    return m_Connection.session().post(url).allowRedirects(true);
   }
 
   /**
@@ -101,7 +101,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().put(url);
+    return m_Connection.session().put(url).allowRedirects(true);
   }
 
   /**
@@ -115,7 +115,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().patch(url);
+    return m_Connection.session().patch(url).allowRedirects(true);
   }
 
   /**
@@ -129,7 +129,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().head(url);
+    return m_Connection.session().head(url).allowRedirects(true);
   }
 
   /**
@@ -143,7 +143,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().options(url);
+    return m_Connection.session().options(url).allowRedirects(true);
   }
 
   /**
@@ -157,7 +157,7 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
-    return m_Connection.session().delete(url);
+    return m_Connection.session().delete(url).allowRedirects(true);
   }
 
   /**
