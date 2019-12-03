@@ -186,7 +186,8 @@ public class Users
   /**
    * For loading a specific user.
    *
-   * @return		the list of users
+   * @param id 		the ID of the user to load
+   * @return		the user
    * @throws Exception	if request fails
    */
   public User load(int id) throws Exception {
@@ -246,5 +247,40 @@ public class Users
       throw new FailedRequestException("Failed to create user: " + user + "/" + password.replaceAll(".", "*"), response);
 
     return result;
+  }
+
+  /**
+   * For deleting a specific user.
+   *
+   * @param user 	the user to delete
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid user ID
+   */
+  public boolean delete(User user) throws Exception {
+    return delete(user.getID());
+  }
+
+  /**
+   * For deleting a specific user.
+   *
+   * @param id 		the ID of the user
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid user ID
+   */
+  public boolean delete(int id) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (id == -1)
+      throw new IllegalArgumentException("Invalid ID: " + id);
+
+    getLogger().info("deleting user with id: " + id);
+
+    request  = newDelete(PATH + id + "/");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete user: " + id, response);
   }
 }
