@@ -5,11 +5,16 @@
 
 package com.github.waikatoufdl.ufdljavaclient;
 
-import com.github.fracpete.requests4j.Session;
 import com.github.waikatoufdl.ufdljavaclient.action.AbstractAction;
-import com.github.waikatoufdl.ufdljavaclient.auth.Authentication;
-import com.github.waikatoufdl.ufdljavaclient.context.Server;
+import com.github.waikatoufdl.ufdljavaclient.action.Datasets;
+import com.github.waikatoufdl.ufdljavaclient.action.Memberships;
+import com.github.waikatoufdl.ufdljavaclient.action.Organisations;
+import com.github.waikatoufdl.ufdljavaclient.action.Projects;
+import com.github.waikatoufdl.ufdljavaclient.action.Users;
+import com.github.waikatoufdl.ufdljavaclient.context.Connection;
 import com.github.waikatoufdl.ufdljavaclient.core.AbstractLoggingObject;
+
+import java.util.logging.Level;
 
 /**
  * The client for communicating with the UFDL backend.
@@ -21,92 +26,122 @@ public class Client
 
   private static final long serialVersionUID = 4630756838422216386L;
 
-  /** the session in use. */
-  protected Session m_Session;
+  /** the connection to use. */
+  protected Connection m_Connection;
 
-  /** the server context. */
-  protected Server m_Server;
+  /** for managing the users. */
+  protected Users m_Users;
 
-  /** the authentication. */
-  protected Authentication m_Authentication;
+  /** for managing the datasets. */
+  protected Datasets m_Datasets;
+
+  /** for managing the projects. */
+  protected Projects m_Projects;
+
+  /** for managing the organizations. */
+  protected Organisations m_Organisations;
+
+  /** for managhing the memberships. */
+  protected Memberships m_Memberships;
 
   /**
    * Initializes the client.
    */
   public Client() {
-    m_Session = new Session();
-    m_Server  = new Server("http://localhost:8000");
-    m_Server.setSession(m_Session);
-    m_Authentication = new Authentication("", "");
-    m_Authentication.setServer(m_Server);
+    m_Connection = new Connection();
+    try {
+      m_Users         = newAction(Users.class);
+      m_Datasets      = newAction(Datasets.class);
+      m_Projects      = newAction(Projects.class);
+      m_Organisations = newAction(Organisations.class);
+      m_Memberships   = newAction(Memberships.class);
+    }
+    catch (Exception e) {
+      getLogger().log(Level.SEVERE, "Failed to setup client!", e);
+    }
   }
 
   /**
-   * Initializes the server context.
+   * Initializes the client.
    *
-   * @param url		the UFDL backend to connect to
-   * @return		the client itself
+   * @param host 	the host to use
+   * @param user 	the user
+   * @param password 	the password
    */
-  public Client server(String url) {
-    m_Server = new Server(url);
-    m_Server.setSession(m_Session);
-    m_Authentication.setServer(m_Server);
-    return this;
+  public Client(String host, String user, String password) {
+    this();
+    connection().server(host);
+    connection().authentication(user, password);
   }
 
   /**
-   * Returns the server context.
+   * Returns the underlying connection.
    *
-   * @return		the context
+   * @return		the connection
    */
-  public Server server() {
-    return m_Server;
+  public Connection connection() {
+    return m_Connection;
   }
 
   /**
-   * Stores the authentication information.
+   * Returns the users action.
    *
-   * @param user	the user
-   * @param password	the password
-   * @return		the client itself
+   * @return		the users action
    */
-  public Client authentication(String user, String password) {
-    m_Authentication = new Authentication(user, password);
-    m_Authentication.setServer(server());
-    return this;
+  public Users users() {
+    return m_Users;
   }
 
   /**
-   * Returns the authentication.
+   * Returns the datasets action.
    *
-   * @return		the authentication
+   * @return		the datasets action
    */
-  public Authentication authentication() {
-    return m_Authentication;
+  public Datasets datasets() {
+    return m_Datasets;
   }
 
   /**
-   * Returns the session object.
+   * Returns the projects action.
    *
-   * @return		the session
+   * @return		the projects action
    */
-  public Session session() {
-    return m_Session;
+  public Projects projects() {
+    return m_Projects;
   }
 
   /**
-   * Creates a new instance of an action, sets the client (itself) and returns the instance.
+   * Returns the organisations action.
+   *
+   * @return		the organisations action
+   */
+  public Organisations organisations() {
+    return m_Organisations;
+  }
+
+  /**
+   * Returns the memberships action.
+   *
+   * @return		the memberships action
+   */
+  public Memberships memberships() {
+    return m_Memberships;
+  }
+
+  /**
+   * Creates a new instance of an action, sets the connection and returns the instance.
    *
    * @param action	the action to instantiate
    * @param <T>		the type of action
    * @return		the action instance
    * @throws Exception	if instantiation fails
+   * @see		#connection()
    */
-  public  <T extends AbstractAction> T newAction(Class<T> action) throws Exception {
+  public <T extends AbstractAction> T newAction(Class<T> action) throws Exception {
     T 	result;
 
     result = action.newInstance();
-    result.setClient(this);
+    result.setConnection(m_Connection);
 
     return result;
   }
@@ -115,7 +150,7 @@ public class Client
    * Closes the client.
    */
   public void close() {
-    m_Server.close();
+    m_Connection.close();
   }
 
   /**
@@ -124,7 +159,6 @@ public class Client
    * @return		the description
    */
   public String toString() {
-    return "context: " + server() + "\n"
-      + "authentication: " + authentication();
+    return m_Connection.toString();
   }
 }

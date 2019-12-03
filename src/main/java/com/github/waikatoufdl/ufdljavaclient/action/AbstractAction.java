@@ -6,7 +6,7 @@
 package com.github.waikatoufdl.ufdljavaclient.action;
 
 import com.github.fracpete.requests4j.request.Request;
-import com.github.waikatoufdl.ufdljavaclient.Client;
+import com.github.waikatoufdl.ufdljavaclient.context.Connection;
 import com.github.waikatoufdl.ufdljavaclient.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdljavaclient.core.JsonResponse;
 
@@ -26,15 +26,15 @@ public abstract class AbstractAction
 
   public static final String PREFIX_BEARER = "Bearer";
 
-  /** the client. */
-  protected Client m_Client;
+  /** the connection. */
+  protected Connection m_Connection;
 
   /**
    * Initializes the action.
    */
   protected AbstractAction() {
     super();
-    m_Client = null;
+    m_Connection = null;
   }
 
   /**
@@ -45,21 +45,21 @@ public abstract class AbstractAction
   public abstract String getName();
 
   /**
-   * Sets the client to use.
+   * Sets the connection to use.
    *
-   * @param value	the client
+   * @param value	the connection
    */
-  public void setClient(Client value) {
-    m_Client = value;
+  public void setConnection(Connection value) {
+    m_Connection = value;
   }
 
   /**
-   * Returns the client in use.
+   * Returns the connection in use.
    *
-   * @return		the client, null if none set
+   * @return		the connection, null if none set
    */
-  public Client getClient() {
-    return m_Client;
+  public Connection getConnection() {
+    return m_Connection;
   }
 
   /**
@@ -72,8 +72,8 @@ public abstract class AbstractAction
   protected Request newGet(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().get(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().get(url);
   }
 
   /**
@@ -86,8 +86,8 @@ public abstract class AbstractAction
   protected Request newPost(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().post(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().post(url);
   }
 
   /**
@@ -100,8 +100,8 @@ public abstract class AbstractAction
   protected Request newPut(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().put(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().put(url);
   }
 
   /**
@@ -114,8 +114,8 @@ public abstract class AbstractAction
   protected Request newPatch(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().patch(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().patch(url);
   }
 
   /**
@@ -128,8 +128,8 @@ public abstract class AbstractAction
   protected Request newHead(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().head(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().head(url);
   }
 
   /**
@@ -142,8 +142,8 @@ public abstract class AbstractAction
   protected Request newOptions(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().options(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().options(url);
   }
 
   /**
@@ -156,8 +156,8 @@ public abstract class AbstractAction
   protected Request newDelete(String path) throws MalformedURLException {
     String	url;
 
-    url = m_Client.server().build(path);
-    return m_Client.session().delete(url);
+    url = m_Connection.server().build(path);
+    return m_Connection.session().delete(url);
   }
 
   /**
@@ -169,22 +169,22 @@ public abstract class AbstractAction
   protected JsonResponse execute(Request request) throws Exception {
     JsonResponse 	result;
 
-    if (m_Client == null)
-      throw new IllegalStateException("No Client set!");
-    if (!m_Client.authentication().getTokens().isValid())
+    if (m_Connection == null)
+      throw new IllegalStateException("No connection set!");
+    if (!m_Connection.authentication().getTokens().isValid())
       throw new IllegalStateException("No valid authentication available!");
-    request.header(HEADER_AUTHORIZATION, PREFIX_BEARER + " " + m_Client.authentication().getTokens().getAccessToken());
+    request.header(HEADER_AUTHORIZATION, PREFIX_BEARER + " " + m_Connection.authentication().getTokens().getAccessToken());
     result = request.execute(new JsonResponse());
 
     // expired access token?
     if (result.statusCode() == 401) {
-      m_Client.authentication().refresh();
+      m_Connection.authentication().refresh();
       result = request.execute(new JsonResponse());
     }
 
     // expired refresh token?
     if (result.statusCode() == 401) {
-      m_Client.authentication().obtain();
+      m_Connection.authentication().obtain();
       result = request.execute(new JsonResponse());
     }
 

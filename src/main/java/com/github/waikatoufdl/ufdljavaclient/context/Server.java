@@ -18,6 +18,8 @@ public class Server
 
   private static final long serialVersionUID = -3984451065997561103L;
 
+  public static final String DEFAULT_HOST = "http://localhost:8000";
+
   /** the host to connect to. */
   protected String m_URL;
 
@@ -25,14 +27,21 @@ public class Server
   protected Session m_Session;
 
   /**
-   * Initializes the context.
-   *
-   * @param url		the URL (protocol, host, port)
+   * Initializes the server.
    */
-  public Server(String url) {
-    if (url.endsWith("/"))
-      url = url.substring(0, url.length() - 1);
-    m_URL = url;
+  public Server() {
+    this(DEFAULT_HOST);
+  }
+
+  /**
+   * Initializes the server.
+   *
+   * @param value	the URL of the server
+   */
+  public Server(String value) {
+    if (value.endsWith("/"))
+      value = value.substring(0, value.length() - 1);
+    m_URL = value;
   }
 
   /**
@@ -72,14 +81,6 @@ public class Server
    */
   public Session getSession() {
     return m_Session;
-  }
-
-  /**
-   * Closes the session.
-   */
-  public void close() {
-    if (m_Session != null)
-      m_Session.close();
   }
 
   /**

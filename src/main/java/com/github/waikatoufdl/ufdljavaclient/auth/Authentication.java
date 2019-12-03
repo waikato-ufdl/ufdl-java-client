@@ -51,6 +51,13 @@ public class Authentication
   protected Storage m_Storage;
 
   /**
+   * Initializes the authentication with empty user/password.
+   */
+  public Authentication() {
+    this("", "");
+  }
+
+  /**
    * Initializes the authentication.
    *
    * @param user	the user to use
