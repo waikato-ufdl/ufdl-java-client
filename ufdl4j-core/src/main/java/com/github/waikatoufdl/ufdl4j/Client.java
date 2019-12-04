@@ -3,16 +3,16 @@
  * Copyright (C) 2019 University of Waikato, Hamilton, NZ
  */
 
-package com.github.waikatoufdl.ufdljavaclient;
+package com.github.waikatoufdl.ufdl4j;
 
-import com.github.waikatoufdl.ufdljavaclient.action.AbstractAction;
-import com.github.waikatoufdl.ufdljavaclient.action.Datasets;
-import com.github.waikatoufdl.ufdljavaclient.action.Memberships;
-import com.github.waikatoufdl.ufdljavaclient.action.Organisations;
-import com.github.waikatoufdl.ufdljavaclient.action.Projects;
-import com.github.waikatoufdl.ufdljavaclient.action.Users;
-import com.github.waikatoufdl.ufdljavaclient.context.Connection;
-import com.github.waikatoufdl.ufdljavaclient.core.AbstractLoggingObject;
+import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
+import com.github.waikatoufdl.ufdl4j.action.Datasets;
+import com.github.waikatoufdl.ufdl4j.action.Memberships;
+import com.github.waikatoufdl.ufdl4j.action.Organisations;
+import com.github.waikatoufdl.ufdl4j.action.Projects;
+import com.github.waikatoufdl.ufdl4j.action.Users;
+import com.github.waikatoufdl.ufdl4j.context.Connection;
+import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
 import java.util.logging.Level;
 

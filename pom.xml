@@ -3,19 +3,19 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.waikato-ufdl</groupId>
-  <artifactId>ufdl-java-client</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>
 
-  <name>ufdl-java-client</name>
-  <description>Core Java library for communicating with the UFDL backend.</description>
+  <groupId>com.github.waikato-ufdl</groupId>
+  <artifactId>ufdl4j-pom</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>ufdl4j-pom</name>
+  <description>The project object model for the UFDL4J modules.</description>
   <organization>
     <name>University of Waikato, Hamilton, NZ</name>
     <url>http://www.waikato.ac.nz/</url>
@@ -27,20 +27,9 @@
     </license>
   </licenses>
 
-  <developers>
-    <developer>
-      <id>fracpete</id>
-      <name>Peter Reutemann</name>
-      <email>fracpete@waikato.ac.nz</email>
-      <url>http://www.cms.waikato.ac.nz/~fracpete/</url>
-      <organization>University of Waikato, CS department</organization>
-      <organizationUrl>http://www.cs.waikato.ac.nz/</organizationUrl>
-      <roles>
-        <role>developer</role>
-      </roles>
-      <timezone>+12</timezone>
-    </developer>
-  </developers>
+  <modules>
+    <module>ufdl4j-core</module>
+  </modules>
 
   <profiles>
     <profile>
@@ -83,6 +72,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <scm>
@@ -92,27 +83,29 @@
     <tag>HEAD</tag>
   </scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.2</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.2</version>
+        <type>jar</type>
+        <scope>test</scope>
+      </dependency>
 
-    <dependency>
-      <groupId>com.github.fracpete</groupId>
-      <artifactId>requests4j</artifactId>
-      <version>0.1.2</version>
-    </dependency>
+      <dependency>
+        <groupId>com.github.fracpete</groupId>
+        <artifactId>requests4j</artifactId>
+        <version>0.1.2</version>
+      </dependency>
 
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.8.6</version>
-    </dependency>
-  </dependencies>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.6</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <pluginManagement>
@@ -149,42 +142,27 @@
             <additionalparam>-Xdoclint:none</additionalparam>
           </configuration>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.1.2</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.2</version>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 </project>

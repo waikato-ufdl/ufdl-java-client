@@ -1,14 +1,14 @@
 /*
- * Projects.java
+ * Datasets.java
  * Copyright (C) 2019 University of Waikato, Hamilton, NZ
  */
 
-package com.github.waikatoufdl.ufdljavaclient.action;
+package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
-import com.github.waikatoufdl.ufdljavaclient.core.AbstractJsonObjectWrapper;
-import com.github.waikatoufdl.ufdljavaclient.core.FailedRequestException;
-import com.github.waikatoufdl.ufdljavaclient.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,36 +18,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates project operations.
+ * Encapsulates dataset operations.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
-public class Projects
+public class Datasets
   extends AbstractAction {
 
   private static final long serialVersionUID = 7013386269355130329L;
 
-  public static final String PATH = "/v1/core/projects/";
+  public static final String PATH = "/v1/core/datasets/";
 
   /**
-   * Container class for project information.
+   * Container class for dataset information.
    */
-  public static class Project
+  public static class Dataset
     extends AbstractJsonObjectWrapper {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
     /**
-     * Initializes the project.
+     * Initializes the dataset.
      *
      * @param data	the data to use
      */
-    public Project(JsonObject data) {
+    public Dataset(JsonObject data) {
       super(data);
     }
 
     /**
-     * Returns the project ID.
+     * Returns the dataset ID.
      *
      * @return		the ID
      */
@@ -65,12 +65,12 @@ public class Projects
     }
 
     /**
-     * Returns the organisation ID.
+     * Returns the project ID.
      *
      * @return		the ID
      */
-    public int getOrganisationID() {
-      return getInt("organisation_id", -1);
+    public int getProjectID() {
+      return getInt("project_id", -1);
     }
 
     /**
@@ -80,6 +80,33 @@ public class Projects
      */
     public String getName() {
       return getString("name", "");
+    }
+
+    /**
+     * Returns the version.
+     *
+     * @return		the version
+     */
+    public int getVersion() {
+      return getInt("version", -1);
+    }
+
+    /**
+     * Returns the licence.
+     *
+     * @return		the licence
+     */
+    public String getLicence() {
+      return getString("licence", "");
+    }
+
+    /**
+     * Returns the tags.
+     *
+     * @return		the tags
+     */
+    public String getTags() {
+      return getString("tags", "");
     }
 
     /**
@@ -101,13 +128,22 @@ public class Projects
     }
 
     /**
+     * Returns whether the dataset public.
+     *
+     * @return		true if public
+     */
+    public boolean isPublic() {
+      return getBoolean("is_public", false);
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
      */
     @Override
     public String toString() {
-      return "id=" + getID() + ", name=" + getName();
+      return "id=" + getID() + ", name=" + getName() + ", licence=" + getLicence();
     }
   }
 
@@ -118,7 +154,7 @@ public class Projects
    */
   @Override
   public String getName() {
-    return "Projects";
+    return "Datasets";
   }
 
   /**
@@ -127,15 +163,15 @@ public class Projects
    * @return		the list of users
    * @throws Exception	if request fails
    */
-  public List<Project> list() throws Exception {
-    List<Project>		result;
+  public List<Dataset> list() throws Exception {
+    List<Dataset>		result;
     JsonResponse 	response;
     JsonElement		element;
     JsonArray		array;
     Request 		request;
     int			i;
 
-    getLogger().info("listing projects");
+    getLogger().info("listing datasets");
 
     result   = new ArrayList<>();
     request  = newGet(PATH);
@@ -145,11 +181,11 @@ public class Projects
       if (element.isJsonArray()) {
         array = element.getAsJsonArray();
         for (i = 0; i < array.size(); i++)
-          result.add(new Project(array.get(i).getAsJsonObject()));
+          result.add(new Dataset(array.get(i).getAsJsonObject()));
       }
     }
     else {
-      throw new FailedRequestException("Failed to list projects!", response);
+      throw new FailedRequestException("Failed to list datasets!", response);
     }
 
     return result;

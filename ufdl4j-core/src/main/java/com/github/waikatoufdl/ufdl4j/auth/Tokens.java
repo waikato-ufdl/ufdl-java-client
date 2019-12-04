@@ -3,9 +3,9 @@
  * Copyright (C) 2019 University of Waikato, Hamilton, NZ
  */
 
-package com.github.waikatoufdl.ufdljavaclient.auth;
+package com.github.waikatoufdl.ufdl4j.auth;
 
-import com.github.waikatoufdl.ufdljavaclient.core.AbstractLoggingObject;
+import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
 /**
  * Simple container for the tokens.

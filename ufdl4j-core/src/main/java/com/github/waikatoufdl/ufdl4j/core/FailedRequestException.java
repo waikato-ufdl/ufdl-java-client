@@ -18,7 +18,7 @@
  * Copyright (C) 2019 University of Waikato, Hamilton, NZ
  */
 
-package com.github.waikatoufdl.ufdljavaclient.core;
+package com.github.waikatoufdl.ufdl4j.core;
 
 import com.github.fracpete.requests4j.response.Response;
 

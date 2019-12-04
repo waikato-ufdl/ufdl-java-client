@@ -3,12 +3,12 @@
  * Copyright (C) 2019 University of Waikato, Hamilton, NZ
  */
 
-package com.github.waikatoufdl.ufdljavaclient.action;
+package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
-import com.github.waikatoufdl.ufdljavaclient.core.AbstractJsonObjectWrapper;
-import com.github.waikatoufdl.ufdljavaclient.core.FailedRequestException;
-import com.github.waikatoufdl.ufdljavaclient.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
