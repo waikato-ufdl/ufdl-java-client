@@ -29,6 +29,7 @@
 
   <modules>
     <module>ufdl4j-core</module>
+    <module>ufdl4j-image</module>
   </modules>
 
   <profiles>
