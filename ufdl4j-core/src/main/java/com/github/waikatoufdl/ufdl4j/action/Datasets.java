@@ -47,12 +47,12 @@ public class Datasets
     }
 
     /**
-     * Returns the dataset ID.
+     * Returns the dataset primary key.
      *
-     * @return		the ID
+     * @return		the primary key
      */
-    public int getID() {
-      return getInt("id", -1);
+    public int getPK() {
+      return getInt("pk", -1);
     }
 
     /**
@@ -143,7 +143,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "id=" + getID() + ", name=" + getName() + ", licence=" + getLicence();
+      return "pk=" + getPK() + ", name=" + getName() + ", licence=" + getLicence();
     }
   }
 
