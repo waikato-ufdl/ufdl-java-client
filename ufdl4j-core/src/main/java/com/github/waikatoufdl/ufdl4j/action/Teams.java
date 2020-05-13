@@ -1,6 +1,6 @@
 /*
- * Organisations.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Teams.java
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -18,41 +18,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates organisation operations.
+ * Encapsulates team operations.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
-public class Organisations
+public class Teams
   extends AbstractAction {
 
   private static final long serialVersionUID = 7013386269355130329L;
 
-  public static final String PATH = "/v1/core/organisations/";
+  public static final String PATH = "/v1/core/teams/";
 
   /**
-   * Container class for organisation information.
+   * Container class for team information.
    */
-  public static class Organisation
+  public static class Team
     extends AbstractJsonObjectWrapper {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
     /**
-     * Initializes the membership.
+     * Initializes the team.
      *
      * @param data	the data to use
      */
-    public Organisation(JsonObject data) {
+    public Team(JsonObject data) {
       super(data);
     }
 
     /**
-     * Returns the dataset ID.
+     * Returns the team primary key.
      *
-     * @return		the ID
+     * @return		the primary key
      */
-    public int getID() {
-      return getInt("id", -1);
+    public int getPK() {
+      return getInt("pk", -1);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Organisations
     }
 
     /**
-     * Returns the organisation name.
+     * Returns the team name.
      *
      * @return		the name
      */
@@ -98,7 +98,7 @@ public class Organisations
      */
     @Override
     public String toString() {
-      return "id=" + getID() + ", name=" + getName();
+      return "pk=" + getPK() + ", name=" + getName();
     }
   }
 
@@ -118,15 +118,15 @@ public class Organisations
    * @return		the list of users
    * @throws Exception	if request fails
    */
-  public List<Organisation> list() throws Exception {
-    List<Organisation>		result;
+  public List<Team> list() throws Exception {
+    List<Team>		result;
     JsonResponse 	response;
     JsonElement		element;
     JsonArray		array;
     Request 		request;
     int			i;
 
-    getLogger().info("listing organisations");
+    getLogger().info("listing teams");
 
     result   = new ArrayList<>();
     request  = newGet(PATH);
@@ -136,11 +136,11 @@ public class Organisations
       if (element.isJsonArray()) {
         array = element.getAsJsonArray();
         for (i = 0; i < array.size(); i++)
-          result.add(new Organisation(array.get(i).getAsJsonObject()));
+          result.add(new Team(array.get(i).getAsJsonObject()));
       }
     }
     else {
-      throw new FailedRequestException("Failed to list organisations!", response);
+      throw new FailedRequestException("Failed to list teams!", response);
     }
 
     return result;

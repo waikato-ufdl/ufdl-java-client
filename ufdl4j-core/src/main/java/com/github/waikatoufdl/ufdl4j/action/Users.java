@@ -1,6 +1,6 @@
 /*
  * Users.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -48,12 +48,12 @@ public class Users
     }
 
     /**
-     * Returns the user ID.
+     * Returns the user primary key.
      *
-     * @return		the ID
+     * @return		the primary key
      */
-    public int getID() {
-      return getInt("id", -1);
+    public int getPK() {
+      return getInt("pk", -1);
     }
 
     /**
@@ -135,7 +135,7 @@ public class Users
      */
     @Override
     public String toString() {
-      return "id=" + getID() + ", user=" + getUserName();
+      return "pk=" + getPK() + ", user=" + getUserName();
     }
   }
 
@@ -257,30 +257,30 @@ public class Users
    * @throws Exception	if request fails, eg invalid user ID
    */
   public boolean delete(User user) throws Exception {
-    return delete(user.getID());
+    return delete(user.getPK());
   }
 
   /**
    * For deleting a specific user.
    *
-   * @param id 		the ID of the user
+   * @param pk 		the ID of the user
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid user ID
    */
-  public boolean delete(int id) throws Exception {
+  public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
     Request 		request;
 
-    if (id == -1)
-      throw new IllegalArgumentException("Invalid ID: " + id);
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("deleting user with id: " + id);
+    getLogger().info("deleting user with PK: " + pk);
 
-    request  = newDelete(PATH + id + "/");
+    request  = newDelete(PATH + pk + "/");
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to delete user: " + id, response);
+      throw new FailedRequestException("Failed to delete user: " + pk, response);
   }
 }

@@ -7,9 +7,8 @@ package com.github.waikatoufdl.ufdl4j;
 
 import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
-import com.github.waikatoufdl.ufdl4j.action.Memberships;
-import com.github.waikatoufdl.ufdl4j.action.Organisations;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
+import com.github.waikatoufdl.ufdl4j.action.Teams;
 import com.github.waikatoufdl.ufdl4j.action.Users;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
@@ -38,11 +37,8 @@ public class Client
   /** for managing the projects. */
   protected Projects m_Projects;
 
-  /** for managing the organizations. */
-  protected Organisations m_Organisations;
-
-  /** for managhing the memberships. */
-  protected Memberships m_Memberships;
+  /** for managing the teams. */
+  protected Teams m_Teams;
 
   /**
    * Initializes the client.
@@ -50,11 +46,10 @@ public class Client
   public Client() {
     m_Connection = new Connection();
     try {
-      m_Users         = newAction(Users.class);
-      m_Datasets      = newAction(Datasets.class);
-      m_Projects      = newAction(Projects.class);
-      m_Organisations = newAction(Organisations.class);
-      m_Memberships   = newAction(Memberships.class);
+      m_Users    = newAction(Users.class);
+      m_Datasets = newAction(Datasets.class);
+      m_Projects = newAction(Projects.class);
+      m_Teams    = newAction(Teams.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -111,21 +106,12 @@ public class Client
   }
 
   /**
-   * Returns the organisations action.
+   * Returns the teams action.
    *
-   * @return		the organisations action
+   * @return		the teams action
    */
-  public Organisations organisations() {
-    return m_Organisations;
-  }
-
-  /**
-   * Returns the memberships action.
-   *
-   * @return		the memberships action
-   */
-  public Memberships memberships() {
-    return m_Memberships;
+  public Teams teams() {
+    return m_Teams;
   }
 
   /**

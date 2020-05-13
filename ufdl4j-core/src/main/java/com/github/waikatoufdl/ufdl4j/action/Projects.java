@@ -1,6 +1,6 @@
 /*
  * Projects.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -47,12 +47,12 @@ public class Projects
     }
 
     /**
-     * Returns the project ID.
+     * Returns the project primary key.
      *
-     * @return		the ID
+     * @return		the primary key
      */
-    public int getID() {
-      return getInt("id", -1);
+    public int getPK() {
+      return getInt("pk", -1);
     }
 
     /**
@@ -107,7 +107,7 @@ public class Projects
      */
     @Override
     public String toString() {
-      return "id=" + getID() + ", name=" + getName();
+      return "pk=" + getPK() + ", name=" + getName();
     }
   }
 
