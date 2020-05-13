@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class Datasets
      * @return		the primary key
      */
     public int getPK() {
-      return getInt("pk", -1);
+      return getInt("pk");
     }
 
     /**
@@ -137,6 +138,21 @@ public class Datasets
     }
 
     /**
+     * Wraps the internal JSON object in the specified Dataset class.
+     *
+     * @param cls	the dataset class to use
+     * @param <T>	the type of dataset
+     * @return		the new wrapper
+     * @throws Exception	if wrapping fails
+     */
+    public <T extends Dataset> T as(Class<T> cls) throws Exception {
+      Constructor<T>	constr;
+
+      constr = cls.getConstructor(JsonObject.class);
+      return constr.newInstance(m_Data);
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
@@ -158,9 +174,9 @@ public class Datasets
   }
 
   /**
-   * For listing the users.
+   * For listing the datasets.
    *
-   * @return		the list of users
+   * @return		the list of datasets
    * @throws Exception	if request fails
    */
   public List<Dataset> list() throws Exception {
@@ -189,5 +205,94 @@ public class Datasets
     }
 
     return result;
+  }
+
+  /**
+   * For loading a specific dataset by primary key.
+   *
+   * @param pk 		the primary key of the dataset to load
+   * @return		the dataset
+   * @throws Exception	if request fails
+   */
+  public Dataset load(int pk) throws Exception {
+    Dataset		result;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("loading dataset with id: " + pk);
+
+    result   = null;
+    request  = newGet(PATH + pk);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Dataset(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to load dataset: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific dataset by name.
+   *
+   * @param name 	the dataset name
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Dataset load(String name) throws Exception {
+    Dataset	result;
+
+    getLogger().info("loading dataset with name: " + name);
+
+    result = null;
+
+    for (Dataset dataset : list()) {
+      if (dataset.getName().equals(name)) {
+        result = dataset;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * For deleting a specific dataset.
+   *
+   * @param dataset 	the dataset to delete
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean delete(Dataset dataset) throws Exception {
+    return delete(dataset.getPK());
+  }
+
+  /**
+   * For deleting a specific dataset.
+   *
+   * @param pk 		the ID of the dataset
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid user PK
+   */
+  public boolean delete(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("deleting dataset with PK: " + pk);
+
+    request  = newDelete(PATH + pk + "/");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete dataset: " + pk, response);
   }
 }

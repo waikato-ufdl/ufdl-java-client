@@ -1,14 +1,19 @@
 /*
  * AbstractJsonObjectWrapper.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.core;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Ancestor for objects that wrap around JSON objects and provide access methods
@@ -53,6 +58,21 @@ public abstract class AbstractJsonObjectWrapper
   }
 
   /**
+   * Returns the specified integer, throws an {@link IllegalStateException} if not present or not a number.
+   *
+   * @param key		the key to retrieve as integer
+   * @return		the value associated with the key
+   */
+  protected int getInt(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
+      return m_Data.get(key).getAsInt();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a number!");
+  }
+
+  /**
    * Returns the specified integer.
    *
    * @param key		the key to retrieve as integer
@@ -64,6 +84,21 @@ public abstract class AbstractJsonObjectWrapper
       return m_Data.get(key).getAsInt();
     else
       return defValue;
+  }
+
+  /**
+   * Returns the specified long, throws an {@link IllegalStateException} if not present or not a number.
+   *
+   * @param key		the key to retrieve as long
+   * @return		the value associated with the key
+   */
+  protected long getLong(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
+      return m_Data.get(key).getAsLong();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a number!");
   }
 
   /**
@@ -81,6 +116,21 @@ public abstract class AbstractJsonObjectWrapper
   }
 
   /**
+   * Returns the specified float, throws an {@link IllegalStateException} if not present or not a number.
+   *
+   * @param key		the key to retrieve as float
+   * @return		the value associated with the key
+   */
+  protected float getFloat(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
+      return m_Data.get(key).getAsFloat();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a number!");
+  }
+
+  /**
    * Returns the specified float.
    *
    * @param key		the key to retrieve as float
@@ -92,6 +142,21 @@ public abstract class AbstractJsonObjectWrapper
       return m_Data.get(key).getAsFloat();
     else
       return defValue;
+  }
+
+  /**
+   * Returns the specified double, throws an {@link IllegalStateException} if not present or not a number.
+   *
+   * @param key		the key to retrieve as double
+   * @return		the value associated with the key
+   */
+  protected double getDouble(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
+      return m_Data.get(key).getAsDouble();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a number!");
   }
 
   /**
@@ -109,6 +174,21 @@ public abstract class AbstractJsonObjectWrapper
   }
 
   /**
+   * Returns the specified boolean, throws an {@link IllegalStateException} if not present or not a boolean.
+   *
+   * @param key		the key to retrieve as boolean
+   * @return		the value associated with the key
+   */
+  protected boolean getBoolean(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isBoolean())
+      return m_Data.get(key).getAsBoolean();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a boolean!");
+  }
+
+  /**
    * Returns the specified boolean.
    *
    * @param key		the key to retrieve as boolean
@@ -120,6 +200,21 @@ public abstract class AbstractJsonObjectWrapper
       return m_Data.get(key).getAsBoolean();
     else
       return defValue;
+  }
+
+  /**
+   * Returns the specified long, throws an {@link IllegalStateException} if not present or not a string.
+   *
+   * @param key		the key to retrieve as string
+   * @return		the value associated with the key
+   */
+  protected String getString(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString())
+      return m_Data.get(key).getAsString();
+    else
+      throw new IllegalStateException("Value for key '" + key + "' is not a string!");
   }
 
   /**
@@ -137,6 +232,28 @@ public abstract class AbstractJsonObjectWrapper
   }
 
   /**
+   * Returns the specified long, throws an {@link IllegalStateException} if not present or not a number.
+   *
+   * @param key		the key to retrieve as long
+   * @return		the value associated with the key
+   */
+  protected LocalDateTime getDateTime(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString()) {
+      try {
+	return LocalDateTime.parse(m_Data.get(key).getAsString(), getDateTimeFormatter());
+      }
+      catch (Exception e) {
+        throw new IllegalStateException("Failed to parse key '" + key + "' as date/time!", e);
+      }
+    }
+    else {
+      throw new IllegalStateException("Value for key '" + key + "' is not a string!");
+    }
+  }
+
+  /**
    * Returns the specified date/time.
    *
    * @param key		the key to retrieve as date/time
@@ -150,10 +267,61 @@ public abstract class AbstractJsonObjectWrapper
 	return LocalDateTime.parse(m_Data.get(key).getAsString(), getDateTimeFormatter());
     }
     catch (Exception e) {
-      e.printStackTrace();
-      // ignored
+      getLogger().log(Level.SEVERE, "Failed to parse key '" + key + "' as date/time!", e);
     }
     return defValue;
+  }
+
+  /**
+   * Returns the specified array as list. In case of primitives (boolean/string/number),
+   * they get returned as such, otherwise as JsonElement.
+   * If key not present, throws an {@link IllegalStateException}.
+   *
+   * @param key		the key to retrieve as string
+   * @return		the value associated with the key
+   */
+  protected List getList(String key) {
+    if (!m_Data.has(key))
+      throw new IllegalStateException("Key does not exist: " + key);
+    return getList(key, null);
+  }
+
+  /**
+   * Returns the specified array as list. In case of primitives (boolean/string/number),
+   * they get returned as such, otherwise as JsonElement.
+   *
+   * @param key		the key to retrieve as string
+   * @param defValue	the default value
+   * @return		the value associated with the key or, if not found or not a string, the default value
+   */
+  protected List getList(String key, List defValue) {
+    List		list;
+    int			i;
+    JsonArray		array;
+    JsonPrimitive	prim;
+
+    if (m_Data.has(key) && m_Data.get(key).isJsonArray()) {
+      list  = new ArrayList();
+      array = m_Data.getAsJsonArray(key);
+      for (i = 0; i < array.size(); i++) {
+        if (array.get(i).isJsonPrimitive()) {
+          prim = array.get(i).getAsJsonPrimitive();
+          if (prim.isString())
+	    list.add(prim.getAsString());
+          else if (prim.isBoolean())
+	    list.add(prim.getAsBoolean());
+          else if (prim.isNumber())
+            list.add(prim.getAsNumber());
+	}
+	else {
+          list.add(array.get(i));
+	}
+      }
+      return list;
+    }
+    else {
+      return defValue;
+    }
   }
 
   /**

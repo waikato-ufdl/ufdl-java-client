@@ -6,12 +6,14 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
+import com.github.waikatoufdl.ufdl4j.action.Users.User;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class Teams
      * @return		the primary key
      */
     public int getPK() {
-      return getInt("pk", -1);
+      return getInt("pk");
     }
 
     /**
@@ -92,13 +94,32 @@ public class Teams
     }
 
     /**
+     * Returns the members of the team.
+     *
+     * @return		the members
+     */
+    public List<String> members() {
+      List<String>	result;
+      List		list;
+
+      result = new ArrayList<>();
+      list = getList("members", null);
+      if (list != null) {
+        for (Object o: list)
+          result.add(o.toString());
+      }
+
+      return result;
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName();
+      return "pk=" + getPK() + ", name=" + getName() + ", members=" + members();
     }
   }
 
@@ -109,13 +130,13 @@ public class Teams
    */
   @Override
   public String getName() {
-    return "Organisations";
+    return "Teams";
   }
 
   /**
-   * For listing the users.
+   * For listing the teams.
    *
-   * @return		the list of users
+   * @return		the list of teams
    * @throws Exception	if request fails
    */
   public List<Team> list() throws Exception {
@@ -144,5 +165,147 @@ public class Teams
     }
 
     return result;
+  }
+
+  /**
+   * For loading a specific team by primary key.
+   *
+   * @param pk 		the primary key of the team to load
+   * @return		the team
+   * @throws Exception	if request fails
+   */
+  public Team load(int pk) throws Exception {
+    Team		result;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("loading team with id: " + pk);
+
+    result   = null;
+    request  = newGet(PATH + pk);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Team(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to load team: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific team by name.
+   *
+   * @param name 	the team name
+   * @return		the team object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Team load(String name) throws Exception {
+    Team	result;
+
+    getLogger().info("loading team with name: " + name);
+
+    result = null;
+
+    for (Team team : list()) {
+      if (team.getName().equals(name)) {
+        result = team;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Creates the team.
+   *
+   * @param team 	the team name
+   * @return		the team object, null if failed to create
+   * @throws Exception	if request fails or team already exists
+   */
+  public Team create(String team) throws Exception {
+    Team		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("creating team: " + team);
+
+    data = new JsonObject();
+    data.addProperty("name", team);
+    request = newPost(PATH)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Team(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to create team: " + team, response);
+
+    return result;
+  }
+
+  /**
+   * For deleting a specific team.
+   *
+   * @param team 	the team to delete
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid team PK
+   */
+  public boolean delete(Team team) throws Exception {
+    return delete(team.getPK());
+  }
+
+  /**
+   * For deleting a specific team.
+   *
+   * @param pk 		the ID of the team
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid team PK
+   */
+  public boolean delete(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("deleting team with PK: " + pk);
+
+    request  = newDelete(PATH + pk + "/");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete team: " + pk, response);
+  }
+
+  /**
+   * Adds the user to the team.
+   *
+   * @param team 	the team to add the user to
+   * @param user 	the user to add
+   */
+  public boolean addMember(Team team, User user, Permissions permissions) throws Exception {
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("adding user '" + user.getUserName() + "' to team '" + getName());
+
+    data     = new JsonObject();
+    data.addProperty("username", user.getUserName());
+    data.addProperty("permissions", permissions.toString());
+    request  = newPost(PATH + team.getPK() + "/add-member")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to added user '" + user.getUserName() + "' to team '" + getName() + "'!", response);
   }
 }

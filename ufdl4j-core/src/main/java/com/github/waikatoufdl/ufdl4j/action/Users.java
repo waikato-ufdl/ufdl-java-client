@@ -53,7 +53,7 @@ public class Users
      * @return		the primary key
      */
     public int getPK() {
-      return getInt("pk", -1);
+      return getInt("pk");
     }
 
     /**
@@ -184,22 +184,22 @@ public class Users
   }
 
   /**
-   * For loading a specific user.
+   * For loading a specific user by primary key.
    *
-   * @param id 		the ID of the user to load
+   * @param pk 		the primary key of the user to load
    * @return		the user
    * @throws Exception	if request fails
    */
-  public User load(int id) throws Exception {
+  public User load(int pk) throws Exception {
     User		result;
     JsonResponse 	response;
     JsonElement		element;
     Request 		request;
 
-    getLogger().info("loading user with id: " + id);
+    getLogger().info("loading user with id: " + pk);
 
     result   = null;
-    request  = newGet(PATH + id);
+    request  = newGet(PATH + pk);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -207,7 +207,31 @@ public class Users
 	result = new User(element.getAsJsonObject());
     }
     else {
-      throw new FailedRequestException("Failed to load user: " + id, response);
+      throw new FailedRequestException("Failed to load user: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific user by name.
+   *
+   * @param name 	the user name
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public User load(String name) throws Exception {
+    User	result;
+
+    getLogger().info("loading user with name: " + name);
+
+    result = null;
+
+    for (User user: list()) {
+      if (user.getUserName().equals(name)) {
+        result = user;
+        break;
+      }
     }
 
     return result;
@@ -254,7 +278,7 @@ public class Users
    *
    * @param user 	the user to delete
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid user ID
+   * @throws Exception	if request fails, eg invalid user PK
    */
   public boolean delete(User user) throws Exception {
     return delete(user.getPK());
@@ -265,7 +289,7 @@ public class Users
    *
    * @param pk 		the ID of the user
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid user ID
+   * @throws Exception	if request fails, eg invalid user PK
    */
   public boolean delete(int pk) throws Exception {
     JsonResponse 	response;

@@ -52,7 +52,7 @@ public class Projects
      * @return		the primary key
      */
     public int getPK() {
-      return getInt("pk", -1);
+      return getInt("pk");
     }
 
     /**
@@ -122,9 +122,9 @@ public class Projects
   }
 
   /**
-   * For listing the users.
+   * For listing the projects.
    *
-   * @return		the list of users
+   * @return		the list of projects
    * @throws Exception	if request fails
    */
   public List<Project> list() throws Exception {
@@ -153,5 +153,94 @@ public class Projects
     }
 
     return result;
+  }
+
+  /**
+   * For loading a specific project by primary key.
+   *
+   * @param pk 		the primary key of the project to load
+   * @return		the project
+   * @throws Exception	if request fails
+   */
+  public Project load(int pk) throws Exception {
+    Project		result;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("loading project with id: " + pk);
+
+    result   = null;
+    request  = newGet(PATH + pk);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Project(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to load project: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific project by name.
+   *
+   * @param name 	the project name
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Project load(String name) throws Exception {
+    Project	result;
+
+    getLogger().info("loading project with name: " + name);
+
+    result = null;
+
+    for (Project project : list()) {
+      if (project.getName().equals(name)) {
+        result = project;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * For deleting a specific project.
+   *
+   * @param project 	the project to delete
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid user PK
+   */
+  public boolean delete(Project project) throws Exception {
+    return delete(project.getPK());
+  }
+
+  /**
+   * For deleting a specific project.
+   *
+   * @param pk 		the ID of the project
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid user PK
+   */
+  public boolean delete(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("deleting project with PK: " + pk);
+
+    request  = newDelete(PATH + pk + "/");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete project: " + pk, response);
   }
 }

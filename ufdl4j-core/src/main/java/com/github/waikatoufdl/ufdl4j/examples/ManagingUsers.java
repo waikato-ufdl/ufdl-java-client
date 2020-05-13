@@ -65,11 +65,15 @@ public class ManagingUsers {
     }
 
     // delete 'blahuser'
-    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser.getPK()));
+    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser));
 
     // load user via primary key
     System.out.println("--> loading user with PK=1");
     System.out.println(client.users().load(1));
+
+    // load user via name
+    System.out.println("--> loading user with name=admin");
+    System.out.println(client.users().load("admin"));
 
     client.close();
   }
