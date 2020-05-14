@@ -63,7 +63,7 @@ public class Teams
      * @return		the ID
      */
     public int getCreatorID() {
-      return getInt("creator_id", -1);
+      return getInt("creator", -1);
     }
 
     /**
