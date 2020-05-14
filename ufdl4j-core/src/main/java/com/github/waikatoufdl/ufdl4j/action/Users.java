@@ -111,6 +111,15 @@ public class Users
     }
 
     /**
+     * Returns whether the user is active.
+     *
+     * @return		true if active
+     */
+    public boolean isActive() {
+      return getBoolean("is_active", false);
+    }
+
+    /**
      * Returns whether the user is staff.
      *
      * @return		true if staff
@@ -135,7 +144,7 @@ public class Users
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", user=" + getUserName();
+      return "pk=" + getPK() + ", user=" + getUserName() + ", staff=" + isStaff() + ", superuser=" + isSuperuser() + ", active=" + isActive();
     }
   }
 
@@ -249,6 +258,24 @@ public class Users
    * @throws Exception	if request fails or user already exists
    */
   public User create(String user, String password, String firstName, String lastName, String email) throws Exception {
+    return create(user, password, firstName, lastName, email, false, false, true);
+  }
+
+  /**
+   * Creates the user.
+   *
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @param staff 	whether the user is staff
+   * @param superuser 	whether the user is an admin
+   * @param active 	whether the use is active
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails or user already exists
+   */
+  public User create(String user, String password, String firstName, String lastName, String email, boolean staff, boolean superuser, boolean active) throws Exception {
     User		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -262,6 +289,9 @@ public class Users
     data.addProperty("first_name", firstName);
     data.addProperty("last_name", lastName);
     data.addProperty("email", email);
+    data.addProperty("is_staff", staff);
+    data.addProperty("is_superuser", superuser);
+    data.addProperty("is_active", active);
     request = newPost(PATH)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
