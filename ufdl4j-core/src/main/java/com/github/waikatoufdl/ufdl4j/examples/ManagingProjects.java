@@ -22,6 +22,9 @@ package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
+import com.github.waikatoufdl.ufdl4j.action.Teams.Team;
+
+import java.util.List;
 
 /**
  * Example code for managing projects.
@@ -59,8 +62,12 @@ public class ManagingProjects {
 
     // create 'blahproject' if necessary
     if (blahproject == null) {
+      int team_id = -1;
+      List<Team> teams = client.teams().list();
+      if (teams.size() > 0)
+        team_id = teams.get(0).getPK();
       System.out.println("--> creating project");
-      blahproject = client.projects().create("blahproject", 1);
+      blahproject = client.projects().create("blahproject", team_id);
       System.out.println(blahproject);
     }
 
