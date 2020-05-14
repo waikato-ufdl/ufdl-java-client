@@ -62,7 +62,7 @@ public class Projects
      * @return		the ID
      */
     public int getCreatorID() {
-      return getInt("creator_id", -1);
+      return getInt("creator", -1);
     }
 
     /**
@@ -71,7 +71,7 @@ public class Projects
      * @return		the ID
      */
     public int getTeamID() {
-      return getInt("team_id", -1);
+      return getInt("team", -1);
     }
 
     /**
