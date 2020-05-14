@@ -65,16 +65,16 @@ public class Projects
     }
 
     /**
-     * Returns the organisation ID.
+     * Returns the team ID.
      *
      * @return		the ID
      */
-    public int getOrganisationID() {
-      return getInt("organisation_id", -1);
+    public int getTeamID() {
+      return getInt("team_id", -1);
     }
 
     /**
-     * Returns the dataset name.
+     * Returns the project name.
      *
      * @return		the name
      */
