@@ -22,6 +22,9 @@ package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
+import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
+
+import java.util.List;
 
 /**
  * Example code for managing datasets.
@@ -53,7 +56,17 @@ public class ManagingDatasets {
     for (Dataset dataset: client.datasets().list())
       System.out.println(dataset);
 
-    // TODO
+    // grab first available project ID
+    int project = -1;
+    List<Project> projects = client.projects().list();
+    if (projects.size() > 0)
+      project = projects.get(0).getPK();
+
+    // create dataset
+    System.out.println("--> creating dataset");
+    Dataset newDataset = client.datasets().create(
+      "dummy-" + System.currentTimeMillis(), 1, project, "GPLv3", true, "");
+    System.out.println(newDataset);
 
     client.close();
   }

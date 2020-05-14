@@ -1,6 +1,6 @@
 /*
  * Client.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j;
@@ -13,6 +13,8 @@ import com.github.waikatoufdl.ufdl4j.action.Users;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -40,16 +42,20 @@ public class Client
   /** for managing the teams. */
   protected Teams m_Teams;
 
+  /** action singletons. */
+  protected Map<Class, AbstractAction> m_Actions;
+
   /**
    * Initializes the client.
    */
   public Client() {
     m_Connection = new Connection();
+    m_Actions    = new HashMap<>();
     try {
-      m_Users    = newAction(Users.class);
-      m_Datasets = newAction(Datasets.class);
-      m_Projects = newAction(Projects.class);
-      m_Teams    = newAction(Teams.class);
+      m_Users    = action(Users.class);
+      m_Datasets = action(Datasets.class);
+      m_Projects = action(Projects.class);
+      m_Teams    = action(Teams.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -115,7 +121,7 @@ public class Client
   }
 
   /**
-   * Creates a new instance of an action, sets the connection and returns the instance.
+   * Always creates a new instance of an action, sets the connection and returns the instance.
    *
    * @param action	the action to instantiate
    * @param <T>		the type of action
@@ -128,6 +134,28 @@ public class Client
 
     result = action.newInstance();
     result.setConnection(m_Connection);
+
+    return result;
+  }
+
+  /**
+   * Creates an instance of an action if not yet present, sets the connection
+   * and returns the instance.
+   *
+   * @param action	the type action to instantiate/return
+   * @param <T>		the type of action
+   * @return		the action instance
+   * @throws Exception	if instantiation fails
+   * @see		#connection()
+   */
+  public <T extends AbstractAction> T action(Class<T> action) throws Exception {
+    T 	result;
+
+    if (m_Actions.containsKey(action))
+      return (T) m_Actions.get(action);
+
+    result = newAction(action);
+    m_Actions.put(action, result);
 
     return result;
   }

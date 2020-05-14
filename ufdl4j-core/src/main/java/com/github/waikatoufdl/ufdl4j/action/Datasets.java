@@ -6,14 +6,18 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.Response;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,6 @@ public class Datasets
   extends AbstractAction {
 
   private static final long serialVersionUID = 7013386269355130329L;
-
-  public static final String PATH = "/v1/core/datasets/";
 
   /**
    * Container class for dataset information.
@@ -174,6 +176,16 @@ public class Datasets
   }
 
   /**
+   * The URL path to use.
+   *
+   * @return		the path
+   */
+  @Override
+  public String getPath() {
+    return "/v1/core/datasets/";
+  }
+
+  /**
    * For listing the datasets.
    *
    * @return		the list of datasets
@@ -190,7 +202,7 @@ public class Datasets
     getLogger().info("listing datasets");
 
     result   = new ArrayList<>();
-    request  = newGet(PATH);
+    request  = newGet(getPath());
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -223,7 +235,7 @@ public class Datasets
     getLogger().info("loading dataset with id: " + pk);
 
     result   = null;
-    request  = newGet(PATH + pk);
+    request  = newGet(getPath() + pk);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -262,6 +274,84 @@ public class Datasets
   }
 
   /**
+   * Creates the dataset.
+   *
+   * @param dataset 	the dataset name
+   * @param version 	the version of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param licence 	the license for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset create(String dataset, int version, int project, String licence, boolean isPublic, String tags) throws Exception {
+    Dataset		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("creating dataset: " + dataset);
+
+    data = new JsonObject();
+    data.addProperty("name", dataset);
+    data.addProperty("version", version);
+    data.addProperty("project", project);
+    data.addProperty("licence", licence);
+    data.addProperty("is_public", isPublic);
+    data.addProperty("tags", tags);
+    request = newPost(getPath())
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Dataset(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to create dataset: " + dataset, response);
+
+    return result;
+  }
+
+  /**
+   * Adds the file to the dataset (uploads it to the server).
+   *
+   * @param dataset	the dataset
+   * @param file	the file to upload
+   * @param name	the name to use in the dataset
+   * @return		true if successfully added/uploaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean addFile(Dataset dataset, File file, String name) throws Exception {
+    return addFile(dataset.getPK(), file, name);
+  }
+
+  /**
+   * Adds the file to the dataset (uploads it to the server).
+   *
+   * @param pk		the dataset ID
+   * @param file	the file to upload
+   * @param name	the name to use in the dataset
+   * @return		true if successfully added/uploaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean addFile(int pk, File file, String name) throws Exception {
+    Request 	request;
+    Response 	response;
+    byte[]	content;
+    JsonObject	data;
+
+    getLogger().info("Reading content of: " + file);
+    content = Files.readAllBytes(file.toPath());
+
+    request = newPost(getPath() + pk + "/" + name)
+      .body(content);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to add file to dataset " + pk + ": " + file, response);
+  }
+
+  /**
    * For deleting a specific dataset.
    *
    * @param dataset 	the dataset to delete
@@ -277,7 +367,7 @@ public class Datasets
    *
    * @param pk 		the ID of the dataset
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid user PK
+   * @throws Exception	if request fails, eg invalid dataset PK
    */
   public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
@@ -288,7 +378,7 @@ public class Datasets
 
     getLogger().info("deleting dataset with PK: " + pk);
 
-    request  = newDelete(PATH + pk + "/");
+    request  = newDelete(getPath() + pk + "/");
     response = execute(request);
     if (response.ok())
       return true;

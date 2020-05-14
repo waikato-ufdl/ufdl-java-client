@@ -28,8 +28,6 @@ public class Projects
 
   private static final long serialVersionUID = 7013386269355130329L;
 
-  public static final String PATH = "/v1/core/projects/";
-
   /**
    * Container class for project information.
    */
@@ -123,6 +121,16 @@ public class Projects
   }
 
   /**
+   * The URL path to use.
+   *
+   * @return		the path
+   */
+  @Override
+  public String getPath() {
+    return "/v1/core/projects/";
+  }
+
+  /**
    * For listing the projects.
    *
    * @return		the list of projects
@@ -139,7 +147,7 @@ public class Projects
     getLogger().info("listing projects");
 
     result   = new ArrayList<>();
-    request  = newGet(PATH);
+    request  = newGet(getPath());
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -172,7 +180,7 @@ public class Projects
     getLogger().info("loading project with id: " + pk);
 
     result   = null;
-    request  = newGet(PATH + pk);
+    request  = newGet(getPath() + pk);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -229,7 +237,7 @@ public class Projects
     data = new JsonObject();
     data.addProperty("name", project);
     data.addProperty("team", team);
-    request = newPost(PATH)
+    request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
@@ -267,7 +275,7 @@ public class Projects
 
     getLogger().info("deleting project with PK: " + pk);
 
-    request  = newDelete(PATH + pk + "/");
+    request  = newDelete(getPath() + pk + "/");
     response = execute(request);
     if (response.ok())
       return true;

@@ -29,8 +29,6 @@ public class Teams
 
   private static final long serialVersionUID = 7013386269355130329L;
 
-  public static final String PATH = "/v1/core/teams/";
-
   /**
    * Container class for team information.
    */
@@ -134,6 +132,16 @@ public class Teams
   }
 
   /**
+   * The URL path to use.
+   *
+   * @return		the path
+   */
+  @Override
+  public String getPath() {
+    return "/v1/core/teams/";
+  }
+
+  /**
    * For listing the teams.
    *
    * @return		the list of teams
@@ -150,7 +158,7 @@ public class Teams
     getLogger().info("listing teams");
 
     result   = new ArrayList<>();
-    request  = newGet(PATH);
+    request  = newGet(getPath());
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -183,7 +191,7 @@ public class Teams
     getLogger().info("loading team with id: " + pk);
 
     result   = null;
-    request  = newGet(PATH + pk);
+    request  = newGet(getPath() + pk);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -238,7 +246,7 @@ public class Teams
 
     data = new JsonObject();
     data.addProperty("name", team);
-    request = newPost(PATH)
+    request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
@@ -276,7 +284,7 @@ public class Teams
 
     getLogger().info("deleting team with PK: " + pk);
 
-    request  = newDelete(PATH + pk + "/");
+    request  = newDelete(getPath() + pk + "/");
     response = execute(request);
     if (response.ok())
       return true;
@@ -300,7 +308,7 @@ public class Teams
     data     = new JsonObject();
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
-    request  = newPost(PATH + team.getPK() + "/add-member")
+    request  = newPost(getPath() + team.getPK() + "/add-member")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

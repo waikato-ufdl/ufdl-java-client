@@ -45,6 +45,13 @@ public abstract class AbstractAction
   public abstract String getName();
 
   /**
+   * The URL path to use.
+   *
+   * @return		the path
+   */
+  public abstract String getPath();
+
+  /**
    * Sets the connection to use.
    *
    * @param value	the connection
