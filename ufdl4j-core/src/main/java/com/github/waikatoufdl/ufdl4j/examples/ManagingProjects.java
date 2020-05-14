@@ -49,11 +49,23 @@ public class ManagingProjects {
       client = new Client(args[0], args[1], args[1]);
 
     // list projects
+    Project blahproject = null;
     System.out.println("--> listing projects");
-    for (Project project: client.projects().list())
+    for (Project project: client.projects().list()) {
       System.out.println(project);
+      if (project.getName().equals("blahproject"))
+        blahproject = project;
+    }
 
-    // TODO
+    // create 'blahproject' if necessary
+    if (blahproject == null) {
+      System.out.println("--> creating project");
+      blahproject = client.projects().create("blahproject", 1);
+      System.out.println(blahproject);
+    }
+
+    // delete 'blahproject'
+    System.out.println("deleting project '" + blahproject + "'? " + client.projects().delete(blahproject));
 
     client.close();
   }

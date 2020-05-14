@@ -12,6 +12,7 @@ import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -205,6 +206,36 @@ public class Projects
         break;
       }
     }
+
+    return result;
+  }
+
+  /**
+   * Creates the project.
+   *
+   * @param project 	the project name
+   * @param team	the team PK
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails or project already exists
+   */
+  public Project create(String project, int team) throws Exception {
+    Project		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("creating project: " + project);
+
+    data = new JsonObject();
+    data.addProperty("name", project);
+    data.addProperty("team", team);
+    request = newPost(PATH)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Project(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to create project: " + project, response);
 
     return result;
   }
