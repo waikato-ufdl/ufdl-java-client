@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
@@ -17,7 +18,6 @@ import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -336,14 +336,9 @@ public class Datasets
   public boolean addFile(int pk, File file, String name) throws Exception {
     Request 	request;
     Response 	response;
-    byte[]	content;
-    JsonObject	data;
 
-    getLogger().info("Reading content of: " + file);
-    content = Files.readAllBytes(file.toPath());
-
-    request = newPost(getPath() + pk + "/" + name)
-      .body(content);
+    request = newPost(getPath() + pk + "/files/" + name)
+      .attachment(new FileAttachment(file));
     response = execute(request);
     if (response.ok())
       return true;
