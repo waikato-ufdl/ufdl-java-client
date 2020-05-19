@@ -55,16 +55,41 @@ public class ManagingImageClassificationDatasets {
 
     // create dataset
     System.out.println("--> creating dataset");
+    String newName = "dummy-" + System.currentTimeMillis();
     Dataset newDataset = action.create(
-      "dummy-" + System.currentTimeMillis(), 1, project, "GPLv3", true, "");
+      newName, 1, project, "GPLv3", true, "");
     System.out.println(newDataset);
 
     // add files to dataset
     if (args.length > 3) {
       for (int i = 3; i < args.length; i++) {
         File file = new File(args[i]);
-        action.addFile(newDataset.getPK(), file, file.getName());
+        System.out.println("--> adding file");
+        action.addFile(newDataset, file, file.getName());
       }
+    }
+
+    // download dataset
+    System.out.println("--> downloading dataset");
+    File output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + ".zip");
+    if (action.download(newDataset, output))
+      System.out.println("--> downloaded dataset to " + output);
+
+    // get file from dataset
+    if (args.length > 3) {
+      File file = new File(args[3]);
+      output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + "-" + file.getName());
+      System.out.println("--> downloading file");
+      if (action.getFile(newDataset, file.getName(), output))
+	System.out.println("--> downloaded file: " + output);
+    }
+
+    // delete file from dataset
+    if (args.length > 3) {
+      File file = new File(args[3]);
+      System.out.println("--> deleting file");
+      if (action.deleteFile(newDataset, file.getName()))
+	System.out.println("--> deleted file: " + file.getName());
     }
 
     client.close();

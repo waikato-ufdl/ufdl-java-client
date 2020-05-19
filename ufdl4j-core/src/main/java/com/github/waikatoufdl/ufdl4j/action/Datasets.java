@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
@@ -344,6 +345,114 @@ public class Datasets
       return true;
     else
       throw new FailedRequestException("Failed to add file to dataset " + pk + ": " + file, response);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset (downloads it from the server).
+   *
+   * @param dataset	the dataset
+   * @param output	the output file
+   * @param name	the name used in the dataset
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean getFile(Dataset dataset, String name, File output) throws Exception {
+    return getFile(dataset.getPK(), name, output);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset (downloads it from the server).
+   *
+   * @param pk		the dataset ID
+   * @param output	the output file
+   * @param name	the name used in the dataset
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean getFile(int pk, String name, File output) throws Exception {
+    Request 	request;
+    Response 	response;
+
+    request = newGet(getPath() + pk + "/files/" + name);
+    response = download(request, output);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to get file from dataset " + pk + ": " + name, response);
+  }
+
+  /**
+   * Deletes the specified file from the dataset (downloads it from the server).
+   *
+   * @param dataset	the dataset
+   * @param name	the name used in the dataset
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean deleteFile(Dataset dataset, String name) throws Exception {
+    return deleteFile(dataset.getPK(), name);
+  }
+
+  /**
+   * Deletes the specified file from the dataset (downloads it from the server).
+   *
+   * @param pk		the dataset ID
+   * @param name	the name used in the dataset
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean deleteFile(int pk, String name) throws Exception {
+    Request 	request;
+    Response 	response;
+
+    request = newDelete(getPath() + pk + "/files/" + name);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete file from dataset " + pk + ": " + name, response);
+  }
+
+  /**
+   * For downloading a specific dataset.
+   *
+   * @param dataset	the dataset to download
+   * @param output	the file to save the downloaded dataset to (zip or tar.gz)
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean download(Dataset dataset, File output) throws Exception {
+    return download(dataset.getPK(), output);
+  }
+
+  /**
+   * For downloading a specific dataset.
+   *
+   * @param pk 		the primary key of the dataset to download
+   * @param output	the file to save the downloaded dataset to (zip or tar.gz)
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean download(int pk, File output) throws Exception {
+    FileResponse 	response;
+    Request 		request;
+    String 		filetype;
+
+    getLogger().info("downloading dataset with id: " + pk);
+
+    if (output.getName().endsWith(".zip"))
+      filetype = "zip";
+    else if (output.getName().endsWith(".tar.gz"))
+      filetype = "tar.gz";
+    else
+      throw new IllegalArgumentException("Only zip or tar.gz available for download: " + output);
+
+    request = newGet(getPath() + pk + "/download?filetype=" + filetype);
+    response = download(request, output);
+    if (!response.ok())
+      throw new FailedRequestException("Failed to download dataset: " + pk, response);
+
+    return true;
   }
 
   /**
