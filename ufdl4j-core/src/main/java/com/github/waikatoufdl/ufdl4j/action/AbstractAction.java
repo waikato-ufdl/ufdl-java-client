@@ -1,15 +1,17 @@
 /*
  * AbstractAction.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 
+import java.io.File;
 import java.net.MalformedURLException;
 
 /**
@@ -168,6 +170,20 @@ public abstract class AbstractAction
   }
 
   /**
+   * Performs checks before executing the request and sets the authentication data.
+   *
+   * @param request	the request to update
+   * @throws Exception	if checks fail
+   */
+  protected void preExecute(Request request) throws Exception {
+    if (m_Connection == null)
+      throw new IllegalStateException("No connection set!");
+    if (!m_Connection.authentication().getTokens().isValid())
+      throw new IllegalStateException("No valid authentication available!");
+    request.header(HEADER_AUTHORIZATION, PREFIX_BEARER + " " + m_Connection.authentication().getTokens().getAccessToken());
+  }
+
+  /**
    * Executes the request. Automatically fills in authentication.
    *
    * @param request	the request to execute
@@ -176,11 +192,8 @@ public abstract class AbstractAction
   protected JsonResponse execute(Request request) throws Exception {
     JsonResponse 	result;
 
-    if (m_Connection == null)
-      throw new IllegalStateException("No connection set!");
-    if (!m_Connection.authentication().getTokens().isValid())
-      throw new IllegalStateException("No valid authentication available!");
-    request.header(HEADER_AUTHORIZATION, PREFIX_BEARER + " " + m_Connection.authentication().getTokens().getAccessToken());
+    preExecute(request);
+
     result = request.execute(new JsonResponse());
 
     // expired access token?
@@ -193,6 +206,34 @@ public abstract class AbstractAction
     if (result.statusCode() == 401) {
       m_Connection.authentication().obtain();
       result = request.execute(new JsonResponse());
+    }
+
+    return result;
+  }
+
+  /**
+   * Executes the request, downloading a file. Automatically fills in authentication.
+   *
+   * @param request	the request to execute
+   * @return		null if successful, otherwise error message
+   */
+  protected FileResponse download(Request request, File output) throws Exception {
+    FileResponse 	result;
+
+    preExecute(request);
+
+    result = request.execute(new FileResponse(output));
+
+    // expired access token?
+    if (result.statusCode() == 401) {
+      m_Connection.authentication().refresh();
+      result = request.execute(new FileResponse(output));
+    }
+
+    // expired refresh token?
+    if (result.statusCode() == 401) {
+      m_Connection.authentication().obtain();
+      result = request.execute(new FileResponse(output));
     }
 
     return result;
