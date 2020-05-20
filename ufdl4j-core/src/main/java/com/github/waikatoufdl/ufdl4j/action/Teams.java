@@ -10,6 +10,7 @@ import com.github.waikatoufdl.ufdl4j.action.Users.User;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,7 +34,8 @@ public class Teams
    * Container class for team information.
    */
   public static class Team
-    extends AbstractJsonObjectWrapper {
+    extends AbstractJsonObjectWrapper
+    implements SoftDeleteObject {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
