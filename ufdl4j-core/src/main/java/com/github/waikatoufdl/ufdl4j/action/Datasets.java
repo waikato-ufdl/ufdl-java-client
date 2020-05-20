@@ -19,7 +19,6 @@ import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,21 +139,6 @@ public class Datasets
      */
     public boolean isPublic() {
       return getBoolean("is_public", false);
-    }
-
-    /**
-     * Wraps the internal JSON object in the specified Dataset class.
-     *
-     * @param cls	the dataset class to use
-     * @param <T>	the type of dataset
-     * @return		the new wrapper
-     * @throws Exception	if wrapping fails
-     */
-    public <T extends Dataset> T as(Class<T> cls) throws Exception {
-      Constructor<T>	constr;
-
-      constr = cls.getConstructor(JsonObject.class);
-      return constr.newInstance(m_Data);
     }
 
     /**

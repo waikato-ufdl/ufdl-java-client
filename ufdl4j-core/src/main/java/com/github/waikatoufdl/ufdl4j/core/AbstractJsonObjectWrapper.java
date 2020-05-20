@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -331,5 +332,24 @@ public abstract class AbstractJsonObjectWrapper
    */
   public JsonObject getData() {
     return m_Data;
+  }
+
+  /**
+   * Creates a new instance of the specified wrapper class, reusing the
+   * internal JSON object.
+   *
+   * @param wrapper	the wrapper class to instantiate
+   * @param <T>		the type of wrapper
+   * @return		the wrapper instance
+   * @throws Exception	if instantiation fails
+   */
+  public <T extends AbstractJsonObjectWrapper> T as(Class<T> wrapper) throws Exception {
+    T 			result;
+    Constructor<T>	constr;
+
+    constr = wrapper.getConstructor(JsonObject.class);
+    result = constr.newInstance(m_Data);
+
+    return result;
   }
 }
