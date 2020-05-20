@@ -442,6 +442,44 @@ public class Datasets
   }
 
   /**
+   * For copying a dataset.
+   *
+   * @param dataset	the dataset to copy
+   * @param newName	the new name
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean copy(Dataset dataset, String newName) throws Exception {
+    return copy(dataset.getPK(), newName);
+  }
+
+  /**
+   * For copying a dataset.
+   *
+   * @param pk 		the primary key of the dataset to copy
+   * @param newName	the new name
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean copy(int pk, String newName) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+    JsonObject		data;
+
+    getLogger().info("copying dataset with id: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("new_name", newName);
+    request = newPost(getPath() + pk + "/copy")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (!response.ok())
+      throw new FailedRequestException("Failed to copy dataset: " + pk, response);
+
+    return true;
+  }
+
+  /**
    * For deleting a specific dataset.
    *
    * @param dataset 	the dataset to delete
