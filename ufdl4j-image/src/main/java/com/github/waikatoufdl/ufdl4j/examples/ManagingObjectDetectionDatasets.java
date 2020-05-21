@@ -13,6 +13,7 @@ import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -114,6 +115,12 @@ public class ManagingObjectDetectionDatasets {
       System.out.println("--> downloading file");
       if (action.getFile(newDataset, file.getName(), output))
 	System.out.println("--> downloaded file: " + output);
+      System.out.println("--> streaming file");
+      FileOutputStream stream = new FileOutputStream(output);
+      if (action.getFile(newDataset, file.getName(), stream))
+	System.out.println("--> streamed file: " + output);
+      stream.flush();
+      stream.close();
     }
 
     // delete file from dataset

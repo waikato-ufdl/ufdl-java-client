@@ -10,6 +10,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
+import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
@@ -20,6 +21,7 @@ import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -396,6 +398,40 @@ public class Datasets
     response = execute(request);
     if (response.ok())
       return response.body();
+    else
+      throw new FailedRequestException("Failed to get file from dataset " + pk + ": " + name, response);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset and outputs it using the output stream.
+   *
+   * @param dataset	the dataset
+   * @param name	the name used in the dataset
+   * @param stream 	the output stream to write to
+   * @return		true if successfully streamed
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean getFile(Dataset dataset, String name, OutputStream stream) throws Exception {
+    return getFile(dataset.getPK(), name, stream);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset and outputs it using the output stream.
+   *
+   * @param pk		the dataset ID
+   * @param name	the name used in the dataset
+   * @param stream 	the output stream to write to
+   * @return		true if successfully streamed
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean getFile(int pk, String name, OutputStream stream) throws Exception {
+    Request 		request;
+    StreamResponse response;
+
+    request = newGet(getPath() + pk + "/files/" + name);
+    response = stream(request, stream);
+    if (response.ok())
+      return true;
     else
       throw new FailedRequestException("Failed to get file from dataset " + pk + ": " + name, response);
   }

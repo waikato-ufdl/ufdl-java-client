@@ -7,11 +7,13 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.FileResponse;
+import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 
 /**
@@ -234,6 +236,35 @@ public abstract class AbstractAction
     if (result.statusCode() == 401) {
       m_Connection.authentication().obtain();
       result = request.execute(new FileResponse(output));
+    }
+
+    return result;
+  }
+
+  /**
+   * Executes the request, downloads the file as stream. Automatically fills in authentication.
+   *
+   * @param request	the request to execute
+   * @param stream 	the output stream to use (caller needs to close it)
+   * @return		null if successful, otherwise error message
+   */
+  protected StreamResponse stream(Request request, OutputStream stream) throws Exception {
+    StreamResponse 	result;
+
+    preExecute(request);
+
+    result = request.execute(new StreamResponse(stream));
+
+    // expired access token?
+    if (result.statusCode() == 401) {
+      m_Connection.authentication().refresh();
+      result = request.execute(new StreamResponse(stream));
+    }
+
+    // expired refresh token?
+    if (result.statusCode() == 401) {
+      m_Connection.authentication().obtain();
+      result = request.execute(new StreamResponse(stream));
     }
 
     return result;
