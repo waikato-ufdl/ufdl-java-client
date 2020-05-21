@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
@@ -363,6 +364,38 @@ public class Datasets
     response = download(request, output);
     if (response.ok())
       return true;
+    else
+      throw new FailedRequestException("Failed to get file from dataset " + pk + ": " + name, response);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset (downloads it from the server).
+   *
+   * @param dataset	the dataset
+   * @param name	the name used in the dataset
+   * @return		the file content as byte array
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public byte[] getFile(Dataset dataset, String name) throws Exception {
+    return getFile(dataset.getPK(), name);
+  }
+
+  /**
+   * Retrieves the specified file from the dataset (downloads it from the server).
+   *
+   * @param pk		the dataset ID
+   * @param name	the name used in the dataset
+   * @return		the file content as byte array
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public byte[] getFile(int pk, String name) throws Exception {
+    Request 		request;
+    BasicResponse 	response;
+
+    request = newGet(getPath() + pk + "/files/" + name);
+    response = execute(request);
+    if (response.ok())
+      return response.body();
     else
       throw new FailedRequestException("Failed to get file from dataset " + pk + ": " + name, response);
   }
