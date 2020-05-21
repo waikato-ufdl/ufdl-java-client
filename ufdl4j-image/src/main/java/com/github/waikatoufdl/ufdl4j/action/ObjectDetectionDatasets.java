@@ -204,6 +204,15 @@ public class ObjectDetectionDatasets
   }
 
   /**
+   * Just a convenience class for multiple annotations.
+   */
+  public static class Annotations
+    extends ArrayList<Annotation> {
+
+    private static final long serialVersionUID = -7226329137008392231L;
+  }
+
+  /**
    * Container class for object detection dataset information.
    */
   public static class ObjectDetectionDataset
@@ -255,7 +264,7 @@ public class ObjectDetectionDatasets
    * @return		the annotations (image -> annotations)
    * @throws Exception	if request fails
    */
-  public Map<String,List<Annotation>> getAnnotations(Dataset dataset) throws Exception {
+  public Map<String,Annotations> getAnnotations(Dataset dataset) throws Exception {
     return getAnnotations(dataset.getPK());
   }
 
@@ -266,14 +275,14 @@ public class ObjectDetectionDatasets
    * @return		the annotations (image -> annotations)
    * @throws Exception	if request fails
    */
-  public Map<String,List<Annotation>> getAnnotations(int pk) throws Exception {
-    Map<String,List<Annotation>>	result;
-    Request 				request;
-    JsonResponse 			response;
-    JsonObject 				obj;
-    JsonObject				img;
-    JsonArray 				anns;
-    List				list;
+  public Map<String,Annotations> getAnnotations(int pk) throws Exception {
+    Map<String,Annotations>	result;
+    Request 			request;
+    JsonResponse 		response;
+    JsonObject 			obj;
+    JsonObject			img;
+    JsonArray 			anns;
+    List			list;
 
     getLogger().info("loading annotations for: " + pk);
 
@@ -284,7 +293,7 @@ public class ObjectDetectionDatasets
       result = new HashMap<>();
       obj = response.json().getAsJsonObject();
       for (String key : obj.keySet()) {
-	result.put(key, new ArrayList<>());
+	result.put(key, new Annotations());
 	img  = obj.getAsJsonObject(key);
 	if (img.has("annotations")) {
 	  anns = img.getAsJsonArray("annotations");
@@ -311,7 +320,7 @@ public class ObjectDetectionDatasets
    * @return		the annotations
    * @throws Exception	if request fails
    */
-  public List<Annotation> getAnnotations(Dataset dataset, String name) throws Exception {
+  public Annotations getAnnotations(Dataset dataset, String name) throws Exception {
     return getAnnotations(dataset.getPK(), name);
   }
 
@@ -323,8 +332,8 @@ public class ObjectDetectionDatasets
    * @return		the annotations
    * @throws Exception	if request fails
    */
-  public List<Annotation> getAnnotations(int pk, String name) throws Exception {
-    List<Annotation>	result;
+  public Annotations getAnnotations(int pk, String name) throws Exception {
+    Annotations		result;
     Request 		request;
     JsonResponse 	response;
     List		list;
@@ -335,7 +344,7 @@ public class ObjectDetectionDatasets
     request  = newGet(getPath() + pk + "/annotations/" + name);
     response = execute(request);
     if (response.ok()) {
-      result = new ArrayList<>();
+      result = new Annotations();
       list = JsonUtils.asList(response.json().getAsJsonArray());
       for (Object item: list) {
         if (item instanceof JsonObject)
@@ -358,7 +367,7 @@ public class ObjectDetectionDatasets
    * @return 		true if successful
    * @throws Exception	if request fails
    */
-  public boolean setAnnotations(Dataset dataset, String name, List<Annotation> annotations) throws Exception {
+  public boolean setAnnotations(Dataset dataset, String name, Annotations annotations) throws Exception {
     return setAnnotations(dataset.getPK(), name, annotations);
   }
 
@@ -371,7 +380,7 @@ public class ObjectDetectionDatasets
    * @return 		true if successful
    * @throws Exception	if request fails
    */
-  public boolean setAnnotations(int pk, String name, List<Annotation> annotations) throws Exception {
+  public boolean setAnnotations(int pk, String name, Annotations annotations) throws Exception {
     boolean		result;
     Request 		request;
     JsonObject		data;

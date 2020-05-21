@@ -9,10 +9,10 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotation;
+import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -72,7 +72,7 @@ public class ManagingObjectDetectionDatasets {
         System.out.println("--> adding file");
         action.addFile(newDataset, file, file.getName());
         // add annotations
-	List<Annotation> annotations = new ArrayList<>();
+	Annotations annotations = new Annotations();
 	int num = rnd.nextInt(10) + 1;
 	for (int n = 0; n < num; n++) {
 	  annotations.add(new Annotation(
@@ -91,7 +91,7 @@ public class ManagingObjectDetectionDatasets {
 
     // get all annotations
     System.out.println("--> get all annotations");
-    Map<String,List<Annotation>> all = action.getAnnotations(newDataset);
+    Map<String,Annotations> all = action.getAnnotations(newDataset);
     System.out.println(all);
 
     // get annotations for second image
