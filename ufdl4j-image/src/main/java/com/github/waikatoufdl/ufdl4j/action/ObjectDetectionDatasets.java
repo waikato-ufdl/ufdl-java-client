@@ -35,6 +35,8 @@ public class ObjectDetectionDatasets
   public static class Polygon
     extends AbstractJsonObjectWrapper {
 
+    private static final long serialVersionUID = -3602500084615096872L;
+
     /**
      * Initializes the wrapper.
      *
@@ -45,13 +47,45 @@ public class ObjectDetectionDatasets
     }
 
     /**
+     * Initializes the wrapper.
+     *
+     * @param coordinates	the list of x/y pairs
+     */
+    public Polygon(List<int[]> coordinates) {
+      super(new JsonObject());
+      JsonArray points = new JsonArray();
+      for (int[] coordinate: coordinates) {
+        JsonArray pair = new JsonArray();
+        pair.add(coordinate[0]);
+        pair.add(coordinate[1]);
+        points.add(pair);
+      }
+      m_Data.add("points", points);
+    }
+
+    /**
      * Returns the coordinates, list of x/y pairs.
      *
      * @return		the coordinates
      */
     public List<int[]> getCoordinates() {
-      // TODO
-      return new ArrayList<>();
+      List<int[]>	result;
+      JsonArray		points;
+      JsonArray		pair;
+      int		i;
+
+      result = new ArrayList<>();
+
+      if (m_Data.has("points")) {
+        points = m_Data.getAsJsonArray("points");
+        for (i = 0; i < points.size(); i++) {
+          pair = points.get(i).getAsJsonArray();
+          if (pair.size() == 2)
+	    result.add(new int[]{pair.get(0).getAsInt(), pair.get(1).getAsInt()});
+	}
+      }
+
+      return result;
     }
 
     /**
@@ -217,6 +251,8 @@ public class ObjectDetectionDatasets
    */
   public static class ObjectDetectionDataset
     extends Dataset {
+
+    private static final long serialVersionUID = 6194673928089676350L;
 
     /**
      * Initializes the dataset.
