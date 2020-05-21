@@ -99,7 +99,7 @@ public class ImageClassificationDatasets
     List			list;
     List<String>		categories;
 
-    getLogger().info("loading categories for id: " + pk);
+    getLogger().info("loading categories for: " + pk);
 
     result   = null;
     request  = newGet(getPath() + pk + "/categories");
@@ -110,7 +110,7 @@ public class ImageClassificationDatasets
       for (String key: obj.keySet()) {
         categories = new ArrayList<>();
         result.put(key, categories);
-        list = JsonUtils.getList(obj, key, new ArrayList());
+        list = JsonUtils.asList(obj, key, new ArrayList());
         for (Object item: list)
           categories.add("" + item);
       }
@@ -150,7 +150,7 @@ public class ImageClassificationDatasets
     JsonResponse	response;
     Request 		request;
 
-    getLogger().info("adding categories to id: " + pk);
+    getLogger().info("adding categories to: " + pk);
 
     result   = false;
     data     = new JsonObject();
@@ -163,7 +163,7 @@ public class ImageClassificationDatasets
       result = true;
     }
     else {
-      throw new FailedRequestException("Failed to add categories for: " + pk, response);
+      throw new FailedRequestException("Failed to add categories to: " + pk, response);
     }
 
     return result;
@@ -196,7 +196,7 @@ public class ImageClassificationDatasets
     JsonResponse	response;
     Request 		request;
 
-    getLogger().info("removing categories from id: " + pk);
+    getLogger().info("removing categories from: " + pk);
 
     // TODO UFDL API needs changing, using PATCH with JSON body
 

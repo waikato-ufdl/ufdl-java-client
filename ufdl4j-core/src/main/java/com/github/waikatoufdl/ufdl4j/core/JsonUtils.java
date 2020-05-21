@@ -44,34 +44,46 @@ public class JsonUtils {
    * @param defValue	the default value
    * @return		the value associated with the key or, if not found or not a string, the default value
    */
-  public static List getList(JsonObject object, String key, List defValue) {
-    List		list;
-    int			i;
-    JsonArray array;
-    JsonPrimitive prim;
+  public static List asList(JsonObject object, String key, List defValue) {
+    List 	list;
 
     if (object.has(key) && object.get(key).isJsonArray()) {
-      list  = new ArrayList();
-      array = object.getAsJsonArray(key);
-      for (i = 0; i < array.size(); i++) {
-        if (array.get(i).isJsonPrimitive()) {
-          prim = array.get(i).getAsJsonPrimitive();
-          if (prim.isString())
-	    list.add(prim.getAsString());
-          else if (prim.isBoolean())
-	    list.add(prim.getAsBoolean());
-          else if (prim.isNumber())
-            list.add(prim.getAsNumber());
-	}
-	else {
-          list.add(array.get(i));
-	}
-      }
+      list = asList(object.getAsJsonArray(key));
       return list;
     }
     else {
       return defValue;
     }
+  }
+
+  /**
+   * Returns the specified array as list. In case of primitives (boolean/string/number),
+   * they get returned as such, otherwise as JsonElement.
+   *
+   * @param array 	the array to process
+   * @return		the value associated with the key or, if not found or not a string, the default value
+   */
+  public static List asList(JsonArray array) {
+    List		list;
+    int			i;
+    JsonPrimitive prim;
+
+    list  = new ArrayList();
+    for (i = 0; i < array.size(); i++) {
+      if (array.get(i).isJsonPrimitive()) {
+	prim = array.get(i).getAsJsonPrimitive();
+	if (prim.isString())
+	  list.add(prim.getAsString());
+	else if (prim.isBoolean())
+	  list.add(prim.getAsBoolean());
+	else if (prim.isNumber())
+	  list.add(prim.getAsNumber());
+      }
+      else {
+	list.add(array.get(i));
+      }
+    }
+    return list;
   }
 
   /**

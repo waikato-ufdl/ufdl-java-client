@@ -293,7 +293,7 @@ public abstract class AbstractJsonObjectWrapper
    * @return		the value associated with the key or, if not found or not a string, the default value
    */
   protected List getList(String key, List defValue) {
-    return JsonUtils.getList(m_Data, key, defValue);
+    return JsonUtils.asList(m_Data, key, defValue);
   }
 
   /**
