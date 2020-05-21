@@ -5,14 +5,11 @@
 
 package com.github.waikatoufdl.ufdl4j.core;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -296,33 +293,7 @@ public abstract class AbstractJsonObjectWrapper
    * @return		the value associated with the key or, if not found or not a string, the default value
    */
   protected List getList(String key, List defValue) {
-    List		list;
-    int			i;
-    JsonArray		array;
-    JsonPrimitive	prim;
-
-    if (m_Data.has(key) && m_Data.get(key).isJsonArray()) {
-      list  = new ArrayList();
-      array = m_Data.getAsJsonArray(key);
-      for (i = 0; i < array.size(); i++) {
-        if (array.get(i).isJsonPrimitive()) {
-          prim = array.get(i).getAsJsonPrimitive();
-          if (prim.isString())
-	    list.add(prim.getAsString());
-          else if (prim.isBoolean())
-	    list.add(prim.getAsBoolean());
-          else if (prim.isNumber())
-            list.add(prim.getAsNumber());
-	}
-	else {
-          list.add(array.get(i));
-	}
-      }
-      return list;
-    }
-    else {
-      return defValue;
-    }
+    return JsonUtils.getList(m_Data, key, defValue);
   }
 
   /**
@@ -332,6 +303,15 @@ public abstract class AbstractJsonObjectWrapper
    */
   public JsonObject getData() {
     return m_Data;
+  }
+
+  /**
+   * Returns the stored data as pretty printed string.
+   *
+   * @return		the pretty json
+   */
+  public String toPrettyPrint() {
+    return JsonUtils.prettyPrint(m_Data);
   }
 
   /**

@@ -11,6 +11,7 @@ import com.github.waikatoufdl.ufdl4j.action.ImageClassificationDatasets;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -66,6 +67,15 @@ public class ManagingImageClassificationDatasets {
         File file = new File(args[i]);
         System.out.println("--> adding file");
         action.addFile(newDataset, file, file.getName());
+        // add categories
+        action.addCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label1", "label2"));
+        // remove categories
+	/* TODO UFDL API needs changing
+        if (i % 2 == 0)
+	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label1"));
+        else
+	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label2"));
+	  */
       }
     }
 
