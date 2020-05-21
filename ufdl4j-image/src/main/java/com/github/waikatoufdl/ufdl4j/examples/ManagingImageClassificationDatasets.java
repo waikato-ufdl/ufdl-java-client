@@ -13,6 +13,7 @@ import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Example code for managing image classification datasets.
@@ -78,6 +79,11 @@ public class ManagingImageClassificationDatasets {
 	  */
       }
     }
+
+    // get categories
+    System.out.println("--> downloading categories");
+    Map<String,List<String>> categories = action.getCategories(newDataset);
+    System.out.println(categories);
 
     // download dataset
     System.out.println("--> downloading dataset");

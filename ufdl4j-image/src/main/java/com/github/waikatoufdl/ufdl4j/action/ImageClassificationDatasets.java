@@ -10,11 +10,11 @@ import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,9 +93,11 @@ public class ImageClassificationDatasets
    */
   public Map<String,List<String>> getCategories(int pk) throws Exception {
     Map<String,List<String>>	result;
-    JsonResponse 		response;
-    JsonElement 		element;
     Request 			request;
+    JsonResponse 		response;
+    JsonObject			obj;
+    List			list;
+    List<String>		categories;
 
     getLogger().info("loading categories for id: " + pk);
 
@@ -103,9 +105,14 @@ public class ImageClassificationDatasets
     request  = newGet(getPath() + pk + "/categories");
     response = execute(request);
     if (response.ok()) {
-      element = response.json();
-      if (element.isJsonObject()) {
-        System.out.println(JsonUtils.prettyPrint(element));
+      obj = response.json().getAsJsonObject();
+      result = new HashMap<>();
+      for (String key: obj.keySet()) {
+        categories = new ArrayList<>();
+        result.put(key, categories);
+        list = JsonUtils.getList(obj, key, new ArrayList());
+        for (Object item: list)
+          categories.add("" + item);
       }
     }
     else {
