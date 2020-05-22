@@ -154,9 +154,10 @@ public class ImageClassificationDatasets
 
     result   = false;
     data     = new JsonObject();
+    data.addProperty("method", "add");
     data.add("images", JsonUtils.toArray(images));
     data.add("categories", JsonUtils.toArray(categories));
-    request  = newPost(getPath() + pk + "/categories")
+    request  = newPatch(getPath() + pk + "/categories")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
@@ -193,17 +194,19 @@ public class ImageClassificationDatasets
    */
   public boolean removeCategories(int pk, List<String> images, List<String> categories) throws Exception {
     boolean		result;
+    JsonObject		data;
     JsonResponse	response;
     Request 		request;
 
     getLogger().info("removing categories from: " + pk);
 
-    // TODO UFDL API needs changing, using PATCH with JSON body
-
     result   = false;
-    request  = newDelete(getPath() + pk + "/categories")
-      .parameter("images", images)
-      .parameter("categories", categories);
+    data     = new JsonObject();
+    data.addProperty("method", "remove");
+    data.add("images", JsonUtils.toArray(images));
+    data.add("categories", JsonUtils.toArray(categories));
+    request  = newPatch(getPath() + pk + "/categories")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       result = true;

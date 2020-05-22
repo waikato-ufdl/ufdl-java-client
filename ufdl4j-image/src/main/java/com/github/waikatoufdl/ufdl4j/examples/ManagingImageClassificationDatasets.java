@@ -71,12 +71,10 @@ public class ManagingImageClassificationDatasets {
         // add categories
         action.addCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label1", "label2"));
         // remove categories
-	/* TODO UFDL API needs changing
         if (i % 2 == 0)
 	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label1"));
         else
 	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label2"));
-	  */
       }
     }
 
