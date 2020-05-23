@@ -1,6 +1,6 @@
 /*
- * Storage.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * LocalStorage.java
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.auth;
@@ -18,12 +18,13 @@ import java.io.FileWriter;
 import java.util.logging.Level;
 
 /**
- * For managing storage of tokens.
+ * For managing storage of tokens in the local file system.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
-public class Storage
-  extends AbstractLoggingObject {
+public class LocalStorage
+  extends AbstractLoggingObject
+  implements TokenStorageHandler {
 
   private static final long serialVersionUID = 8396124600663114923L;
 

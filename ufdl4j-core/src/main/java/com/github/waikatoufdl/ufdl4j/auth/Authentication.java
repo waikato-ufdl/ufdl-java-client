@@ -1,6 +1,6 @@
 /*
  * Authentication.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.auth;
@@ -48,7 +48,7 @@ public class Authentication
   protected Tokens m_Tokens;
 
   /** for handling the storage of the tokens. */
-  protected Storage m_Storage;
+  protected TokenStorageHandler m_Storage;
 
   /**
    * Initializes the authentication with empty user/password.
@@ -64,11 +64,21 @@ public class Authentication
    * @param password	the password to use
    */
   public Authentication(String user, String password) {
+    this(user, password, new LocalStorage());
+  }
+
+  /**
+   * Initializes the authentication.
+   *
+   * @param user	the user to use
+   * @param password	the password to use
+   */
+  public Authentication(String user, String password, TokenStorageHandler storage) {
     m_User     = user;
     m_Password = password;
     m_Server   = null;
     m_Tokens   = null;
-    m_Storage  = new Storage();
+    m_Storage  = storage;
   }
 
   /**

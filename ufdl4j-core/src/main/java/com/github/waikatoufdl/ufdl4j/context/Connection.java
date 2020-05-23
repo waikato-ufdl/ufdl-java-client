@@ -1,12 +1,14 @@
 /*
  * Connection.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.context;
 
 import com.github.fracpete.requests4j.Session;
 import com.github.waikatoufdl.ufdl4j.auth.Authentication;
+import com.github.waikatoufdl.ufdl4j.auth.LocalStorage;
+import com.github.waikatoufdl.ufdl4j.auth.TokenStorageHandler;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
 /**
@@ -69,7 +71,19 @@ public class Connection
    * @return		the client itself
    */
   public Connection authentication(String user, String password) {
-    m_Authentication = new Authentication(user, password);
+    return authentication(user, password, new LocalStorage());
+  }
+
+  /**
+   * Stores the authentication information.
+   *
+   * @param user	the user
+   * @param password	the password
+   * @param storage 	the handler for storing the tokens
+   * @return		the client itself
+   */
+  public Connection authentication(String user, String password, TokenStorageHandler storage) {
+    m_Authentication = new Authentication(user, password, storage);
     m_Authentication.setServer(m_Server);
     return this;
   }

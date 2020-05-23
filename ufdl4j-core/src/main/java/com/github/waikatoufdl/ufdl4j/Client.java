@@ -10,6 +10,8 @@ import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
 import com.github.waikatoufdl.ufdl4j.action.Teams;
 import com.github.waikatoufdl.ufdl4j.action.Users;
+import com.github.waikatoufdl.ufdl4j.auth.LocalStorage;
+import com.github.waikatoufdl.ufdl4j.auth.TokenStorageHandler;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
@@ -70,9 +72,21 @@ public class Client
    * @param password 	the password
    */
   public Client(String host, String user, String password) {
+    this(host, user, password, new LocalStorage());
+  }
+
+  /**
+   * Initializes the client.
+   *
+   * @param host 	the host to use
+   * @param user 	the user
+   * @param password 	the password
+   * @param storage 	the handler for the tokens
+   */
+  public Client(String host, String user, String password, TokenStorageHandler storage) {
     this();
     connection().server(host);
-    connection().authentication(user, password);
+    connection().authentication(user, password, storage);
   }
 
   /**
