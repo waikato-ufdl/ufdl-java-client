@@ -195,18 +195,19 @@ public abstract class AbstractAction
     JsonResponse 	result;
 
     preExecute(request);
-
     result = request.execute(new JsonResponse());
 
     // expired access token?
     if (result.statusCode() == 401) {
       m_Connection.authentication().refresh();
+      preExecute(request);
       result = request.execute(new JsonResponse());
     }
 
     // expired refresh token?
     if (result.statusCode() == 401) {
       m_Connection.authentication().obtain();
+      preExecute(request);
       result = request.execute(new JsonResponse());
     }
 
