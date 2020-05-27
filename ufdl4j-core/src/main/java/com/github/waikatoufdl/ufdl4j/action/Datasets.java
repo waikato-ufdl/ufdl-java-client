@@ -267,7 +267,7 @@ public class Datasets
    * Creates the dataset.
    *
    * @param dataset 	the dataset name
-   * @param version 	the version of the dataset
+   * @param description the description of the dataset
    * @param project 	the project PK this dataset belongs to
    * @param licence 	the license for the dataset
    * @param isPublic 	whether the dataset is public
@@ -275,7 +275,7 @@ public class Datasets
    * @return		the dataset object, null if failed to create
    * @throws Exception	if request fails or dataset already exists
    */
-  public Dataset create(String dataset, int version, int project, String licence, boolean isPublic, String tags) throws Exception {
+  public Dataset create(String dataset, String description, int project, String licence, boolean isPublic, String tags) throws Exception {
     Dataset		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -285,7 +285,7 @@ public class Datasets
 
     data = new JsonObject();
     data.addProperty("name", dataset);
-    data.addProperty("version", version);
+    data.addProperty("description", description);
     data.addProperty("project", project);
     data.addProperty("licence", licence);
     data.addProperty("is_public", isPublic);

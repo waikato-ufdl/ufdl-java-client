@@ -59,7 +59,7 @@ public class ManagingImageClassificationDatasets {
     System.out.println("--> creating dataset");
     String newName = "dummy-" + System.currentTimeMillis();
     Dataset newDataset = action.create(
-      newName, 1, project, "GPLv3", true, "");
+      newName, "image classification dataset", project, "GPLv3", true, "");
     System.out.println(newDataset);
 
     // add files to dataset

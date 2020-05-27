@@ -50,7 +50,7 @@ public class ManagingDatasets {
     // create dataset
     System.out.println("--> creating dataset");
     Dataset newDataset = client.datasets().create(
-      "dummy-" + System.currentTimeMillis(), 1, project, "GPLv3", true, "");
+      "dummy-" + System.currentTimeMillis(), "dataset", project, "GPLv3", true, "");
     System.out.println(newDataset);
 
     client.close();
