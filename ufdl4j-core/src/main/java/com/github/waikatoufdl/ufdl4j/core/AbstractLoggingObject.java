@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
 public abstract class AbstractLoggingObject
-  implements Serializable {
+  implements Serializable, LoggingObject {
 
   private static final long serialVersionUID = 2158229474578643464L;
 
@@ -26,6 +26,7 @@ public abstract class AbstractLoggingObject
    *
    * @return		the logger
    */
+  @Override
   public synchronized Logger getLogger() {
     if (m_Logger == null)
       m_Logger = Logging.getLogger(getClass());
