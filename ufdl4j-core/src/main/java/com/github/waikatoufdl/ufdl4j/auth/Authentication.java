@@ -140,6 +140,15 @@ public class Authentication
   }
 
   /**
+   * Returns the storage handler.
+   *
+   * @return		the handler
+   */
+  public TokenStorageHandler storage() {
+    return m_Storage;
+  }
+
+  /**
    * Obtains the tokens, using the supplied user/password.
    *
    * @return		null if successful, otherwise error message
