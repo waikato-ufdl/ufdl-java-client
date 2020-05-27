@@ -179,6 +179,9 @@ public class LocalStorage
       getLogger().info("No data stored user '" + context.getUser() + ".");
     }
 
+    getLogger().fine("refresh token: " + result.getRefreshToken());
+    getLogger().fine("access token: " + result.getAccessToken());
+
     return result;
   }
 
@@ -205,6 +208,9 @@ public class LocalStorage
     auth.addProperty(KEY_REFRESH, tokens.getRefreshToken());
     auth.addProperty(KEY_ACCESS, tokens.getAccessToken());
     data.add(context.getUser(), auth);
+
+    getLogger().fine("refresh token: " + tokens.getRefreshToken());
+    getLogger().fine("access token: " + tokens.getAccessToken());
 
     return store(data);
   }
