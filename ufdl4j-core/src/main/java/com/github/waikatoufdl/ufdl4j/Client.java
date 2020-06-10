@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j;
 import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
+import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
 import com.github.waikatoufdl.ufdl4j.action.Teams;
 import com.github.waikatoufdl.ufdl4j.action.Users;
@@ -48,6 +49,9 @@ public class Client
   /** for managing the licenses. */
   protected Licenses m_Licenses;
 
+  /** for managing the log. */
+  protected Log m_Log;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -63,6 +67,7 @@ public class Client
       m_Projects = action(Projects.class);
       m_Teams    = action(Teams.class);
       m_Licenses = action(Licenses.class);
+      m_Log      = action(Log.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -146,6 +151,15 @@ public class Client
    */
   public Licenses licenses() {
     return m_Licenses;
+  }
+
+  /**
+   * Returns the log action.
+   *
+   * @return		the log action
+   */
+  public Log log() {
+    return m_Log;
   }
 
   /**
