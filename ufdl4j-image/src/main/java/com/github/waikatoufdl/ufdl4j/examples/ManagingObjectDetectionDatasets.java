@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotation;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
@@ -58,11 +59,14 @@ public class ManagingObjectDetectionDatasets {
     // get action
     ObjectDetectionDatasets action = client.action(ObjectDetectionDatasets.class);
 
+    // load license
+    License gpl3 = client.licenses().load("GPL3");
+
     // create dataset
     System.out.println("--> creating dataset");
     String newName = "dummy-" + System.currentTimeMillis();
     Dataset newDataset = action.create(
-      newName, "object detection dataset", project, "GPLv3", true, "");
+      newName, "object detection dataset", project, gpl3, true, "");
     System.out.println(newDataset);
 
     // add files to dataset

@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.examples;
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
 import com.github.waikatoufdl.ufdl4j.action.ImageClassificationDatasets;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 
 import java.io.File;
@@ -55,11 +56,14 @@ public class ManagingImageClassificationDatasets {
     // get action
     ImageClassificationDatasets action = client.action(ImageClassificationDatasets.class);
 
+    // load license
+    License gpl3 = client.licenses().load("GPL3");
+
     // create dataset
     System.out.println("--> creating dataset");
     String newName = "dummy-" + System.currentTimeMillis();
     Dataset newDataset = action.create(
-      newName, "image classification dataset", project, "GPLv3", true, "");
+      newName, "image classification dataset", project, gpl3, true, "");
     System.out.println(newDataset);
 
     // add files to dataset
