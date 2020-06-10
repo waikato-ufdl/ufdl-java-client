@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -24,12 +23,6 @@ public abstract class AbstractJsonObjectWrapper
 
   private static final long serialVersionUID = 8986254238262104142L;
 
-  /** the date/time format to use. */
-  public final static String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSVV";
-
-  /** for parsing date/time strings. */
-  protected transient DateTimeFormatter m_DateTimeFormatter;
-
   /** the underlying JSON object. */
   protected JsonObject m_Data;
 
@@ -42,17 +35,6 @@ public abstract class AbstractJsonObjectWrapper
     if (data == null)
       throw new IllegalArgumentException("JSON Object cannot be null!");
     m_Data = data;
-  }
-
-  /**
-   * Returns the date formatter/parser.
-   *
-   * @return		the instance
-   */
-  protected synchronized DateTimeFormatter getDateTimeFormatter() {
-    if (m_DateTimeFormatter == null)
-      m_DateTimeFormatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
-    return m_DateTimeFormatter;
   }
 
   /**
@@ -240,7 +222,7 @@ public abstract class AbstractJsonObjectWrapper
       throw new IllegalStateException("Key does not exist: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString()) {
       try {
-	return LocalDateTime.parse(m_Data.get(key).getAsString(), getDateTimeFormatter());
+	return LocalDateTime.parse(m_Data.get(key).getAsString(), DateTimeUtils.getDateTimeFormatter());
       }
       catch (Exception e) {
         throw new IllegalStateException("Failed to parse key '" + key + "' as date/time!", e);
@@ -257,12 +239,12 @@ public abstract class AbstractJsonObjectWrapper
    * @param key		the key to retrieve as date/time
    * @param defValue	the default value
    * @return		the value associated with the key or, if not found or not a date or failed to parse, the default value
-   * @see		#getDateTimeFormatter()
+   * @see		DateTimeUtils#getDateTimeFormatter()
    */
   protected LocalDateTime getDateTime(String key, LocalDateTime defValue) {
     try {
       if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString())
-	return LocalDateTime.parse(m_Data.get(key).getAsString(), getDateTimeFormatter());
+	return LocalDateTime.parse(m_Data.get(key).getAsString(), DateTimeUtils.getDateTimeFormatter());
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to parse key '" + key + "' as date/time!", e);
