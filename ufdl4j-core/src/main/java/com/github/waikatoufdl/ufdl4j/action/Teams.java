@@ -300,25 +300,38 @@ public class Teams
    * @param team 	the team to add the user to
    * @param user 	the user to add
    * @param permissions the permissions to use
+   * @throws Exception	if request fails, eg invalid team PK
    */
   public boolean addMembership(Team team, User user, Permissions permissions) throws Exception {
+    return addMembership(team.getPK(), user, permissions);
+  }
+
+  /**
+   * Adds the membership of a user to a team.
+   *
+   * @param pk 		the team PK to add the user to
+   * @param user 	the user to add
+   * @param permissions the permissions to use
+   * @throws Exception	if request fails, eg invalid team PK
+   */
+  public boolean addMembership(int pk, User user, Permissions permissions) throws Exception {
     JsonObject		data;
     JsonResponse 	response;
     Request 		request;
 
-    getLogger().info("adding membership of user '" + user.getUserName() + "' to team '" + getName());
+    getLogger().info("adding membership of user '" + user.getUserName() + "' to team '" + pk);
 
     data     = new JsonObject();
     data.addProperty("method", "add");
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
-    request  = newPatch(getPath() + team.getPK() + "/memberships")
+    request  = newPatch(getPath() + pk + "/memberships")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to add user '" + user.getUserName() + "' to team '" + getName() + "'!", response);
+      throw new FailedRequestException("Failed to add user '" + user.getUserName() + "' to team '" + pk + "'!", response);
   }
 
   /**
@@ -327,25 +340,38 @@ public class Teams
    * @param team 	the team to add the user to
    * @param user 	the user to add
    * @param permissions the permissions to use
+   * @throws Exception	if request fails, eg invalid team PK
    */
   public boolean updateMembership(Team team, User user, Permissions permissions) throws Exception {
+    return updateMembership(team.getPK(), user, permissions);
+  }
+
+  /**
+   * Updates the membership of user in a team.
+   *
+   * @param pk 		the team PK to add the user to
+   * @param user 	the user to add
+   * @param permissions the permissions to use
+   * @throws Exception	if request fails, eg invalid team PK
+   */
+  public boolean updateMembership(int pk, User user, Permissions permissions) throws Exception {
     JsonObject		data;
     JsonResponse 	response;
     Request 		request;
 
-    getLogger().info("updating membership of user '" + user.getUserName() + "' in team '" + getName());
+    getLogger().info("updating membership of user '" + user.getUserName() + "' in team '" + pk);
 
     data     = new JsonObject();
     data.addProperty("method", "update");
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
-    request  = newPatch(getPath() + team.getPK() + "/memberships")
+    request  = newPatch(getPath() + pk + "/memberships")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to update membership of user '" + user.getUserName() + "' in team '" + getName() + "'!", response);
+      throw new FailedRequestException("Failed to update membership of user '" + user.getUserName() + "' in team '" + pk + "'!", response);
   }
 
   /**
@@ -353,23 +379,35 @@ public class Teams
    *
    * @param team 	the team to add the user to
    * @param user 	the user to add
+   * @throws Exception	if request fails, eg invalid team PK
    */
   public boolean removeMembership(Team team, User user) throws Exception {
+    return removeMembership(team.getPK(), user);
+  }
+
+  /**
+   * Removes the membership of user from a team.
+   *
+   * @param pk 		the team pk to remove the user from
+   * @param user 	the user to add
+   * @throws Exception	if request fails, eg invalid team PK
+   */
+  public boolean removeMembership(int pk, User user) throws Exception {
     JsonObject		data;
     JsonResponse 	response;
     Request 		request;
 
-    getLogger().info("removing membership of user '" + user.getUserName() + "' from team '" + getName());
+    getLogger().info("removing membership of user '" + user.getUserName() + "' from team '" + pk);
 
     data     = new JsonObject();
     data.addProperty("method", "remove");
     data.addProperty("username", user.getUserName());
-    request  = newPatch(getPath() + team.getPK() + "/memberships")
+    request  = newPatch(getPath() + pk + "/memberships")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to remove membership of user '" + user.getUserName() + "' from team '" + getName() + "'!", response);
+      throw new FailedRequestException("Failed to remove membership of user '" + user.getUserName() + "' from team '" + pk + "'!", response);
   }
 }
