@@ -295,27 +295,81 @@ public class Teams
   }
 
   /**
-   * Adds the user to the team.
+   * Adds the membership of a user to a team.
    *
    * @param team 	the team to add the user to
    * @param user 	the user to add
+   * @param permissions the permissions to use
    */
-  public boolean addMember(Team team, User user, Permissions permissions) throws Exception {
+  public boolean addMembership(Team team, User user, Permissions permissions) throws Exception {
     JsonObject		data;
     JsonResponse 	response;
     Request 		request;
 
-    getLogger().info("adding user '" + user.getUserName() + "' to team '" + getName());
+    getLogger().info("adding membership of user '" + user.getUserName() + "' to team '" + getName());
 
     data     = new JsonObject();
+    data.addProperty("method", "add");
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
-    request  = newPost(getPath() + team.getPK() + "/add-member")
+    request  = newPatch(getPath() + team.getPK() + "/memberships")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to added user '" + user.getUserName() + "' to team '" + getName() + "'!", response);
+      throw new FailedRequestException("Failed to add user '" + user.getUserName() + "' to team '" + getName() + "'!", response);
+  }
+
+  /**
+   * Updates the membership of user in a team.
+   *
+   * @param team 	the team to add the user to
+   * @param user 	the user to add
+   * @param permissions the permissions to use
+   */
+  public boolean updateMembership(Team team, User user, Permissions permissions) throws Exception {
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("updating membership of user '" + user.getUserName() + "' in team '" + getName());
+
+    data     = new JsonObject();
+    data.addProperty("method", "update");
+    data.addProperty("username", user.getUserName());
+    data.addProperty("permissions", permissions.toString());
+    request  = newPatch(getPath() + team.getPK() + "/memberships")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to update membership of user '" + user.getUserName() + "' in team '" + getName() + "'!", response);
+  }
+
+  /**
+   * Removes the membership of user from a team.
+   *
+   * @param team 	the team to add the user to
+   * @param user 	the user to add
+   */
+  public boolean removeMembership(Team team, User user) throws Exception {
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("removing membership of user '" + user.getUserName() + "' from team '" + getName());
+
+    data     = new JsonObject();
+    data.addProperty("method", "remove");
+    data.addProperty("username", user.getUserName());
+    request  = newPatch(getPath() + team.getPK() + "/memberships")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to remove membership of user '" + user.getUserName() + "' from team '" + getName() + "'!", response);
   }
 }

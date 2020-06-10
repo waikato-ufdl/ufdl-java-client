@@ -51,12 +51,20 @@ public class ManagingTeams {
       System.out.println(blahteam);
     }
 
+    // load blahteam
+    System.out.println("--> loading team");
+    blahteam = client.teams().load("blahteam");
+
     // adding team member
     User admin = client.users().load("admin");
     if ((admin != null) && !blahteam.members().contains(admin.getUserName())) {
-      System.out.println("--> adding user: " + admin);
-      client.teams().addMember(blahteam, admin, Permissions.WRITE);
+      System.out.println("--> adding user to team: " + admin);
+      client.teams().addMembership(blahteam, admin, Permissions.WRITE);
     }
+    System.out.println("--> updating membership: " + admin);
+    client.teams().updateMembership(blahteam, admin, Permissions.READ);
+    System.out.println("--> removing membership: " + admin);
+    client.teams().removeMembership(blahteam, admin);
 
     // delete 'blahteam'
     System.out.println("deleting team '" + blahteam + "'? " + client.teams().delete(blahteam));
