@@ -6,7 +6,16 @@
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.Condition;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.Permission;
+
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Condition.SAME_LICENSE;
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation.LIABILITY;
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation.WARRANTY;
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Permission.COMMERCIAL_USE;
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Permission.DISTRIBUTION;
 
 /**
  * Example code for managing licenses.
@@ -35,8 +44,12 @@ public class ManagingLicenses {
 
     // list licenses (and check whether 'glp3' already exists)
     System.out.println("--> listing licenses");
-    for (License license : client.licenses().list())
+    License dummy = null;
+    for (License license : client.licenses().list()) {
       System.out.println(license);
+      if (license.getName().equals("DUMMY"))
+        dummy = license;
+    }
 
     // load license via primary key
     System.out.println("--> loading license with PK=1");
@@ -45,6 +58,37 @@ public class ManagingLicenses {
     // load license via name
     System.out.println("--> loading license with name=GPL3");
     System.out.println(client.licenses().load("GPL3"));
+
+    // create license
+    if (dummy == null) {
+      System.out.println("--> creating license with name=DUMMY");
+      dummy = client.licenses().create("DUMMY", "http://nowhere.com");
+      System.out.println(dummy);
+
+      // add sub-descriptors
+      System.out.println("--> adding sub-descriptions");
+      client.licenses().addSubDescriptors(
+        dummy,
+	new Permission[]{COMMERCIAL_USE, DISTRIBUTION},
+	new Condition[]{SAME_LICENSE},
+	new Limitation[]{LIABILITY, WARRANTY});
+      dummy = client.licenses().load(dummy.getPK());
+      System.out.println(dummy);
+
+      // remove sub-descriptors
+      System.out.println("--> removing sub-descriptions");
+      client.licenses().removeSubDescriptors(
+        dummy,
+	new Permission[]{DISTRIBUTION},
+	null,
+	null);
+      dummy = client.licenses().load(dummy.getPK());
+      System.out.println(dummy);
+    }
+
+    // delete license
+    System.out.println("--> deleting license: " + dummy);
+    System.out.println(client.licenses().delete(dummy));
 
     client.close();
   }

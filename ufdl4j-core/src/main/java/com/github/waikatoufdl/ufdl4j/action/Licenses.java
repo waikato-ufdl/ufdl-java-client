@@ -9,11 +9,14 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,14 +35,62 @@ public class Licenses
    * The available permissions.
    */
   public enum Permission {
-    DISTRIBUTION,
-    PATENT_USE,
-    PRIVATE_USE,
-    MODIFICATION,
-    COMMERCIAL_USE;
+    DISTRIBUTION("Distribution"),
+    PATENT_USE("Patent use"),
+    PRIVATE_USE("Private use"),
+    MODIFICATION("Modification"),
+    COMMERCIAL_USE("Commercial use");
 
+    /** the name string. */
+    private String m_Name;
+
+    /**
+     * Initializes the enum with the name string.
+     *
+     * @param name	the string to use
+     */
+    private Permission(String name) {
+      m_Name = name;
+    }
+
+    /**
+     * Returns the name string.
+     *
+     * @return		the string
+     */
+    public String getName() {
+      return m_Name;
+    }
+
+    /**
+     * Parses the string.
+     *
+     * @param s		the string to parse
+     * @return		the permission
+     */
     public static Permission parse(String s) {
+      for (Permission value : Permission.values()) {
+        if (value.getName().equals(s))
+          return value;
+      }
+
       return valueOf(s.toUpperCase().replace(" ", "_"));
+    }
+
+    /**
+     * Turns the enum array into a string array of associated names.
+     *
+     * @param values	the values to convert
+     * @return		the names
+     */
+    public static String[] toNames(Permission[] values) {
+      List<String>	result;
+
+      result = new ArrayList<>();
+      for (Permission value: values)
+        result.add(value.getName());
+
+      return result.toArray(new String[0]);
     }
   }
 
@@ -47,14 +98,64 @@ public class Licenses
    * The available conditions.
    */
   public enum Condition {
-    LICENSE_AND_COPYRIGHT_NOTICE,
-    SAME_LICENSE,
-    NETWORK_USE_IS_DISTRIBUTION,
-    STATE_CHANGES,
-    DISCLOSE_SOURCE;
+    LICENSE_AND_COPYRIGHT_NOTICE("License and copyright notice"),
+    SAME_LICENSE("Same license"),
+    SAME_LICENSE_LIBRARY("Same license (library)"),
+    SAME_LICENSE_FILE("Same license (file)"),
+    NETWORK_USE_IS_DISTRIBUTION("Network use is distribution"),
+    STATE_CHANGES("State changes"),
+    DISCLOSE_SOURCE("Disclose source");
 
+    /** the name string. */
+    private String m_Name;
+
+    /**
+     * Initializes the enum with the name string.
+     *
+     * @param name	the string to use
+     */
+    private Condition(String name) {
+      m_Name = name;
+    }
+
+    /**
+     * Returns the name string.
+     *
+     * @return		the string
+     */
+    public String getName() {
+      return m_Name;
+    }
+
+    /**
+     * Parses the string.
+     *
+     * @param s		the string to parse
+     * @return		the condition
+     */
     public static Condition parse(String s) {
+      for (Condition value : Condition.values()) {
+        if (value.getName().equals(s))
+          return value;
+      }
+
       return valueOf(s.toUpperCase().replace(" ", "_"));
+    }
+
+    /**
+     * Turns the enum array into a string array of associated names.
+     *
+     * @param values	the values to convert
+     * @return		the names
+     */
+    public static String[] toNames(Condition[] values) {
+      List<String>	result;
+
+      result = new ArrayList<>();
+      for (Condition value: values)
+        result.add(value.getName());
+
+      return result.toArray(new String[0]);
     }
   }
 
@@ -62,11 +163,61 @@ public class Licenses
    * The available limitations.
    */
   public enum Limitation {
-    LIABILITY,
-    WARRANTY;
+    LIABILITY("Liability"),
+    WARRANTY("Warranty"),
+    TRADEMARK_USE("Trademark use"),
+    PATENT_USE("Patent use");
 
+    /** the name string. */
+    private String m_Name;
+
+    /**
+     * Initializes the enum with the name string.
+     *
+     * @param name	the string to use
+     */
+    private Limitation(String name) {
+      m_Name = name;
+    }
+
+    /**
+     * Returns the name string.
+     *
+     * @return		the string
+     */
+    public String getName() {
+      return m_Name;
+    }
+
+    /**
+     * Parses the string.
+     *
+     * @param s		the string to parse
+     * @return		the limitation
+     */
     public static Limitation parse(String s) {
+      for (Limitation value : Limitation.values()) {
+        if (value.getName().equals(s))
+          return value;
+      }
+
       return valueOf(s.toUpperCase().replace(" ", "_"));
+    }
+
+    /**
+     * Turns the enum array into a string array of associated names.
+     *
+     * @param values	the values to convert
+     * @return		the names
+     */
+    public static String[] toNames(Limitation[] values) {
+      List<String>	result;
+
+      result = new ArrayList<>();
+      for (Limitation value: values)
+        result.add(value.getName());
+
+      return result.toArray(new String[0]);
     }
   }
 
@@ -255,6 +406,184 @@ public class Licenses
     }
 
     return result;
+  }
+
+  /**
+   * For creating a license.
+   *
+   * @param name	the name of the license
+   * @param url		the URL to the full text of the license
+   * @return		true if successfully created
+   * @throws Exception	if request fails
+   */
+  public License create(String name, String url) throws Exception {
+    License		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("creating license: " + name);
+
+    result   = null;
+    data     = new JsonObject();
+    data.addProperty("name", name);
+    data.addProperty("url", url);
+    request  = newPost(getPath())
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new License(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to create license: " + name, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * Generic method for modifying the sub-descriptors.
+   *
+   * @param pk		the PK of the license to modify
+   * @param method	the method (add/remove)
+   * @param type	the type (permission/condition/limitation)
+   * @param names	the names of the sub-descriptors
+   * @return		true if successful
+   * @throws Exception	if modification fails or invalid PK
+   */
+  protected boolean modifySubDescriptors(int pk, String method, String type, String[] names) throws Exception {
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    if (!(method.equals("add") || method.equals("remove")))
+      throw new IllegalArgumentException("Unknown subdescriptors method: " + method);
+    if (!(type.equals("permissions") || type.equals("conditions") || type.equals("limitations")))
+      throw new IllegalArgumentException("Unknown subdescriptors type: " + type);
+
+    data     = new JsonObject();
+    data.addProperty("method", method);
+    data.addProperty("type", type);
+    data.add("names", JsonUtils.toArray(Arrays.asList(names)));
+    request  = newPatch(getPath() + pk + "/subdescriptors")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to " + method + " " + type + " sub-descriptors for license " + pk, response);
+  }
+
+  /**
+   * Adds the the sub-descriptors to the license.
+   *
+   * @param license	the license to add to
+   * @param permissions the permissions to add, ignored if null
+   * @param conditions 	the conditions to add, ignored if null
+   * @param limitations the limitations to add, ignored if null
+   * @return		true if successful
+   * @throws Exception	if modification fails or invalid PK
+   */
+  public boolean addSubDescriptors(License license, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    return addSubDescriptors(license.getPK(), permissions, conditions, limitations);
+  }
+
+  /**
+   * Adds the the sub-descriptors to the license.
+   *
+   * @param pk 		the license pk to add to
+   * @param permissions the permissions to add, ignored if null
+   * @param conditions 	the conditions to add, ignored if null
+   * @param limitations the limitations to add, ignored if null
+   * @return		true if successful
+   * @throws Exception	if modification fails or invalid PK
+   */
+  public boolean addSubDescriptors(int pk, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    getLogger().info("adding sub-descriptors to license " + pk);
+
+    if ((permissions != null) && (permissions.length > 0))
+      modifySubDescriptors(pk, "add", "permissions", Permission.toNames(permissions));
+    if ((conditions != null) && (conditions.length > 0))
+      modifySubDescriptors(pk, "add", "conditions", Condition.toNames(conditions));
+    if ((limitations != null) && (limitations.length > 0))
+      modifySubDescriptors(pk, "add", "limitations", Limitation.toNames(limitations));
+
+    return true;
+  }
+
+  /**
+   * Removes the the sub-descriptors to the license.
+   *
+   * @param license	the license to add to
+   * @param permissions the permissions to add, ignored if null
+   * @param conditions 	the conditions to add, ignored if null
+   * @param limitations the limitations to add, ignored if null
+   * @return		true if successful
+   * @throws Exception	if modification fails or invalid PK
+   */
+  public boolean removeSubDescriptors(License license, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    return removeSubDescriptors(license.getPK(), permissions, conditions, limitations);
+  }
+
+  /**
+   * Removes the the sub-descriptors to the license.
+   *
+   * @param pk 		the license pk to add to
+   * @param permissions the permissions to add, ignored if null
+   * @param conditions 	the conditions to add, ignored if null
+   * @param limitations the limitations to add, ignored if null
+   * @return		true if successful
+   * @throws Exception	if modification fails or invalid PK
+   */
+  public boolean removeSubDescriptors(int pk, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    getLogger().info("removing sub-descriptors from license " + pk);
+
+    if ((permissions != null) && (permissions.length > 0))
+      modifySubDescriptors(pk, "remove", "permissions", Permission.toNames(permissions));
+    if ((conditions != null) && (conditions.length > 0))
+      modifySubDescriptors(pk, "remove", "conditions", Condition.toNames(conditions));
+    if ((limitations != null) && (limitations.length > 0))
+      modifySubDescriptors(pk, "remove", "limitations", Limitation.toNames(limitations));
+
+    return true;
+  }
+
+  /**
+   * For deleting a specific license.
+   *
+   * @param license 	the license to delete
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid license PK
+   */
+  public boolean delete(License license) throws Exception {
+    return delete(license.getPK());
+  }
+
+  /**
+   * For deleting a specific license.
+   *
+   * @param pk 		the ID of the license
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid license PK
+   */
+  public boolean delete(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("deleting license with PK: " + pk);
+
+    request  = newDelete(getPath() + pk + "/");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to delete license: " + pk, response);
   }
 
   /**
