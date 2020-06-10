@@ -11,6 +11,7 @@ import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.fracpete.requests4j.response.StreamResponse;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
@@ -100,12 +101,12 @@ public class Datasets
     }
 
     /**
-     * Returns the licence.
+     * Returns the license.
      *
-     * @return		the licence
+     * @return		the license
      */
-    public String getLicence() {
-      return getString("licence", "");
+    public int getLicense() {
+      return getInt("licence", -1);
     }
 
     /**
@@ -151,7 +152,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", licence=" + getLicence();
+      return "pk=" + getPK() + ", name=" + getName() + ", license=" + getLicense();
     }
   }
 
@@ -269,13 +270,29 @@ public class Datasets
    * @param dataset 	the dataset name
    * @param description the description of the dataset
    * @param project 	the project PK this dataset belongs to
-   * @param licence 	the license for the dataset
+   * @param license 	the license for the dataset
    * @param isPublic 	whether the dataset is public
    * @param tags 	tags for the dataset
    * @return		the dataset object, null if failed to create
    * @throws Exception	if request fails or dataset already exists
    */
-  public Dataset create(String dataset, String description, int project, String licence, boolean isPublic, String tags) throws Exception {
+  public Dataset create(String dataset, String description, int project, License license, boolean isPublic, String tags) throws Exception {
+    return create(dataset, description, project, license.getPK(), isPublic, tags);
+  }
+
+  /**
+   * Creates the dataset.
+   *
+   * @param dataset 	the dataset name
+   * @param description the description of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param license 	the license PK for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset create(String dataset, String description, int project, int license, boolean isPublic, String tags) throws Exception {
     Dataset		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -287,7 +304,7 @@ public class Datasets
     data.addProperty("name", dataset);
     data.addProperty("description", description);
     data.addProperty("project", project);
-    data.addProperty("licence", licence);
+    data.addProperty("licence", license);
     data.addProperty("is_public", isPublic);
     data.addProperty("tags", tags);
     request = newPost(getPath())

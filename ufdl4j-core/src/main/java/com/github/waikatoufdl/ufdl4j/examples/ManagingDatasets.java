@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 
 import java.util.List;
@@ -47,10 +48,13 @@ public class ManagingDatasets {
     if (projects.size() > 0)
       project = projects.get(0).getPK();
 
+    // load license
+    License gpl3 = client.licenses().load("GPL3");
+
     // create dataset
     System.out.println("--> creating dataset");
     Dataset newDataset = client.datasets().create(
-      "dummy-" + System.currentTimeMillis(), "dataset", project, "GPLv3", true, "");
+      "dummy-" + System.currentTimeMillis(), "dataset", project, gpl3, true, "");
     System.out.println(newDataset);
 
     client.close();
