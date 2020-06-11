@@ -46,7 +46,7 @@ public class ManagingLogEntries {
 
     // create log entry
     System.out.println("--> creating log entry");
-    LogEntry dummyentry = client.log().create(LogLevel.INFO, "my log entry", false);
+    LogEntry dummyentry = client.log().create(LogLevel.INFO, "my log entry");
     System.out.println(dummyentry);
 
     // loading log entry

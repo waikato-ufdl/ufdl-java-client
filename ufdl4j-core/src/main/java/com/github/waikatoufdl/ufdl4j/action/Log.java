@@ -200,12 +200,11 @@ public class Log
    *
    * @param level 	the level
    * @param message 	the message
-   * @param isInternal 	whether this is an internal message
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(LogLevel level, String message, boolean isInternal) throws Exception {
-    return create(LocalDateTime.now(ZoneId.systemDefault()), level.getLevel(), message, isInternal);
+  public LogEntry create(LogLevel level, String message) throws Exception {
+    return create(LocalDateTime.now(ZoneId.systemDefault()), level.getLevel(), message);
   }
 
   /**
@@ -213,12 +212,11 @@ public class Log
    *
    * @param level 	the level
    * @param message 	the message
-   * @param isInternal 	whether this is an internal message
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(int level, String message, boolean isInternal) throws Exception {
-    return create(LocalDateTime.now(ZoneId.systemDefault()), level, message, isInternal);
+  public LogEntry create(int level, String message) throws Exception {
+    return create(LocalDateTime.now(ZoneId.systemDefault()), level, message);
   }
 
   /**
@@ -227,12 +225,11 @@ public class Log
    * @param ts 		the timestamp
    * @param level 	the level
    * @param message 	the message
-   * @param isInternal 	whether this is an internal message
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(LocalDateTime ts, LogLevel level, String message, boolean isInternal) throws Exception {
-    return create(ts, level.getLevel(), message, isInternal);
+  public LogEntry create(LocalDateTime ts, LogLevel level, String message) throws Exception {
+    return create(ts, level.getLevel(), message);
   }
 
   /**
@@ -241,11 +238,10 @@ public class Log
    * @param ts 		the timestamp
    * @param level 	the level
    * @param message 	the message
-   * @param isInternal 	whether this is an internal message
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(LocalDateTime ts, int level, String message, boolean isInternal) throws Exception {
+  public LogEntry create(LocalDateTime ts, int level, String message) throws Exception {
     LogEntry result;
     JsonObject		data;
     JsonResponse 	response;
@@ -257,7 +253,6 @@ public class Log
     data.addProperty("creation_time", ts.toString());
     data.addProperty("level", level);
     data.addProperty("message", message);
-    data.addProperty("is_internal", isInternal);
     request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
