@@ -30,80 +30,6 @@ public class Log
   private static final long serialVersionUID = 7013386269355130329L;
 
   /**
-   * The standard logging levels.
-   */
-  public enum Level {
-    DEBUG(10),
-    INFO(20),
-    WARNING(30),
-    ERROR(40),
-    FATAL(50),
-    OTHER(-1);
-
-    /** the integer value of the level. */
-    private int m_Level;
-
-    /**
-     * Initializes the level.
-     *
-     * @param level	the integer value
-     */
-    private Level(int level) {
-      m_Level = level;
-    }
-
-    /**
-     * Returns the level as integer.
-     *
-     * @return		the level
-     */
-    public int getLevel() {
-      return m_Level;
-    }
-
-    /**
-     * Evaluates either name or integer value to a Level.
-     *
-     * @param s		the string to parse
-     * @return		the level
-     */
-    public static Level parse(String s) {
-      int	level;
-
-      try {
-        level = Integer.parseInt(s);
-        return parse(level);
-      }
-      catch (Exception e) {
-        return valueOf(s);
-      }
-    }
-
-    /**
-     * Evaluates the integer value to a Level.
-     *
-     * @param level	the integer to interpret
-     * @return		the level
-     */
-    public static Level parse(int level) {
-      switch (level) {
-	case 10:
-	  return DEBUG;
-	case 20:
-	  return INFO;
-	case 30:
-	  return WARNING;
-	case 40:
-	  return ERROR;
-	case 50:
-	  return FATAL;
-	default:
-	  return OTHER;
-      }
-    }
-  }
-
-  /**
    * Container class for log entry information.
    */
   public static class LogEntry
@@ -152,8 +78,8 @@ public class Log
      *
      * @return		the level
      */
-    public Level getLevel() {
-      return Level.parse(getLevelAsInt());
+    public LogLevel getLevel() {
+      return LogLevel.parse(getLevelAsInt());
     }
 
     /**
@@ -278,7 +204,7 @@ public class Log
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(Level level, String message, boolean isInternal) throws Exception {
+  public LogEntry create(LogLevel level, String message, boolean isInternal) throws Exception {
     return create(LocalDateTime.now(ZoneId.systemDefault()), level.getLevel(), message, isInternal);
   }
 
@@ -305,7 +231,7 @@ public class Log
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails or user already exists
    */
-  public LogEntry create(LocalDateTime ts, Level level, String message, boolean isInternal) throws Exception {
+  public LogEntry create(LocalDateTime ts, LogLevel level, String message, boolean isInternal) throws Exception {
     return create(ts, level.getLevel(), message, isInternal);
   }
 

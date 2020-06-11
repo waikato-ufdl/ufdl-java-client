@@ -6,8 +6,8 @@
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
-import com.github.waikatoufdl.ufdl4j.action.Log.Level;
 import com.github.waikatoufdl.ufdl4j.action.Log.LogEntry;
+import com.github.waikatoufdl.ufdl4j.action.LogLevel;
 
 /**
  * Example code for managing log entries.
@@ -46,7 +46,7 @@ public class ManagingLogEntries {
 
     // create log entry
     System.out.println("--> creating log entry");
-    LogEntry dummyentry = client.log().create(Level.INFO, "my log entry", false);
+    LogEntry dummyentry = client.log().create(LogLevel.INFO, "my log entry", false);
     System.out.println(dummyentry);
 
     // loading log entry
