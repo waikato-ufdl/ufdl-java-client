@@ -16,6 +16,8 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.Teams` - managing teams
 * `com.github.waikatoufdl.ufdl4j.action.Projects` - managing projects
 * `com.github.waikatoufdl.ufdl4j.action.Datasets` - managing datasets
+* `com.github.waikatoufdl.ufdl4j.action.Licenses` - managing licenses (must be admin to add licenses)
+* `com.github.waikatoufdl.ufdl4j.action.Log` - managing log entries
 
 ### ufdl4j-image
 
@@ -40,6 +42,8 @@ The core actions that can be accessed via the client:
 * `client.teams()` - Team management
 * `client.projects()` - Project management
 * `client.datasets()` - (core) Dataset management
+* `client.licenses()` - Licenses management
+* `client.log()` - Log management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
@@ -47,6 +51,8 @@ import com.github.waikatoufdl.ufdl4j.action.Users.User;
 import com.github.waikatoufdl.ufdl4j.action.Teams.Team;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
+import com.github.waikatoufdl.ufdl4j.action.Log.LogEntry;
 ...
 Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
 // output all users
@@ -68,6 +74,16 @@ for (Project project: client.projects().list()) {
 System.out.println("\nDatasets:");
 for (Dataset dataset: client.datasets().list()) {
   System.out.println(dataset);
+}
+// output all licenses
+System.out.println("\nLicenses:");
+for (License license: client.licenses().list()) {
+  System.out.println(license);
+}
+// output all log entries
+System.out.println("\nLog:");
+for (LogEntry entry: client.log().list()) {
+  System.out.println(entry);
 }
 ```
 
