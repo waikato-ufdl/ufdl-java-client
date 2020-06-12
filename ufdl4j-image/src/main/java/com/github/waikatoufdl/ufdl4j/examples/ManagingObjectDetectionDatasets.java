@@ -88,6 +88,10 @@ public class ManagingObjectDetectionDatasets {
 	    "label" + rnd.nextInt(5)));
 	}
 	action.setAnnotations(newDataset, file.getName(), annotations);
+	// metadata
+	System.out.println("--> adding metadata");
+	action.setMetadata(newDataset, file.getName(), "Full file path: " + file.getAbsolutePath());
+	System.out.println(action.getMetadata(newDataset, file.getName()));
       }
       // remove annotations
       System.out.println("--> removing annotations");

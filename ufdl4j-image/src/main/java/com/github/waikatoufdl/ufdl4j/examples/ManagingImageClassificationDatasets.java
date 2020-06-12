@@ -79,7 +79,11 @@ public class ManagingImageClassificationDatasets {
 	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label1"));
         else
 	  action.removeCategories(newDataset, Arrays.asList(file.getName()), Arrays.asList("label2"));
-      }
+     	// metadata
+	System.out.println("--> adding metadata");
+	action.setMetadata(newDataset, file.getName(), "Full file path: " + file.getAbsolutePath());
+	System.out.println(action.getMetadata(newDataset, file.getName()));
+ }
     }
 
     // get categories

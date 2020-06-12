@@ -486,6 +486,92 @@ public class Datasets
   }
 
   /**
+   * Sets the meta-data of the specified file in the dataset.
+   *
+   * @param dataset	the dataset
+   * @param name	the name of the file in the dataset
+   * @param metadata 	the meta-data to upload, use empty string to remove data
+   * @return		true if successfully added/uploaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean setMetadata(Dataset dataset, String name, String metadata) throws Exception {
+    return setMetadata(dataset.getPK(), name, metadata);
+  }
+
+  /**
+   * Sets the meta-data of the specified file in the dataset.
+   *
+   * @param pk		the dataset ID
+   * @param name	the name of the file in the dataset
+   * @param metadata 	the meta-data to upload, use empty string to remove data
+   * @return		true if successfully added/uploaded
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean setMetadata(int pk, String name, String metadata) throws Exception {
+    Request 		request;
+    JsonObject		data;
+    JsonResponse 	response;
+
+    getLogger().info("setting metadata for file '" + name + "' in dataset id: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("metadata", metadata);
+    request = newPost(getPath() + pk + "/metadata/" + name)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to set metadata for file '" + name + "' in dataset " + pk + "!", response);
+  }
+
+  /**
+   * Retrieves the metadata for the specified file from the dataset (downloads it from the server).
+   *
+   * @param dataset	the dataset
+   * @param name	the name used in the dataset
+   * @return		the metadata content as string
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public String getMetadata(Dataset dataset, String name) throws Exception {
+    return getMetadata(dataset.getPK(), name);
+  }
+
+  /**
+   * Retrieves the metadata for the specified file from the dataset (downloads it from the server).
+   *
+   * @param pk		the dataset ID
+   * @param name	the name used in the dataset
+   * @return		the metadata content as string
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public String getMetadata(int pk, String name) throws Exception {
+    Request 		request;
+    JsonResponse 	response;
+    JsonElement		element;
+    JsonObject		obj;
+
+    request  = newGet(getPath() + pk + "/metadata/" + name);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject()) {
+        obj = element.getAsJsonObject();
+        if (obj.has("metadata"))
+	  return obj.get("metadata").getAsString();
+	else
+	  throw new FailedRequestException("No metadata returned for file '" + name + "' from dataset " + pk + "!", response);
+      }
+      else {
+	throw new FailedRequestException("Expected JSON response for file '" + name + "' from dataset " + pk + "!", response);
+      }
+    }
+    else {
+      throw new FailedRequestException("Failed to get metadata of file '" + name + "' from dataset " + pk + "!", response);
+    }
+  }
+
+  /**
    * For downloading a specific dataset.
    *
    * @param dataset	the dataset to download
