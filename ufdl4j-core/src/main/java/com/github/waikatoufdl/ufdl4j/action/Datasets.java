@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.request.URLBuilder;
 import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
@@ -580,7 +581,7 @@ public class Datasets
    * @throws Exception	if request fails
    */
   public boolean download(Dataset dataset, File output) throws Exception {
-    return download(dataset.getPK(), output);
+    return download(dataset.getPK(), new String[0], output);
   }
 
   /**
@@ -592,9 +593,38 @@ public class Datasets
    * @throws Exception	if request fails
    */
   public boolean download(int pk, File output) throws Exception {
+    return download(pk, new String[0], output);
+  }
+
+  /**
+   * For downloading a specific dataset.
+   *
+   * @param dataset	the dataset to download
+   * @param params 	the parameters for <a href="https://github.com/waikato-ufdl/wai-annotations">wai.annotations</a>
+   *                    to generate the output (eg ["vgg", "-o", "ann.json"] or ["tfrecords", "-o", "train.tfrecords"])
+   * @param output	the file to save the downloaded dataset to (zip or tar.gz)
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean download(Dataset dataset, String[] params, File output) throws Exception {
+    return download(dataset.getPK(), params, output);
+  }
+
+  /**
+   * For downloading a specific dataset.
+   *
+   * @param pk 		the primary key of the dataset to download
+   * @param params 	the parameters for <a href="https://github.com/waikato-ufdl/wai-annotations">wai.annotations</a>
+   *                    to generate the output (eg ["vgg", "-o", "ann.json"] or ["tfrecords", "-o", "train.tfrecords"])
+   * @param output	the file to save the downloaded dataset to (zip or tar.gz)
+   * @return		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean download(int pk, String[] params, File output) throws Exception {
     FileResponse 	response;
     Request 		request;
     String 		filetype;
+    URLBuilder builder;
 
     getLogger().info("downloading dataset with id: " + pk);
 
@@ -605,7 +635,11 @@ public class Datasets
     else
       throw new IllegalArgumentException("Only zip or tar.gz available for download: " + output);
 
-    request = newGet(getPath() + pk + "/download?filetype=" + filetype);
+    builder = new URLBuilder()
+      .append("filetype", filetype);
+    if (params.length > 0)
+      builder.append("annotations_args", params);
+    request = newGet(getPath() + pk + "/download" + builder.build());
     response = download(request, output);
     if (!response.ok())
       throw new FailedRequestException("Failed to download dataset: " + pk, response);
