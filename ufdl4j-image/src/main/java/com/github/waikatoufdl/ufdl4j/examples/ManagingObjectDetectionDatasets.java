@@ -110,10 +110,10 @@ public class ManagingObjectDetectionDatasets {
       System.out.println(anns);
     }
 
-    // download dataset
+    // download dataset in MSCOCO format
     System.out.println("--> downloading dataset");
     File output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + ".zip");
-    if (action.download(newDataset, output))
+    if (action.download(newDataset, new String[]{"coco", "-o", "dataset.json"}, output))
       System.out.println("--> downloaded dataset to " + output);
 
     // get file from dataset
