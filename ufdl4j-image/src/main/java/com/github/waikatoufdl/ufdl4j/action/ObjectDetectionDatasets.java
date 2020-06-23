@@ -279,11 +279,10 @@ public class ObjectDetectionDatasets
      * @return		the files
      */
     public List<String> files() {
-      List<String> result;
-      JsonArray array;
-      int i;
+      List<String> 	result;
+      JsonArray 	array;
+      int 		i;
 
-      annotations();
       result = new ArrayList<>();
       if (getData().has("files")) {
 	array = getData().getAsJsonArray("files");
