@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,12 +71,16 @@ public class ImageClassificationDatasets
     public Map<String,List<String>> categories() {
       Map<String,List<String>>	result;
       JsonObject		categories;
+      List<String>		list;
 
       result = new HashMap<>();
       if (m_Data.has("categories")) {
 	categories = m_Data.getAsJsonObject("categories");
-	for (String name : categories.keySet())
-	  result.put(name, (List<String>) JsonUtils.asList(categories, name, new ArrayList<String>()));
+	for (String name : categories.keySet()) {
+	  list = (List<String>) JsonUtils.asList(categories, name, new ArrayList<String>());
+	  Collections.sort(list);
+	  result.put(name, list);
+	}
       }
 
       return result;
