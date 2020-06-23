@@ -61,6 +61,43 @@ public class ImageClassificationDatasets
       }
       return result;
     }
+
+    /**
+     * Returns the categories associated with each image.
+     *
+     * @return 		the categories
+     */
+    public Map<String,List<String>> categories() {
+      Map<String,List<String>>	result;
+      JsonObject		categories;
+
+      result = new HashMap<>();
+      if (m_Data.has("categories")) {
+	categories = m_Data.getAsJsonObject("categories");
+	for (String name : categories.keySet())
+	  result.put(name, (List<String>) JsonUtils.asList(categories, name, new ArrayList<String>()));
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the categories associated with the specified image.
+     *
+     * @param name 	the name of the image to get the categories for
+     * @return 		the categories
+     */
+    public List<String> categories(String name) {
+      List<String>		result;
+      Map<String,List<String>>	all;
+
+      result = new ArrayList<>();
+      all    = categories();
+      if (all.containsKey(name))
+        result = all.get(name);
+
+      return result;
+    }
   }
 
   /**
