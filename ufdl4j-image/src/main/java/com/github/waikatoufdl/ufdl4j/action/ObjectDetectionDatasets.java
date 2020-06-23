@@ -95,8 +95,18 @@ public class ObjectDetectionDatasets
      */
     @Override
     public String toString() {
-      // TODO
-      return null;
+      StringBuilder	result;
+      List<int[]> 	coords;
+
+      result = new StringBuilder();
+      coords = getCoordinates();
+      for (int[] coord: coords) {
+        if (result.length() > 0)
+          result.append(",");
+        result.append("(").append(coord[0]).append(",").append(coord[1]).append(")");
+      }
+
+      return result.toString();
     }
   }
 
@@ -273,12 +283,63 @@ public class ObjectDetectionDatasets
       JsonArray array;
       int i;
 
+      annotations();
       result = new ArrayList<>();
       if (getData().has("files")) {
 	array = getData().getAsJsonArray("files");
 	for (i = 0; i < array.size(); i++)
 	  result.add(array.get(i).getAsString());
       }
+      return result;
+    }
+
+    /**
+     * Returns the annotations.
+     *
+     * @return		the annotations
+     */
+    public Map<String,Annotations> annotations() {
+      Map<String,Annotations>	result;
+      JsonObject 		annotationsObj;
+      Annotations		annotations;
+      JsonArray			annotationsArray;
+      JsonObject		fileObject;
+      int			i;
+
+      result = new HashMap<>();
+
+      if (m_Data.has("annotations")) {
+	annotationsObj = m_Data.getAsJsonObject("annotations");
+	for (String name: annotationsObj.keySet()) {
+	  annotations = new Annotations();
+	  result.put(name, annotations);
+	  fileObject = annotationsObj.getAsJsonObject(name);
+	  if (fileObject.has("annotations")) {
+	    annotationsArray = fileObject.getAsJsonArray("annotations");
+	    for (i = 0; i < annotationsArray.size(); i++)
+	      annotations.add(new Annotation(annotationsArray.get(i).getAsJsonObject()));
+	  }
+	}
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the annotations for the specified image.
+     *
+     * @param name	the image to get the annotations for
+     * @return		the annotations
+     */
+    public Annotations annotations(String name) {
+      Annotations		result;
+      Map<String,Annotations>	all;
+
+      result = new Annotations();
+      all    = annotations();
+      if (all.containsKey(name))
+        result = all.get(name);
+
       return result;
     }
   }
