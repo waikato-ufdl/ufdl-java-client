@@ -165,6 +165,38 @@ public class ImageClassificationDatasets
   }
 
   /**
+   * For loading the categories of an image from a specific dataset.
+   *
+   * @param dataset	the dataset to get the categories for
+   * @param name 	the name of the image to get the categories for
+   * @return		the categories
+   * @throws Exception	if request fails
+   */
+  public List<String> getCategories(Dataset dataset, String name) throws Exception {
+    return getCategories(dataset.getPK(), name);
+  }
+
+  /**
+   * For loading the categories of an image from a specific dataset by primary key.
+   *
+   * @param pk 		the primary key of the dataset to get the categories for
+   * @param name 	the name of the image to get the categories for
+   * @return		the categories
+   * @throws Exception	if request fails
+   */
+  public List<String> getCategories(int pk, String name) throws Exception {
+    List<String>		result;
+    Map<String,List<String>>	categories;
+
+    result     = new ArrayList<>();
+    categories = getCategories(pk);
+    if (categories.containsKey(name))
+      result = categories.get(name);
+
+    return result;
+  }
+
+  /**
    * For adding categories to a specific dataset.
    *
    * @param dataset	the dataset to add the categories to
