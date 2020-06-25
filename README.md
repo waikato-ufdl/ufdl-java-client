@@ -7,6 +7,7 @@ managing the communication and executing actions.
 The following modules are available
 * **ufdl4j-core** - core API calls (users, teams, projects, datasets)
 * **ufdl4j-image** - image API calls (image classification, object detection)
+* **ufdl4j-speech** - speech API calls
 
 ## API
 
@@ -23,6 +24,10 @@ The following modules are available
 
 * `com.github.waikatoufdl.ufdl4j.action.ImageClassificationDatasets` - managing image classification datasets
 * `com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets` - managing object classifications datasets
+
+### ufdl4j-speech
+
+* `com.github.waikatoufdl.ufdl4j.action.SpeechDatasets` - managing speech datasets
 
 ## Example code
 
@@ -109,8 +114,14 @@ Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotation
 * [ManagingTeams](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingTeams.java) - same for teams
 * [ManagingProjects](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingProjects.java) - same for projects
 * [ManagingDatasets](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDatasets.java) - basic dataset operations
+* [ManagingLicenses](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLicenses.java) - license operations
+* [ManagingLogEntries](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLogEntries.java) - backend log operations
 
 ### ufdl4j-image
 
 * [ManagingImageClassificationDatasets](ufdl4j-image/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingImageClassificationDatasets.java) - operations on image classification datasets
 * [ManagingObjectDetectionDatasets](ufdl4j-image/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingObjectDetectionDatasets.java) - same, but for object detection datasets
+
+### ufdl4j-speech
+
+* [ManagingSpeechDatasets](ufdl4j-speech/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingSpeechDatasets.java) - operations on speech datasets
