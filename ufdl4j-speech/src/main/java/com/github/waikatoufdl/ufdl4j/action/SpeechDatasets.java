@@ -33,6 +33,8 @@ public class SpeechDatasets
   public static class SpeechDataset
     extends Dataset {
 
+    private static final long serialVersionUID = -2813933771483250370L;
+
     /**
      * Initializes the dataset.
      *

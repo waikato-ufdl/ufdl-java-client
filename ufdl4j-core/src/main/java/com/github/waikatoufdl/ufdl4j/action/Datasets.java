@@ -93,6 +93,15 @@ public class Datasets
     }
 
     /**
+     * Returns the dataset description.
+     *
+     * @return		the description
+     */
+    public String getDescription() {
+      return getString("description", "");
+    }
+
+    /**
      * Returns the version.
      *
      * @return		the version
