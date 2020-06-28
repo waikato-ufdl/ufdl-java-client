@@ -55,6 +55,16 @@ public class ManagingTeams {
     System.out.println("--> loading team");
     blahteam = client.teams().load("blahteam");
 
+    // updating blahteam
+    System.out.println("--> updating team");
+    blahteam = client.teams().update(blahteam, "blahteam2");
+    System.out.println(blahteam);
+
+    // updating blahteam
+    System.out.println("--> updating team (2)");
+    blahteam = client.teams().update(blahteam, "blahteam");
+    System.out.println(blahteam);
+
     // adding team member
     User admin = client.users().load("admin");
     if ((admin != null) && !blahteam.members().contains(admin.getUserName())) {

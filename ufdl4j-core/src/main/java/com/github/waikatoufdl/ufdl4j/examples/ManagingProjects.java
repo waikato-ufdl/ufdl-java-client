@@ -56,6 +56,16 @@ public class ManagingProjects {
       System.out.println(blahproject);
     }
 
+    // updating 'blahproject'
+    System.out.println("--> partially updating project");
+    blahproject = client.projects().partialUpdate(blahproject, "blahproject2", null);
+    System.out.println(blahproject);
+
+    // updating 'blahproject2'
+    System.out.println("--> partially updating project");
+    blahproject = client.projects().partialUpdate(blahproject, "blahproject", null);
+    System.out.println(blahproject);
+
     // delete 'blahproject'
     System.out.println("deleting project '" + blahproject + "'? " + client.projects().delete(blahproject));
 

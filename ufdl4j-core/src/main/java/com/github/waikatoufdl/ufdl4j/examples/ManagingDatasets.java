@@ -57,6 +57,11 @@ public class ManagingDatasets {
       "dummy-" + System.currentTimeMillis(), "dataset", project, gpl3, true, "");
     System.out.println(newDataset);
 
+    // update dataset
+    System.out.println("--> creating dataset");
+    newDataset = client.datasets().partialUpdate(newDataset, null, "new desription", null, null, null, null);
+    System.out.println(newDataset);
+
     client.close();
   }
 }

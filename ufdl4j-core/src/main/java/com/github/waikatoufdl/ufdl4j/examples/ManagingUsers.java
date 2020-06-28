@@ -52,6 +52,11 @@ public class ManagingUsers {
     // delete 'blahuser'
     System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser));
 
+    // update user
+    System.out.println("--> (partially) updating the user");
+    blahuser = client.users().partialUpdate(blahuser, null, null, null, null, "noone@example.org");
+    System.out.println(blahuser);
+
     // load user via primary key
     System.out.println("--> loading user with PK=1");
     System.out.println(client.users().load(1));

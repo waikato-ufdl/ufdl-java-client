@@ -251,6 +251,96 @@ public class Projects
   }
 
   /**
+   * Updates the project.
+   *
+   * @param projectObj	the project to update
+   * @param project 	the project name
+   * @param team	the team PK
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails or project already exists
+   */
+  public Project update(Project projectObj, String project, int team) throws Exception {
+    return update(projectObj.getPK(), project, team);
+  }
+
+  /**
+   * Updates the project.
+   *
+   * @param pk 		the PK of the project to update
+   * @param project 	the project name
+   * @param team	the team PK
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails or project already exists
+   */
+  public Project update(int pk, String project, int team) throws Exception {
+    Project		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("updating project: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("name", project);
+    data.addProperty("team", team);
+    request = newPut(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Project(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to update project: " + pk, response);
+
+    return result;
+  }
+
+  /**
+   * (Partially) Updates the project using the null values.
+   *
+   * @param projectObj	the project to update
+   * @param project 	the project name
+   * @param team	the team PK
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails or project already exists
+   */
+  public Project partialUpdate(Project projectObj, String project, Integer team) throws Exception {
+    return partialUpdate(projectObj.getPK(), project, team);
+  }
+
+  /**
+   * (Partially) Updates the project using the null values.
+   *
+   * @param pk 		the PK of the project to update
+   * @param project 	the project name
+   * @param team	the team PK
+   * @return		the project object, null if failed to create
+   * @throws Exception	if request fails or project already exists
+   */
+  public Project partialUpdate(int pk, String project, Integer team) throws Exception {
+    Project		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("partially updating project: " + pk);
+
+    data = new JsonObject();
+    if (project != null)
+      data.addProperty("name", project);
+    if (team != null)
+      data.addProperty("team", team);
+    request = newPatch(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Project(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to partially update project: " + pk, response);
+
+    return result;
+  }
+
+  /**
    * For deleting a specific project.
    *
    * @param project 	the project to delete

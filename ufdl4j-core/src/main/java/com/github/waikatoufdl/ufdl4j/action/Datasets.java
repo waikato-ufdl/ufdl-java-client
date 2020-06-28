@@ -162,7 +162,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", license=" + getLicense();
+      return "pk=" + getPK() + ", name=" + getName() + ", license=" + getLicense() + ", desc=" + getDescription();
     }
   }
 
@@ -324,6 +324,124 @@ public class Datasets
       result = new Dataset(response.jsonObject());
     else
       throw new FailedRequestException("Failed to create dataset: " + dataset, response);
+
+    return result;
+  }
+
+  /**
+   * Updates the dataset.
+   *
+   * @param datasetObj	the dataset to update
+   * @param dataset 	the dataset name
+   * @param description the description of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param license 	the license PK for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset update(Dataset datasetObj, String dataset, String description, int project, int license, boolean isPublic, String tags) throws Exception {
+    return update(datasetObj.getPK(), dataset, description, project, license, isPublic, tags);
+  }
+
+  /**
+   * Updates the dataset.
+   *
+   * @param pk		the PK of the dataset to update
+   * @param dataset 	the dataset name
+   * @param description the description of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param license 	the license PK for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset update(int pk, String dataset, String description, int project, int license, boolean isPublic, String tags) throws Exception {
+    Dataset		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("updating dataset: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("name", dataset);
+    data.addProperty("description", description);
+    data.addProperty("project", project);
+    data.addProperty("licence", license);
+    data.addProperty("is_public", isPublic);
+    data.addProperty("tags", tags);
+    request = newPut(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Dataset(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to update dataset: " + pk, response);
+
+    return result;
+  }
+
+  /**
+   * (Partially) Updates the dataset with the non-null values.
+   *
+   * @param datasetObj	the dataset to update
+   * @param dataset 	the dataset name
+   * @param description the description of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param license 	the license PK for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset partialUpdate(Dataset datasetObj, String dataset, String description, Integer project, Integer license, Boolean isPublic, String tags) throws Exception {
+    return partialUpdate(datasetObj.getPK(), dataset, description, project, license, isPublic, tags);
+  }
+
+  /**
+   * (Partially) Updates the dataset with the non-null values.
+   *
+   * @param pk		the PK of the dataset to update
+   * @param dataset 	the dataset name
+   * @param description the description of the dataset
+   * @param project 	the project PK this dataset belongs to
+   * @param license 	the license PK for the dataset
+   * @param isPublic 	whether the dataset is public
+   * @param tags 	tags for the dataset
+   * @return		the dataset object, null if failed to create
+   * @throws Exception	if request fails or dataset already exists
+   */
+  public Dataset partialUpdate(int pk, String dataset, String description, Integer project, Integer license, Boolean isPublic, String tags) throws Exception {
+    Dataset		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("partially updating dataset: " + pk);
+
+    data = new JsonObject();
+    if (dataset != null)
+      data.addProperty("name", dataset);
+    if (description != null)
+      data.addProperty("description", description);
+    if (project != null)
+      data.addProperty("project", project);
+    if (license != null)
+      data.addProperty("licence", license);
+    if (isPublic != null)
+      data.addProperty("is_public", isPublic);
+    if (tags != null)
+      data.addProperty("tags", tags);
+    request = newPatch(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Dataset(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to partially update dataset: " + pk, response);
 
     return result;
   }

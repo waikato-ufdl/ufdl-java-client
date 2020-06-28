@@ -260,6 +260,47 @@ public class Teams
   }
 
   /**
+   * Updates the team.
+   *
+   * @param teamObj 	the team to update
+   * @param team 	the new team name
+   * @return		the team object
+   * @throws Exception	if request fails
+   */
+  public Team update(Team teamObj, String team) throws Exception {
+    return update(teamObj.getPK(), team);
+  }
+
+  /**
+   * Updates the team.
+   *
+   * @param pk 		the PK of the team to update
+   * @param team 	the new team name
+   * @return		the team object
+   * @throws Exception	if request fails
+   */
+  public Team update(int pk, String team) throws Exception {
+    Team		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("updating team: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("name", team);
+    request = newPut(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Team(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to update team: " + pk, response);
+
+    return result;
+  }
+
+  /**
    * For deleting a specific team.
    *
    * @param team 	the team to delete

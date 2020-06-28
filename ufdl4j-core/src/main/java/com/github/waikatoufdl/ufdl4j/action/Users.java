@@ -142,7 +142,7 @@ public class Users
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", user=" + getUserName() + ", staff=" + isStaff() + ", superuser=" + isSuperuser() + ", active=" + isActive();
+      return "pk=" + getPK() + ", user=" + getUserName() + ", email=" + getEmail() + ", staff=" + isStaff() + ", superuser=" + isSuperuser() + ", active=" + isActive();
     }
   }
 
@@ -266,24 +266,6 @@ public class Users
    * @throws Exception	if request fails or user already exists
    */
   public User create(String user, String password, String firstName, String lastName, String email) throws Exception {
-    return create(user, password, firstName, lastName, email, false, false, true);
-  }
-
-  /**
-   * Creates the user.
-   *
-   * @param user 	the user name
-   * @param password 	the user's password
-   * @param firstName 	the user's first name
-   * @param lastName 	the user's last name
-   * @param email 	the user's email address
-   * @param staff 	whether the user is staff
-   * @param superuser 	whether the user is an admin
-   * @param active 	whether the use is active
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails or user already exists
-   */
-  public User create(String user, String password, String firstName, String lastName, String email, boolean staff, boolean superuser, boolean active) throws Exception {
     User		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -297,9 +279,6 @@ public class Users
     data.addProperty("first_name", firstName);
     data.addProperty("last_name", lastName);
     data.addProperty("email", email);
-    data.addProperty("is_staff", staff);
-    data.addProperty("is_superuser", superuser);
-    data.addProperty("is_active", active);
     request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -307,6 +286,117 @@ public class Users
       result = new User(response.jsonObject());
     else
       throw new FailedRequestException("Failed to create user: " + user + "/" + password.replaceAll(".", "*"), response);
+
+    return result;
+  }
+
+  /**
+   * Updates the user identified by the PK.
+   *
+   * @param userObj 	the user to update
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public User update(User userObj, String user, String password, String firstName, String lastName, String email) throws Exception {
+    return update(userObj.getPK(), user, password, firstName, lastName, email);
+  }
+
+  /**
+   * Updates the user identified by the PK.
+   *
+   * @param pk 		the PK of the user to update
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public User update(int pk, String user, String password, String firstName, String lastName, String email) throws Exception {
+    User		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("updating user: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("username", user);
+    data.addProperty("password", password);
+    data.addProperty("first_name", firstName);
+    data.addProperty("last_name", lastName);
+    data.addProperty("email", email);
+    request = newPut(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new User(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to update user: " + pk, response);
+
+    return result;
+  }
+
+  /**
+   * (Partially) Updates the user identified by the PK, using only the non-null arguments.
+   *
+   * @param userObj	the user to update
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public User partialUpdate(User userObj, String user, String password, String firstName, String lastName, String email) throws Exception {
+    return partialUpdate(userObj.getPK(), user, password, firstName, lastName, email);
+  }
+
+  /**
+   * (Partially) Updates the user identified by the PK, using only the non-null arguments.
+   *
+   * @param pk 		the PK of the user to update
+   * @param user 	the user name
+   * @param password 	the user's password
+   * @param firstName 	the user's first name
+   * @param lastName 	the user's last name
+   * @param email 	the user's email address
+   * @return		the user object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public User partialUpdate(int pk, String user, String password, String firstName, String lastName, String email) throws Exception {
+    User		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("partially updating user: " + pk);
+
+    data = new JsonObject();
+    if (user != null)
+      data.addProperty("username", user);
+    if (password != null)
+      data.addProperty("password", password);
+    if (firstName != null)
+      data.addProperty("first_name", firstName);
+    if (lastName != null)
+      data.addProperty("last_name", lastName);
+    if (email != null)
+      data.addProperty("email", email);
+    request = newPatch(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new User(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to partially update user: " + pk, response);
 
     return result;
   }
