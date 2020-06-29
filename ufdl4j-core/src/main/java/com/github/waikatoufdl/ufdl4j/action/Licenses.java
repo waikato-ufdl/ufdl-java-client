@@ -445,6 +445,108 @@ public class Licenses
   }
 
   /**
+   * For updating a license.
+   *
+   * @param license 	the license to update
+   * @param name	the new name of the license
+   * @param url		the new URL to the full text of the license
+   * @return		true if successfully created
+   * @throws Exception	if request fails
+   */
+  public License update(License license, String name, String url) throws Exception {
+    return update(license.getPK(), name, url);
+  }
+
+  /**
+   * For updating a license.
+   *
+   * @param pk 		the license ID
+   * @param name	the new name of the license
+   * @param url		the new URL to the full text of the license
+   * @return		true if successfully created
+   * @throws Exception	if request fails
+   */
+  public License update(int pk, String name, String url) throws Exception {
+    License		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("updating license: " + pk);
+
+    result   = null;
+    data     = new JsonObject();
+    data.addProperty("name", name);
+    data.addProperty("url", url);
+    request  = newPut(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new License(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to update license: " + name, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For (partially) updating a license, using only the non-null values.
+   *
+   * @param license 	the license to update
+   * @param name	the new name of the license
+   * @param url		the new URL to the full text of the license
+   * @return		true if successfully created
+   * @throws Exception	if request fails
+   */
+  public License partialUpdate(License license, String name, String url) throws Exception {
+    return partialUpdate(license.getPK(), name, url);
+  }
+
+  /**
+   * For (partially) updating a license, using only the non-null values.
+   *
+   * @param pk 		the license ID
+   * @param name	the new name of the license
+   * @param url		the new URL to the full text of the license
+   * @return		true if successfully created
+   * @throws Exception	if request fails
+   */
+  public License partialUpdate(int pk, String name, String url) throws Exception {
+    License		result;
+    JsonObject		data;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    getLogger().info("(partially) updating license: " + pk);
+
+    result   = null;
+    data     = new JsonObject();
+    if (name != null)
+      data.addProperty("name", name);
+    if (url != null)
+      data.addProperty("url", url);
+    request  = newPatch(getPath() + pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new License(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to (partially) update license: " + name, response);
+    }
+
+    return result;
+  }
+
+  /**
    * Generic method for modifying the sub-descriptors.
    *
    * @param pk		the PK of the license to modify

@@ -86,6 +86,22 @@ public class ManagingLicenses {
       System.out.println(dummy);
     }
 
+    // (partially) update license
+    System.out.println("--> updating license name (1)");
+    dummy = client.licenses().partialUpdate(dummy, "DUMMY2", null);
+    System.out.println(dummy);
+    System.out.println("--> updating license name (2)");
+    dummy = client.licenses().partialUpdate(dummy, "DUMMY", null);
+    System.out.println(dummy);
+
+    // update license
+    System.out.println("--> updating license (1)");
+    dummy = client.licenses().update(dummy, "DUMMY2", "http://somewhereelse.com");
+    System.out.println(dummy);
+    System.out.println("--> updating license (2)");
+    dummy = client.licenses().update(dummy, "DUMMY", "http://nowhere.com");
+    System.out.println(dummy);
+
     // delete license
     System.out.println("--> deleting license: " + dummy);
     System.out.println(client.licenses().delete(dummy));
