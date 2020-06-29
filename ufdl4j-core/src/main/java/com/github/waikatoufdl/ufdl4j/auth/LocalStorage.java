@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.auth;
 
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tika.io.IOUtils;
@@ -162,18 +163,21 @@ public class LocalStorage
   public Tokens load(Authentication context) {
     Tokens	result;
     JsonObject	data;
-    JsonObject	auth;
+    JsonArray   auth;
 
     result = new Tokens();
     data   = load();
     if (data.has(context.getUser())) {
-      auth   = data.getAsJsonObject(context.getUser());
-      if (!auth.has(KEY_REFRESH))
-        getLogger().warning("No value for '" + KEY_REFRESH + "' stored for user '" + context.getUser() + "!");
-      else if (!auth.has(KEY_ACCESS))
-        getLogger().warning("No value for '" + KEY_ACCESS + "' stored for user '" + context.getUser() + "!");
-      else
-	result = new Tokens(auth.get(KEY_REFRESH).getAsString(), auth.get(KEY_ACCESS).getAsString());
+      try {
+        auth = data.getAsJsonArray(context.getUser());
+        if (auth.size() != 2)
+          getLogger().warning("Expected two values (access/refresh) in token array, but got: " + auth.size());
+        else
+          result = new Tokens(auth.get(0).getAsString(), auth.get(1).getAsString());
+      }
+      catch (Exception e) {
+        getLogger().log(Level.SEVERE, "Failed to read tokens from: " + data);
+      }
     }
     else {
       getLogger().info("No data stored user '" + context.getUser() + ".");
