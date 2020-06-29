@@ -31,10 +31,6 @@ public class LocalStorage
 
   public static final String TOKENS_FILE = "tokens.json";
 
-  public static final String KEY_REFRESH = "refresh";
-
-  public static final String KEY_ACCESS = "access";
-
   /** the config directory. */
   protected String m_ConfigDir;
 
@@ -199,7 +195,7 @@ public class LocalStorage
   public String store(Authentication context, Tokens tokens) {
     String	result;
     JsonObject	data;
-    JsonObject	auth;
+    JsonArray	auth;
 
     if (!tokens.isValid()) {
       result = "Tokens are not valid, cannot store!";
@@ -208,9 +204,9 @@ public class LocalStorage
     }
 
     data = load();
-    auth = new JsonObject();
-    auth.addProperty(KEY_REFRESH, tokens.getRefreshToken());
-    auth.addProperty(KEY_ACCESS, tokens.getAccessToken());
+    auth = new JsonArray();
+    auth.add(tokens.getAccessToken());
+    auth.add(tokens.getRefreshToken());
     data.add(context.getUser(), auth);
 
     getLogger().fine("refresh token: " + tokens.getRefreshToken());
