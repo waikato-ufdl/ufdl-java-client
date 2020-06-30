@@ -80,7 +80,7 @@ public class Datasets
      * @return		the ID
      */
     public int getProjectID() {
-      return getInt("project_id", -1);
+      return getInt("project", -1);
     }
 
     /**
@@ -162,7 +162,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", license=" + getLicense() + ", desc=" + getDescription();
+      return "pk=" + getPK() + ", name=" + getName() + ", project=" + getProjectID() + ", license=" + getLicense() + ", desc=" + getDescription();
     }
   }
 
