@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
@@ -34,32 +35,58 @@ public class Licenses
   /**
    * The available permissions.
    */
-  public enum Permission {
+  public enum Permission
+    implements CustomDisplayEnum {
+
     DISTRIBUTION("Distribution"),
     PATENT_USE("Patent use"),
     PRIVATE_USE("Private use"),
     MODIFICATION("Modification"),
     COMMERCIAL_USE("Commercial use");
 
-    /** the name string. */
-    private String m_Name;
+    /** the string to use for display. */
+    private String m_Display;
+
+    /** the commandline string. */
+    private String m_Raw;
 
     /**
      * Initializes the enum with the name string.
      *
-     * @param name	the string to use
+     * @param display	the string to use
      */
-    private Permission(String name) {
-      m_Name = name;
+    private Permission(String display) {
+      m_Display = display;
     }
 
     /**
-     * Returns the name string.
+     * Returns the display string.
      *
-     * @return		the string
+     * @return		the display string
      */
-    public String getName() {
-      return m_Name;
+    @Override
+    public String toDisplay() {
+      return m_Display;
+    }
+
+    /**
+     * Returns the raw enum string.
+     *
+     * @return		the raw enum string
+     */
+    @Override
+    public String toRaw() {
+      return m_Raw;
+    }
+
+    /**
+     * Returns the display string.
+     *
+     * @return		the display string
+     */
+    @Override
+    public String toString() {
+      return m_Display;
     }
 
     /**
@@ -70,8 +97,14 @@ public class Licenses
      */
     public static Permission parse(String s) {
       for (Permission value : Permission.values()) {
-        if (value.getName().equals(s))
+        if (value.toDisplay().equals(s))
           return value;
+      }
+
+      // try raw
+      for (Permission p : values()) {
+	if (p.toRaw().equals(s))
+	  return p;
       }
 
       return valueOf(s.toUpperCase().replace(" ", "_"));
@@ -88,7 +121,7 @@ public class Licenses
 
       result = new ArrayList<>();
       for (Permission value: values)
-        result.add(value.getName());
+        result.add(value.toDisplay());
 
       return result.toArray(new String[0]);
     }
@@ -97,7 +130,9 @@ public class Licenses
   /**
    * The available conditions.
    */
-  public enum Condition {
+  public enum Condition
+    implements CustomDisplayEnum {
+
     LICENSE_AND_COPYRIGHT_NOTICE("License and copyright notice"),
     SAME_LICENSE("Same license"),
     SAME_LICENSE_LIBRARY("Same license (library)"),
@@ -106,25 +141,49 @@ public class Licenses
     STATE_CHANGES("State changes"),
     DISCLOSE_SOURCE("Disclose source");
 
-    /** the name string. */
-    private String m_Name;
+    /** the string to use for display. */
+    private String m_Display;
+
+    /** the commandline string. */
+    private String m_Raw;
 
     /**
      * Initializes the enum with the name string.
      *
-     * @param name	the string to use
+     * @param display	the string to use
      */
-    private Condition(String name) {
-      m_Name = name;
+    private Condition(String display) {
+      m_Display = display;
     }
 
     /**
-     * Returns the name string.
+     * Returns the display string.
      *
-     * @return		the string
+     * @return		the display string
      */
-    public String getName() {
-      return m_Name;
+    @Override
+    public String toDisplay() {
+      return m_Display;
+    }
+
+    /**
+     * Returns the raw enum string.
+     *
+     * @return		the raw enum string
+     */
+    @Override
+    public String toRaw() {
+      return m_Raw;
+    }
+
+    /**
+     * Returns the display string.
+     *
+     * @return		the display string
+     */
+    @Override
+    public String toString() {
+      return m_Display;
     }
 
     /**
@@ -135,8 +194,14 @@ public class Licenses
      */
     public static Condition parse(String s) {
       for (Condition value : Condition.values()) {
-        if (value.getName().equals(s))
+        if (value.toDisplay().equals(s))
           return value;
+      }
+
+      // try raw
+      for (Condition c : values()) {
+	if (c.toRaw().equals(s))
+	  return c;
       }
 
       return valueOf(s.toUpperCase().replace(" ", "_"));
@@ -153,7 +218,7 @@ public class Licenses
 
       result = new ArrayList<>();
       for (Condition value: values)
-        result.add(value.getName());
+        result.add(value.toDisplay());
 
       return result.toArray(new String[0]);
     }
@@ -162,31 +227,57 @@ public class Licenses
   /**
    * The available limitations.
    */
-  public enum Limitation {
+  public enum Limitation
+    implements CustomDisplayEnum {
+
     LIABILITY("Liability"),
     WARRANTY("Warranty"),
     TRADEMARK_USE("Trademark use"),
     PATENT_USE("Patent use");
 
-    /** the name string. */
-    private String m_Name;
+    /** the string to use for display. */
+    private String m_Display;
+
+    /** the commandline string. */
+    private String m_Raw;
 
     /**
      * Initializes the enum with the name string.
      *
-     * @param name	the string to use
+     * @param display	the string to use
      */
-    private Limitation(String name) {
-      m_Name = name;
+    private Limitation(String display) {
+      m_Display = display;
     }
 
     /**
-     * Returns the name string.
+     * Returns the display string.
      *
-     * @return		the string
+     * @return		the display string
      */
-    public String getName() {
-      return m_Name;
+    @Override
+    public String toDisplay() {
+      return m_Display;
+    }
+
+    /**
+     * Returns the raw enum string.
+     *
+     * @return		the raw enum string
+     */
+    @Override
+    public String toRaw() {
+      return m_Raw;
+    }
+
+    /**
+     * Returns the display string.
+     *
+     * @return		the display string
+     */
+    @Override
+    public String toString() {
+      return m_Display;
     }
 
     /**
@@ -197,8 +288,14 @@ public class Licenses
      */
     public static Limitation parse(String s) {
       for (Limitation value : Limitation.values()) {
-        if (value.getName().equals(s))
+        if (value.toDisplay().equals(s))
           return value;
+      }
+
+      // try raw
+      for (Limitation l : values()) {
+	if (l.toRaw().equals(s))
+	  return l;
       }
 
       return valueOf(s.toUpperCase().replace(" ", "_"));
@@ -215,7 +312,7 @@ public class Licenses
 
       result = new ArrayList<>();
       for (Limitation value: values)
-        result.add(value.getName());
+        result.add(value.toDisplay());
 
       return result.toArray(new String[0]);
     }

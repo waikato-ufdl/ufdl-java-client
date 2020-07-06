@@ -5,12 +5,16 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
+
 /**
  * General permissions.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
-public enum Permissions {
+public enum Permissions
+  implements CustomDisplayEnum {
+
   READ("R"),
   WRITE("W"),
   ADMIN("A");
@@ -36,6 +40,7 @@ public enum Permissions {
    *
    * @return		the display string
    */
+  @Override
   public String toDisplay() {
     return m_Display;
   }
@@ -45,6 +50,7 @@ public enum Permissions {
    *
    * @return		the raw enum string
    */
+  @Override
   public String toRaw() {
     return m_Raw;
   }
@@ -54,6 +60,7 @@ public enum Permissions {
    *
    * @return		the display string
    */
+  @Override
   public String toString() {
     return m_Display;
   }
