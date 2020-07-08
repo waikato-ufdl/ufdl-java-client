@@ -56,6 +56,7 @@ public class Licenses
      * @param display	the string to use
      */
     private Permission(String display) {
+      m_Raw     = super.toString();
       m_Display = display;
     }
 
@@ -86,7 +87,7 @@ public class Licenses
      */
     @Override
     public String toString() {
-      return m_Display;
+      return m_Raw;
     }
 
     /**
@@ -153,6 +154,7 @@ public class Licenses
      * @param display	the string to use
      */
     private Condition(String display) {
+      m_Raw     = super.toString();
       m_Display = display;
     }
 
@@ -183,7 +185,7 @@ public class Licenses
      */
     @Override
     public String toString() {
-      return m_Display;
+      return m_Raw;
     }
 
     /**
@@ -247,6 +249,7 @@ public class Licenses
      * @param display	the string to use
      */
     private Limitation(String display) {
+      m_Raw     = super.toString();
       m_Display = display;
     }
 
@@ -277,7 +280,7 @@ public class Licenses
      */
     @Override
     public String toString() {
-      return m_Display;
+      return m_Raw;
     }
 
     /**
