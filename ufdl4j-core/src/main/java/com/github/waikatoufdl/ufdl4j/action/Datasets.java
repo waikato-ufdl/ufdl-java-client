@@ -70,8 +70,8 @@ public class Datasets
      *
      * @return		the ID
      */
-    public int getCreatorID() {
-      return getInt("creator_id", -1);
+    public int getCreator() {
+      return getInt("creator", -1);
     }
 
     /**
@@ -79,7 +79,7 @@ public class Datasets
      *
      * @return		the ID
      */
-    public int getProjectID() {
+    public int getProject() {
       return getInt("project", -1);
     }
 
@@ -162,7 +162,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", project=" + getProjectID() + ", license=" + getLicense() + ", desc=" + getDescription();
+      return "pk=" + getPK() + ", name=" + getName() + ", project=" + getProject() + ", license=" + getLicense() + ", desc=" + getDescription();
     }
   }
 
