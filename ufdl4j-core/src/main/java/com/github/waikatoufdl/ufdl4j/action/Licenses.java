@@ -33,6 +33,100 @@ public class Licenses
   private static final long serialVersionUID = 7013386269355130329L;
 
   /**
+   * The available domains.
+   */
+  public enum Domain
+    implements CustomDisplayEnum {
+
+    SOFTWARE("Software"),
+    MODELS("Models"),
+    DATA("Data");
+
+    /** the string to use for display. */
+    private String m_Display;
+
+    /** the commandline string. */
+    private String m_Raw;
+
+    /**
+     * Initializes the enum with the name string.
+     *
+     * @param display	the string to use
+     */
+    private Domain(String display) {
+      m_Raw     = super.toString();
+      m_Display = display;
+    }
+
+    /**
+     * Returns the display string.
+     *
+     * @return		the display string
+     */
+    @Override
+    public String toDisplay() {
+      return m_Display;
+    }
+
+    /**
+     * Returns the raw enum string.
+     *
+     * @return		the raw enum string
+     */
+    @Override
+    public String toRaw() {
+      return m_Raw;
+    }
+
+    /**
+     * Returns the display string.
+     *
+     * @return		the display string
+     */
+    @Override
+    public String toString() {
+      return m_Raw;
+    }
+
+    /**
+     * Parses the string.
+     *
+     * @param s		the string to parse
+     * @return		the permission
+     */
+    public static Domain parse(String s) {
+      for (Domain value : Domain.values()) {
+        if (value.toDisplay().equals(s))
+          return value;
+      }
+
+      // try raw
+      for (Domain p : values()) {
+	if (p.toRaw().equals(s))
+	  return p;
+      }
+
+      return valueOf(s.toUpperCase().replace(" ", "_"));
+    }
+
+    /**
+     * Turns the enum array into a string array of associated names.
+     *
+     * @param values	the values to convert
+     * @return		the names
+     */
+    public static String[] toNames(Domain[] values) {
+      List<String>	result;
+
+      result = new ArrayList<>();
+      for (Domain value: values)
+        result.add(value.toDisplay());
+
+      return result.toArray(new String[0]);
+    }
+  }
+
+  /**
    * The available permissions.
    */
   public enum Permission
@@ -366,6 +460,32 @@ public class Licenses
     }
 
     /**
+     * Returns the domains.
+     *
+     * @return		the domains
+     */
+    public Set<Domain> getDomains() {
+      Set<Domain>	result;
+      List 		list;
+
+      result = new HashSet<>();
+
+      if (m_Data.has("domains")) {
+	list = getList("domains");
+	for (Object item : list) {
+	  try {
+	    result.add(Domain.parse("" + item));
+	  }
+	  catch (Exception e) {
+	    getLogger().warning("Unknown domain: " + item);
+	  }
+	}
+      }
+
+      return result;
+    }
+
+    /**
      * Returns the permissions.
      *
      * @return		the permissions
@@ -450,7 +570,7 @@ public class Licenses
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", user=" + getName() + ", permissions=" + getPermissions() + ", conditions=" + getConditions() + ", limitations=" + getLimitations();
+      return "pk=" + getPK() + ", user=" + getName() + ", domains=" + getDomains() + ", permissions=" + getPermissions() + ", conditions=" + getConditions() + ", limitations=" + getLimitations();
     }
   }
 
@@ -663,7 +783,7 @@ public class Licenses
 
     if (!(method.equals("add") || method.equals("remove")))
       throw new IllegalArgumentException("Unknown subdescriptors method: " + method);
-    if (!(type.equals("permissions") || type.equals("conditions") || type.equals("limitations")))
+    if (!(type.equals("domains") || type.equals("permissions") || type.equals("conditions") || type.equals("limitations")))
       throw new IllegalArgumentException("Unknown subdescriptors type: " + type);
 
     data     = new JsonObject();
@@ -683,29 +803,33 @@ public class Licenses
    * Adds the the sub-descriptors to the license.
    *
    * @param license	the license to add to
+   * @param domains 	the domains to add to, ignore if null
    * @param permissions the permissions to add, ignored if null
    * @param conditions 	the conditions to add, ignored if null
    * @param limitations the limitations to add, ignored if null
    * @return		true if successful
    * @throws Exception	if modification fails or invalid PK
    */
-  public boolean addSubDescriptors(License license, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
-    return addSubDescriptors(license.getPK(), permissions, conditions, limitations);
+  public boolean addSubDescriptors(License license, Domain[] domains, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    return addSubDescriptors(license.getPK(), domains, permissions, conditions, limitations);
   }
 
   /**
    * Adds the the sub-descriptors to the license.
    *
    * @param pk 		the license pk to add to
+   * @param domains 	the domains to add to, ignore if null
    * @param permissions the permissions to add, ignored if null
    * @param conditions 	the conditions to add, ignored if null
    * @param limitations the limitations to add, ignored if null
    * @return		true if successful
    * @throws Exception	if modification fails or invalid PK
    */
-  public boolean addSubDescriptors(int pk, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+  public boolean addSubDescriptors(int pk, Domain[] domains, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
     getLogger().info("adding sub-descriptors to license " + pk);
 
+    if ((domains != null) && (domains.length > 0))
+      modifySubDescriptors(pk, "add", "domains", Domain.toNames(domains));
     if ((permissions != null) && (permissions.length > 0))
       modifySubDescriptors(pk, "add", "permissions", Permission.toNames(permissions));
     if ((conditions != null) && (conditions.length > 0))
@@ -720,29 +844,33 @@ public class Licenses
    * Removes the the sub-descriptors to the license.
    *
    * @param license	the license to add to
-   * @param permissions the permissions to add, ignored if null
-   * @param conditions 	the conditions to add, ignored if null
-   * @param limitations the limitations to add, ignored if null
+   * @param domains 	the domains to remove to, ignore if null
+   * @param permissions the permissions to remove, ignored if null
+   * @param conditions 	the conditions to remove, ignored if null
+   * @param limitations the limitations to remove, ignored if null
    * @return		true if successful
    * @throws Exception	if modification fails or invalid PK
    */
-  public boolean removeSubDescriptors(License license, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
-    return removeSubDescriptors(license.getPK(), permissions, conditions, limitations);
+  public boolean removeSubDescriptors(License license, Domain[] domains, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+    return removeSubDescriptors(license.getPK(), domains, permissions, conditions, limitations);
   }
 
   /**
    * Removes the the sub-descriptors to the license.
    *
    * @param pk 		the license pk to add to
-   * @param permissions the permissions to add, ignored if null
-   * @param conditions 	the conditions to add, ignored if null
-   * @param limitations the limitations to add, ignored if null
+   * @param domains 	the domains to remove to, ignore if null
+   * @param permissions the permissions to remove, ignored if null
+   * @param conditions 	the conditions to remove, ignored if null
+   * @param limitations the limitations to remove, ignored if null
    * @return		true if successful
    * @throws Exception	if modification fails or invalid PK
    */
-  public boolean removeSubDescriptors(int pk, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
+  public boolean removeSubDescriptors(int pk, Domain[] domains, Permission[] permissions, Condition[] conditions, Limitation[] limitations) throws Exception {
     getLogger().info("removing sub-descriptors from license " + pk);
 
+    if ((domains != null) && (domains.length > 0))
+      modifySubDescriptors(pk, "remove", "domains", Domain.toNames(domains));
     if ((permissions != null) && (permissions.length > 0))
       modifySubDescriptors(pk, "remove", "permissions", Permission.toNames(permissions));
     if ((conditions != null) && (conditions.length > 0))

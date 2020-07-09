@@ -7,11 +7,13 @@ package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.Condition;
+import com.github.waikatoufdl.ufdl4j.action.Licenses.Domain;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.Permission;
 
 import static com.github.waikatoufdl.ufdl4j.action.Licenses.Condition.SAME_LICENSE;
+import static com.github.waikatoufdl.ufdl4j.action.Licenses.Domain.DATA;
 import static com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation.LIABILITY;
 import static com.github.waikatoufdl.ufdl4j.action.Licenses.Limitation.WARRANTY;
 import static com.github.waikatoufdl.ufdl4j.action.Licenses.Permission.COMMERCIAL_USE;
@@ -69,6 +71,7 @@ public class ManagingLicenses {
       System.out.println("--> adding sub-descriptions");
       client.licenses().addSubDescriptors(
         dummy,
+	new Domain[]{DATA},
 	new Permission[]{COMMERCIAL_USE, DISTRIBUTION},
 	new Condition[]{SAME_LICENSE},
 	new Limitation[]{LIABILITY, WARRANTY});
@@ -79,6 +82,7 @@ public class ManagingLicenses {
       System.out.println("--> removing sub-descriptions");
       client.licenses().removeSubDescriptors(
         dummy,
+	null,
 	new Permission[]{DISTRIBUTION},
 	null,
 	null);
