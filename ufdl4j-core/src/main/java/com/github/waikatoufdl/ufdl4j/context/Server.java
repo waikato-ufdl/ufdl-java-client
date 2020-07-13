@@ -1,12 +1,13 @@
 /*
  * Server.java
- * Copyright (C) 2019 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.context;
 
 import com.github.fracpete.requests4j.Session;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
+import org.apache.http.client.utils.URIBuilder;
 
 /**
  * The server context.
@@ -62,7 +63,14 @@ public class Server
   public String build(String path) {
     if (!path.startsWith("/"))
       path = "/" + path;
-    return getURL() + path;
+    try {
+      return new URIBuilder(getURL())
+	.setPath(path)
+	.build().toURL().toString();
+    }
+    catch (Exception e) {
+      return getURL() + path;
+    }
   }
 
   /**
