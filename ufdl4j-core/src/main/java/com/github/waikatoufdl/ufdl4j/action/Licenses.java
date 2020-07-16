@@ -570,7 +570,7 @@ public class Licenses
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", user=" + getName() + ", domains=" + getDomains() + ", permissions=" + getPermissions() + ", conditions=" + getConditions() + ", limitations=" + getLimitations();
+      return "pk=" + getPK() + ", name=" + getName() + ", domains=" + getDomains() + ", permissions=" + getPermissions() + ", conditions=" + getConditions() + ", limitations=" + getLimitations();
     }
   }
 
