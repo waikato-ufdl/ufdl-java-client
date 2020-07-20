@@ -49,8 +49,11 @@ public class ManagingUsers {
       System.out.println(blahuser);
     }
 
-    // delete 'blahuser'
-    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser));
+    // (soft) delete 'blahuser'
+    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser, false));
+
+    // reinstate 'blahuser'
+    System.out.println("reinstating user '" + blahuser + "'? " + client.users().reinstate(blahuser));
 
     // update user
     System.out.println("--> (partially) updating the user");
