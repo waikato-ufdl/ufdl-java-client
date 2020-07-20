@@ -76,8 +76,11 @@ public class ManagingTeams {
     System.out.println("--> removing membership: " + admin);
     client.teams().removeMembership(blahteam, admin);
 
-    // delete 'blahteam'
-    System.out.println("deleting team '" + blahteam + "'? " + client.teams().delete(blahteam));
+    // (soft) delete 'blahteam'
+    System.out.println("deleting team '" + blahteam + "'? " + client.teams().delete(blahteam, false));
+
+    // reinstating 'blahteam'
+    System.out.println("reinstating team '" + blahteam + "'? " + client.teams().reinstate(blahteam));
 
     client.close();
   }

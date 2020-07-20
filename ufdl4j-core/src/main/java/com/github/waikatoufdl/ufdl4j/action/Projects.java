@@ -344,34 +344,71 @@ public class Projects
    * For deleting a specific project.
    *
    * @param project 	the project to delete
+   * @param hard 	whether hard or soft delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid user PK
    */
-  public boolean delete(Project project) throws Exception {
-    return delete(project.getPK());
+  public boolean delete(Project project, boolean hard) throws Exception {
+    return delete(project.getPK(), hard);
   }
 
   /**
    * For deleting a specific project.
    *
    * @param pk 		the ID of the project
+   * @param hard 	whether hard or soft delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid user PK
    */
-  public boolean delete(int pk) throws Exception {
+  public boolean delete(int pk, boolean hard) throws Exception {
     JsonResponse 	response;
     Request 		request;
 
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("deleting project with PK: " + pk);
+    getLogger().info("deleting project with PK (hard=" + hard + "): " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk + (hard ? "/hard" : "/"));
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to delete project: " + pk, response);
+      throw new FailedRequestException("Failed to delete project (hard=" + hard + "): " + pk, response);
+  }
+
+  /**
+   * For reinstating a specific project.
+   *
+   * @param project 	the project to reinstate
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid project PK
+   */
+  public boolean reinstate(Project project) throws Exception {
+    return reinstate(project.getPK());
+  }
+
+  /**
+   * For reinstating a specific project.
+   *
+   * @param pk 		the ID of the project
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid project PK
+   */
+  public boolean reinstate(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Reinstating project with PK: " + pk);
+
+    request  = newDelete(getPath() + pk + "/reinstate");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to reinstate project: " + pk, response);
   }
 }

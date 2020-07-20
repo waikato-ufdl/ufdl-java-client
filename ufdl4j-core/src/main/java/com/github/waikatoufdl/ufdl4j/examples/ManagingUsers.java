@@ -54,7 +54,7 @@ public class ManagingUsers {
 
     // update user
     System.out.println("--> (partially) updating the user");
-    blahuser = client.users().partialUpdate(blahuser, null, null, null, null, "noone@example.org");
+    blahuser = client.users().partialUpdate(blahuser, null, null, null, null, "noone@example.org", null);
     System.out.println(blahuser);
 
     // load user via primary key

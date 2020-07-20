@@ -816,34 +816,71 @@ public class Datasets
    * For deleting a specific dataset.
    *
    * @param dataset 	the dataset to delete
+   * @param hard 	whether hard or soft delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid dataset PK
    */
-  public boolean delete(Dataset dataset) throws Exception {
-    return delete(dataset.getPK());
+  public boolean delete(Dataset dataset, boolean hard) throws Exception {
+    return delete(dataset.getPK(), hard);
   }
 
   /**
    * For deleting a specific dataset.
    *
    * @param pk 		the ID of the dataset
+   * @param hard 	whether hard or soft delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid dataset PK
    */
-  public boolean delete(int pk) throws Exception {
+  public boolean delete(int pk, boolean hard) throws Exception {
     JsonResponse 	response;
     Request 		request;
 
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("deleting dataset with PK: " + pk);
+    getLogger().info("deleting dataset with PK (hard=" + hard + "): " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk + (hard ? "/hard" : "/"));
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to delete dataset: " + pk, response);
+      throw new FailedRequestException("Failed to delete dataset (hard=" + hard + "): " + pk, response);
+  }
+
+  /**
+   * For reinstating a specific dataset.
+   *
+   * @param dataset 	the dataset to reinstate
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean reinstate(Dataset dataset) throws Exception {
+    return reinstate(dataset.getPK());
+  }
+
+  /**
+   * For reinstating a specific dataset.
+   *
+   * @param pk 		the ID of the dataset
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean reinstate(int pk) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Reinstating dataset with PK: " + pk);
+
+    request  = newDelete(getPath() + pk + "/reinstate");
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to reinstate dataset: " + pk, response);
   }
 }

@@ -352,11 +352,12 @@ public class Users
    * @param firstName 	the user's first name
    * @param lastName 	the user's last name
    * @param email 	the user's email address
+   * @param isActive 	the user's active state
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public User partialUpdate(User userObj, String user, String password, String firstName, String lastName, String email) throws Exception {
-    return partialUpdate(userObj.getPK(), user, password, firstName, lastName, email);
+  public User partialUpdate(User userObj, String user, String password, String firstName, String lastName, String email, Boolean isActive) throws Exception {
+    return partialUpdate(userObj.getPK(), user, password, firstName, lastName, email, isActive);
   }
 
   /**
@@ -368,10 +369,11 @@ public class Users
    * @param firstName 	the user's first name
    * @param lastName 	the user's last name
    * @param email 	the user's email address
+   * @param isActive 	the user's active state
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public User partialUpdate(int pk, String user, String password, String firstName, String lastName, String email) throws Exception {
+  public User partialUpdate(int pk, String user, String password, String firstName, String lastName, String email, Boolean isActive) throws Exception {
     User		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -390,6 +392,8 @@ public class Users
       data.addProperty("last_name", lastName);
     if (email != null)
       data.addProperty("email", email);
+    if (isActive != null)
+      data.addProperty("is_active", isActive);
     request = newPatch(getPath() + pk)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -434,5 +438,28 @@ public class Users
       return true;
     else
       throw new FailedRequestException("Failed to delete user: " + pk, response);
+  }
+
+  /**
+   * For reinstating a specific user.
+   *
+   * @param user 	the user to reinstate
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid user PK
+   */
+  public boolean reinstate(User user) throws Exception {
+    return reinstate(user.getPK());
+  }
+
+  /**
+   * For reinstating a specific user.
+   *
+   * @param pk 		the ID of the user
+   * @return		true if successfully reinstated
+   * @throws Exception	if request fails, eg invalid user PK
+   */
+  public boolean reinstate(int pk) throws Exception {
+    getLogger().info("reinstating user with PK: " + pk);
+    return (partialUpdate(pk, null, null, null, null, null, true) != null);
   }
 }

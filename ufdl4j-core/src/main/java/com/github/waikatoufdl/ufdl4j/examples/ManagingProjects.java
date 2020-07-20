@@ -66,8 +66,11 @@ public class ManagingProjects {
     blahproject = client.projects().partialUpdate(blahproject, "blahproject", null);
     System.out.println(blahproject);
 
-    // delete 'blahproject'
-    System.out.println("deleting project '" + blahproject + "'? " + client.projects().delete(blahproject));
+    // (soft) delete 'blahproject'
+    System.out.println("deleting project '" + blahproject + "'? " + client.projects().delete(blahproject, false));
+
+    // reinstating 'blahproject'
+    System.out.println("reinstating project '" + blahproject + "'? " + client.projects().reinstate(blahproject));
 
     client.close();
   }
