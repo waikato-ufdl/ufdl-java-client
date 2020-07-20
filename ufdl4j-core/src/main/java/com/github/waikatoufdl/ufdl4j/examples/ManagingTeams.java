@@ -69,10 +69,10 @@ public class ManagingTeams {
     User admin = client.users().load("admin");
     if ((admin != null) && !blahteam.members().contains(admin.getUserName())) {
       System.out.println("--> adding user to team: " + admin);
-      client.teams().addMembership(blahteam, admin, Permissions.WRITE);
+      client.teams().addMembership(blahteam, admin, Permissions.W);
     }
     System.out.println("--> updating membership: " + admin);
-    client.teams().updateMembership(blahteam, admin, Permissions.READ);
+    client.teams().updateMembership(blahteam, admin, Permissions.R);
     System.out.println("--> removing membership: " + admin);
     client.teams().removeMembership(blahteam, admin);
 

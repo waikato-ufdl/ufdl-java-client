@@ -15,9 +15,9 @@ import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
 public enum Permissions
   implements CustomDisplayEnum {
 
-  READ("R"),
-  WRITE("W"),
-  ADMIN("A");
+  R("R"),  // read
+  W("W"),  // write
+  A("A");  // admin
 
   /** the string to use as display. */
   private String m_Display;
