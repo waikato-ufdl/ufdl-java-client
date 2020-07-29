@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Extends {@link Response} to automatically parse the received text as JSON.
+ * Extends {@link BasicResponse} to automatically parse the received text as JSON.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
