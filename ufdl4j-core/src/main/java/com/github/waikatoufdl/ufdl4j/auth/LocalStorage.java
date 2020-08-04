@@ -159,24 +159,31 @@ public class LocalStorage
   public Tokens load(Authentication context) {
     Tokens	result;
     JsonObject	data;
+    JsonObject  server;
     JsonArray   auth;
 
     result = new Tokens();
     data   = load();
-    if (data.has(context.getUser())) {
-      try {
-        auth = data.getAsJsonArray(context.getUser());
-        if (auth.size() != 2)
-          getLogger().warning("Expected two values (access/refresh) in token array, but got: " + auth.size());
-        else
-          result = new Tokens(auth.get(0).getAsString(), auth.get(1).getAsString());
+    if (data.has(context.getServer().getURL())) {
+      server = data.getAsJsonObject(context.getServer().getURL());
+      if (server.has(context.getUser())) {
+        try {
+          auth = server.getAsJsonArray(context.getUser());
+          if (auth.size() != 2)
+            getLogger().warning("Expected two values (access/refresh) in token array, but got: " + auth.size());
+          else
+            result = new Tokens(auth.get(1).getAsString(), auth.get(0).getAsString());
+        }
+        catch (Exception e) {
+          getLogger().log(Level.SEVERE, "Failed to read tokens from: " + data);
+        }
       }
-      catch (Exception e) {
-        getLogger().log(Level.SEVERE, "Failed to read tokens from: " + data);
+      else {
+        getLogger().info("No data stored for user '" + context.getUser() + ".");
       }
     }
     else {
-      getLogger().info("No data stored user '" + context.getUser() + ".");
+      getLogger().info("No data stored for server/user '" + context.getServer().getURL() + "/" + context.getUser() + ".");
     }
 
     getLogger().fine("refresh token: " + result.getRefreshToken());
@@ -196,6 +203,7 @@ public class LocalStorage
     String	result;
     JsonObject	data;
     JsonArray	auth;
+    JsonObject  server;
 
     if (!tokens.isValid()) {
       result = "Tokens are not valid, cannot store!";
@@ -204,10 +212,15 @@ public class LocalStorage
     }
 
     data = load();
+    if (data.has(context.getServer().getURL()))
+      server = data.getAsJsonObject(context.getServer().getURL());
+    else
+      server = new JsonObject();
     auth = new JsonArray();
     auth.add(tokens.getAccessToken());
     auth.add(tokens.getRefreshToken());
-    data.add(context.getUser(), auth);
+    server.add(context.getUser(), auth);
+    data.add(context.getServer().getURL(), server);
 
     getLogger().fine("refresh token: " + tokens.getRefreshToken());
     getLogger().fine("access token: " + tokens.getAccessToken());
