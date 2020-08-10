@@ -19,6 +19,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.Datasets` - managing datasets
 * `com.github.waikatoufdl.ufdl4j.action.Licenses` - managing licenses (must be admin to add licenses)
 * `com.github.waikatoufdl.ufdl4j.action.Log` - managing log entries
+* `com.github.waikatoufdl.ufdl4j.action.Domains` - managing domains
 
 ### ufdl4j-image
 
@@ -49,6 +50,7 @@ The core actions that can be accessed via the client:
 * `client.datasets()` - (core) Dataset management
 * `client.licenses()` - Licenses management
 * `client.log()` - Log management
+* `client.domains()` - Domain management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
@@ -116,6 +118,7 @@ Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotation
 * [ManagingDatasets](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDatasets.java) - basic dataset operations
 * [ManagingLicenses](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLicenses.java) - license operations
 * [ManagingLogEntries](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLogEntries.java) - backend log operations
+* [ManagingDomains](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDomains.java) - domain operations
 
 ### ufdl4j-image
 

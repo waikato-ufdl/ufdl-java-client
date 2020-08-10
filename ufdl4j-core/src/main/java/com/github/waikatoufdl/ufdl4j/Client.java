@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j;
 
 import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
+import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
@@ -52,6 +53,9 @@ public class Client
   /** for managing the log. */
   protected Log m_Log;
 
+  /** the domains. */
+  protected Domains m_Domains;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -68,6 +72,7 @@ public class Client
       m_Teams    = action(Teams.class);
       m_Licenses = action(Licenses.class);
       m_Log      = action(Log.class);
+      m_Domains  = action(Domains.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -160,6 +165,15 @@ public class Client
    */
   public Log log() {
     return m_Log;
+  }
+
+  /**
+   * Returns the domains action.
+   *
+   * @return		the domains action
+   */
+  public Domains domains() {
+    return m_Domains;
   }
 
   /**
