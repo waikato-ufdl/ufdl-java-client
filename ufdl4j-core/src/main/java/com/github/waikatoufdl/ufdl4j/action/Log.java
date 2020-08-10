@@ -38,7 +38,7 @@ public class Log
     private static final long serialVersionUID = 3523630902439390574L;
 
     /**
-     * Initializes the user.
+     * Initializes the log entry.
      *
      * @param data	the data to use
      */
@@ -47,7 +47,7 @@ public class Log
     }
 
     /**
-     * Returns the user primary key.
+     * Returns the log entry primary key.
      *
      * @return		the primary key
      */
@@ -134,7 +134,7 @@ public class Log
   /**
    * For listing the log entries.
    *
-   * @return		the list of users
+   * @return		the list of log entries
    * @throws Exception	if request fails
    */
   public List<LogEntry> list() throws Exception {
@@ -168,7 +168,7 @@ public class Log
   /**
    * For loading a specific log entry by primary key.
    *
-   * @param pk 		the primary key of the user to load
+   * @param pk 		the primary key of the log entry to load
    * @return		the entry
    * @throws Exception	if request fails
    */
@@ -200,8 +200,8 @@ public class Log
    *
    * @param level 	the level
    * @param message 	the message
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails or user already exists
+   * @return		the log entry object, null if failed to create
+   * @throws Exception	if request fails or log entry already exists
    */
   public LogEntry create(LogLevel level, String message) throws Exception {
     return create(LocalDateTime.now(ZoneId.systemDefault()), level.getLevel(), message);
@@ -212,8 +212,8 @@ public class Log
    *
    * @param level 	the level
    * @param message 	the message
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails or user already exists
+   * @return		the log entry object, null if failed to create
+   * @throws Exception	if request fails or log entry already exists
    */
   public LogEntry create(int level, String message) throws Exception {
     return create(LocalDateTime.now(ZoneId.systemDefault()), level, message);
@@ -225,8 +225,8 @@ public class Log
    * @param ts 		the timestamp
    * @param level 	the level
    * @param message 	the message
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails or user already exists
+   * @return		the log entry object, null if failed to create
+   * @throws Exception	if request fails or log entry already exists
    */
   public LogEntry create(LocalDateTime ts, LogLevel level, String message) throws Exception {
     return create(ts, level.getLevel(), message);
@@ -238,8 +238,8 @@ public class Log
    * @param ts 		the timestamp
    * @param level 	the level
    * @param message 	the message
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails or user already exists
+   * @return		the log entry object, null if failed to create
+   * @throws Exception	if request fails or log entry already exists
    */
   public LogEntry create(LocalDateTime ts, int level, String message) throws Exception {
     LogEntry result;
@@ -269,7 +269,7 @@ public class Log
    *
    * @param entry 	the entry to delete
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid user PK
+   * @throws Exception	if request fails, eg invalid log entry PK
    */
   public boolean delete(LogEntry entry) throws Exception {
     return delete(entry.getPK());
@@ -280,7 +280,7 @@ public class Log
    *
    * @param pk 		the ID of the log entry
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid user PK
+   * @throws Exception	if request fails, eg invalid log entry PK
    */
   public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
