@@ -58,7 +58,7 @@ public class ManagingDockerImages {
     blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", "train", "Pascal", false);
     System.out.println(blahimg);
 
-    // partially updating blahteam
+    // partially updating blahimg
     System.out.println("--> partially updating docker image");
     blahimg = client.docker().partialUpdate(blahimg, "1.0", null, null, null, null, null, null, null, null, null, null, null);
     System.out.println(blahimg);

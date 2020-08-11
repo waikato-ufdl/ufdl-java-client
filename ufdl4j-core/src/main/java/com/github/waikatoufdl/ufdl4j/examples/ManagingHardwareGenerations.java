@@ -33,7 +33,7 @@ public class ManagingHardwareGenerations {
     else
       client = new Client(args[0], args[1], args[1]);
 
-    // listing teams
+    // listing generations
     System.out.println("--> listing hardware generations");
     HardwareGeneration genFermat = null;
     for (HardwareGeneration gen : client.hardware().list()) {
@@ -58,7 +58,7 @@ public class ManagingHardwareGenerations {
     genFermat = client.hardware().update(genFermat, "Fermat", 5.0, 11.0);
     System.out.println(genFermat);
 
-    // partially updating blahteam
+    // partially updating blahgeneration
     System.out.println("--> partially updating hardware generation");
     genFermat = client.hardware().partialUpdate(genFermat, null, null, 9.0);
     System.out.println(genFermat);

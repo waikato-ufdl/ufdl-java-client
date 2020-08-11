@@ -33,7 +33,7 @@ public class ManagingCudaVersions {
     else
       client = new Client(args[0], args[1], args[1]);
 
-    // listing teams
+    // listing cuda versions
     System.out.println("--> listing cuda versions");
     CudaVersion cuda99 = null;
     for (CudaVersion cuda : client.cuda().list()) {
@@ -58,7 +58,7 @@ public class ManagingCudaVersions {
     cuda99 = client.cuda().update(cuda99, "99.0", "99.1.123", "657.111.333");
     System.out.println(cuda99);
 
-    // partially updating blahteam
+    // partially updating blahcuda
     System.out.println("--> partially updating cuda version");
     cuda99 = client.cuda().partialUpdate(cuda99, null, null, "657.111.222");
     System.out.println(cuda99);

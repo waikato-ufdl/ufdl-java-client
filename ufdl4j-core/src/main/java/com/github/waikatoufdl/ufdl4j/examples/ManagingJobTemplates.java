@@ -33,7 +33,7 @@ public class ManagingJobTemplates {
     else
       client = new Client(args[0], args[1], args[1]);
 
-    // listing teams
+    // listing templates
     System.out.println("--> listing job templates");
     JobTemplate blahjobtype = null;
     for (JobTemplate templates : client.jobTemplates().list()) {
@@ -58,7 +58,7 @@ public class ManagingJobTemplates {
     blahjobtype = client.jobTemplates().update(blahjobtype, "blah2", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
     System.out.println(blahjobtype);
 
-    // partially updating blahteam
+    // partially updating blahtemplate
     System.out.println("--> partially updating job template");
     blahjobtype = client.jobTemplates().partialUpdate(blahjobtype, "blah", null, "project", null, null, null, null, null, null);
     System.out.println(blahjobtype);

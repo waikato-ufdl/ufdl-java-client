@@ -33,7 +33,7 @@ public class ManagingJobTypes {
     else
       client = new Client(args[0], args[1], args[1]);
 
-    // listing teams
+    // listing types
     System.out.println("--> listing job types");
     JobType blahjobtype = null;
     for (JobType types : client.jobTypes().list()) {
@@ -58,7 +58,7 @@ public class ManagingJobTypes {
     blahjobtype = client.jobTypes().update(blahjobtype, "blah2");
     System.out.println(blahjobtype);
 
-    // partially updating blahteam
+    // partially updating blahtype
     System.out.println("--> partially updating job type");
     blahjobtype = client.jobTypes().partialUpdate(blahjobtype, "blah");
     System.out.println(blahjobtype);

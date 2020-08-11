@@ -33,7 +33,7 @@ public class ManagingFrameworks {
     else
       client = new Client(args[0], args[1], args[1]);
 
-    // listing teams
+    // listing frameworks
     System.out.println("--> listing frameworks");
     Framework blahframework = null;
     for (Framework framework : client.frameworks().list()) {
