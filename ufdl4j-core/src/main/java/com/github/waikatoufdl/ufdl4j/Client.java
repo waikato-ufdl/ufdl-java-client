@@ -9,6 +9,7 @@ import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
 import com.github.waikatoufdl.ufdl4j.action.CudaVersions;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
+import com.github.waikatoufdl.ufdl4j.action.Frameworks;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
@@ -60,6 +61,9 @@ public class Client
   /** the cuda versions. */
   protected CudaVersions m_Cuda;
 
+  /** the frameworks. */
+  protected Frameworks m_Frameworks;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -70,14 +74,15 @@ public class Client
     m_Connection = new Connection();
     m_Actions    = new HashMap<>();
     try {
-      m_Users    = action(Users.class);
-      m_Datasets = action(Datasets.class);
-      m_Projects = action(Projects.class);
-      m_Teams    = action(Teams.class);
-      m_Licenses = action(Licenses.class);
-      m_Log      = action(Log.class);
-      m_Domains  = action(Domains.class);
-      m_Cuda     = action(CudaVersions.class);
+      m_Users      = action(Users.class);
+      m_Datasets   = action(Datasets.class);
+      m_Projects   = action(Projects.class);
+      m_Teams      = action(Teams.class);
+      m_Licenses   = action(Licenses.class);
+      m_Log        = action(Log.class);
+      m_Domains    = action(Domains.class);
+      m_Cuda       = action(CudaVersions.class);
+      m_Frameworks = action(Frameworks.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -188,6 +193,15 @@ public class Client
    */
   public CudaVersions cuda() {
     return m_Cuda;
+  }
+
+  /**
+   * Returns the frameworks action.
+   *
+   * @return		the frameworks action
+   */
+  public Frameworks frameworks() {
+    return m_Frameworks;
   }
 
   /**

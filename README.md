@@ -21,6 +21,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.Log` - managing log entries
 * `com.github.waikatoufdl.ufdl4j.action.Domains` - managing domains
 * `com.github.waikatoufdl.ufdl4j.action.CudaVersions` - managing CUDA versions
+* `com.github.waikatoufdl.ufdl4j.action.Frameworks` - managing frameworks
 
 ### ufdl4j-image
 
@@ -53,6 +54,7 @@ The core actions that can be accessed via the client:
 * `client.log()` - Log management
 * `client.domains()` - Domain management
 * `client.cuda()` - CUDA version management
+* `client.frameworks()` - Framework management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
@@ -122,6 +124,7 @@ Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotation
 * [ManagingLogEntries](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLogEntries.java) - backend log operations
 * [ManagingDomains](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDomains.java) - domain operations
 * [ManagingCudaVersions](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingCudaVersions.java) - CUDA version operations
+* [ManagingFrameworks](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingCudaVersions.java) - framework operations
 
 ### ufdl4j-image
 
