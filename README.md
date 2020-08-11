@@ -23,7 +23,8 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.CudaVersions` - managing CUDA versions
 * `com.github.waikatoufdl.ufdl4j.action.Frameworks` - managing frameworks
 * `com.github.waikatoufdl.ufdl4j.action.HardwareGenerations` - managing hardware generations
-* `com.github.waikatoufdl.ufdl4j.action.Node` - managing nodes
+* `com.github.waikatoufdl.ufdl4j.action.Nodes` - managing nodes
+* `com.github.waikatoufdl.ufdl4j.action.JobTypes` - managing job types
 
 ### ufdl4j-image
 
@@ -59,6 +60,7 @@ The core actions that can be accessed via the client:
 * `client.frameworks()` - framework management
 * `client.hardware()` - hardware generations management
 * `client.nodes()` - node management
+* `client.jobTypes()` - job type management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
@@ -131,6 +133,7 @@ Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotation
 * [ManagingFrameworks](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingFrameworks.java) - framework operations
 * [ManagingHardwareGenerations](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingHardwareGenerations.java) - hardware generations operations
 * [ManagingNodes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingNodes.java) - node operations
+* [ManagingJobTypes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTypes.java) - job type operations
 
 ### ufdl4j-image
 
