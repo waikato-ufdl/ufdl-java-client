@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j;
 
 import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
+import com.github.waikatoufdl.ufdl4j.action.CudaVersions;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
@@ -56,6 +57,9 @@ public class Client
   /** the domains. */
   protected Domains m_Domains;
 
+  /** the cuda versions. */
+  protected CudaVersions m_Cuda;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -73,6 +77,7 @@ public class Client
       m_Licenses = action(Licenses.class);
       m_Log      = action(Log.class);
       m_Domains  = action(Domains.class);
+      m_Cuda     = action(CudaVersions.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -174,6 +179,15 @@ public class Client
    */
   public Domains domains() {
     return m_Domains;
+  }
+
+  /**
+   * Returns the cuda versions action.
+   *
+   * @return		the cuda versions action
+   */
+  public CudaVersions cuda() {
+    return m_Cuda;
   }
 
   /**
