@@ -36,7 +36,7 @@ public class CudaVersions
     private static final long serialVersionUID = 3523630902439390574L;
 
     /**
-     * Initializes the cudaVersion.
+     * Initializes the cuda version.
      *
      * @param data	the data to use
      */
@@ -45,7 +45,7 @@ public class CudaVersions
     }
 
     /**
-     * Returns the cudaVersion primary key.
+     * Returns the cuda version primary key.
      *
      * @return		the primary key
      */
@@ -118,7 +118,7 @@ public class CudaVersions
    * @throws Exception	if request fails
    */
   public List<CudaVersion> list() throws Exception {
-    List<CudaVersion>		result;
+    List<CudaVersion>	result;
     JsonResponse 	response;
     JsonElement		element;
     JsonArray		array;
@@ -148,8 +148,8 @@ public class CudaVersions
   /**
    * For loading a specific cuda version by primary key.
    *
-   * @param pk 		the primary key of the cudaVersion to load
-   * @return		the cudaVersion
+   * @param pk 		the primary key of the cuda version to load
+   * @return		the cuda version
    * @throws Exception	if request fails
    */
   public CudaVersion load(int pk) throws Exception {
@@ -238,7 +238,7 @@ public class CudaVersions
    * @param version 	the new cuda version
    * @param fullVersion	the new full version
    * @param minDriverVersion 	the new minimum driver version
-   * @return		the cudaVersion object
+   * @return		the cuda version object
    * @throws Exception	if request fails
    */
   public CudaVersion update(CudaVersion obj, String version, String fullVersion, String minDriverVersion) throws Exception {
@@ -246,13 +246,13 @@ public class CudaVersions
   }
 
   /**
-   * Updates the cudaVersion.
+   * Updates the cuda version.
    *
-   * @param pk 		the PK of the cudaVersion to update
-   * @param version 	the new cudaVersion name
+   * @param pk 		the PK of the cuda version to update
+   * @param version 	the new cuda version name
    * @param fullVersion	the new full version
    * @param minDriverVersion 	the new minimum driver version
-   * @return		the cudaVersion object
+   * @return		the cuda version object
    * @throws Exception	if request fails
    */
   public CudaVersion update(int pk, String version, String fullVersion, String minDriverVersion) throws Exception {
@@ -282,7 +282,7 @@ public class CudaVersions
    * (Partially) Updates the cuda version identified by the object, using only the non-null arguments.
    *
    * @param obj	the user to update
-   * @param version 	the new cudaVersion name, ignored if null
+   * @param version 	the new cuda version name, ignored if null
    * @param fullVersion	the new full version, ignored if null
    * @param minDriverVersion 	the new minimum driver version, ignored if null
    * @return		the user object, null if failed to create
@@ -296,10 +296,10 @@ public class CudaVersions
    * (Partially) Updates the cuda version identified by the PK, using only the non-null arguments.
    *
    * @param pk 		the PK of the user to update
-   * @param version 	the new cudaVersion name, ignored if null
+   * @param version 	the new cuda version name, ignored if null
    * @param fullVersion	the new full version, ignored if null
    * @param minDriverVersion 	the new minimum driver version, ignored if null
-   * @return		the user object, null if failed to create
+   * @return		the cuda version object, null if failed to create
    * @throws Exception	if request fails
    */
   public CudaVersion partialUpdate(int pk, String version, String fullVersion, String minDriverVersion) throws Exception {
@@ -333,7 +333,7 @@ public class CudaVersions
    *
    * @param cudaVersion the cuda version to delete
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid cudaVersion PK
+   * @throws Exception	if request fails, eg invalid cuda version PK
    */
   public boolean delete(CudaVersion cudaVersion) throws Exception {
     return delete(cudaVersion.getPK());
@@ -344,7 +344,7 @@ public class CudaVersions
    *
    * @param pk 		the ID of the cuda version
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid cudaVersion PK
+   * @throws Exception	if request fails, eg invalid cuda version PK
    */
   public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
