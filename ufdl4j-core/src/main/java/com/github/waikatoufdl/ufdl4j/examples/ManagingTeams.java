@@ -11,7 +11,7 @@ import com.github.waikatoufdl.ufdl4j.action.Teams.Team;
 import com.github.waikatoufdl.ufdl4j.action.Users.User;
 
 /**
- * Example code for managing projects.
+ * Example code for managing teams.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
