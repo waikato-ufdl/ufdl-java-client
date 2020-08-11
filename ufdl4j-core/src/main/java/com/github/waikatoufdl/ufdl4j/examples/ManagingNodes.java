@@ -9,7 +9,7 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Nodes.Node;
 
 /**
- * Example code for managing cuda versions.
+ * Example code for managing nodes.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
