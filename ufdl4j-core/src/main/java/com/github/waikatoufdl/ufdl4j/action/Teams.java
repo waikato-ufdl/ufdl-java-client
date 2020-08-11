@@ -211,7 +211,7 @@ public class Teams
    * For loading a specific team by name.
    *
    * @param name 	the team name
-   * @return		the team object, null if failed to create
+   * @return		the team object, null if failed to locate
    * @throws Exception	if request fails
    */
   public Team load(String name) throws Exception {
