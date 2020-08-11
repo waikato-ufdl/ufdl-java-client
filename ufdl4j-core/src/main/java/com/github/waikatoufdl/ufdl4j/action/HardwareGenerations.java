@@ -148,8 +148,8 @@ public class HardwareGenerations
   /**
    * For loading a specific hardware generation by primary key.
    *
-   * @param pk 		the primary key of the hardwareGeneration to load
-   * @return		the hardwareGeneration
+   * @param pk 		the primary key of the hardware generation to load
+   * @return		the hardware generation
    * @throws Exception	if request fails
    */
   public HardwareGeneration load(int pk) throws Exception {
@@ -238,7 +238,7 @@ public class HardwareGenerations
    * @param generation 	the new hardware generation
    * @param min		the new minimum compute capability (incl)
    * @param max 	the new maximum compute capability (excl)
-   * @return		the hardwareGeneration object
+   * @return		the hardware generation object
    * @throws Exception	if request fails
    */
   public HardwareGeneration update(HardwareGeneration obj, String generation, Double min, Double max) throws Exception {
@@ -246,13 +246,13 @@ public class HardwareGenerations
   }
 
   /**
-   * Updates the hardwareGeneration.
+   * Updates the hardware generation.
    *
-   * @param pk 		the PK of the hardwareGeneration to update
+   * @param pk 		the PK of the hardware generation to update
    * @param generation 	the new hardware generation
    * @param min		the new minimum compute capability (incl)
    * @param max 	the new maximum compute capability (excl)
-   * @return		the hardwareGeneration object
+   * @return		the hardware generation object
    * @throws Exception	if request fails
    */
   public HardwareGeneration update(int pk, String generation, Double min, Double max) throws Exception {
@@ -296,7 +296,7 @@ public class HardwareGenerations
    * (Partially) Updates the hardware generation identified by the PK, using only the non-null arguments.
    *
    * @param pk 		the PK of the user to update
-   * @param generation 	the new hardwareGeneration name, ignored if null
+   * @param generation 	the new hardware generation name, ignored if null
    * @param min	the new full version, ignored if null
    * @param max 	the new minimum driver version, ignored if null
    * @return		the user object, null if failed to create
@@ -333,7 +333,7 @@ public class HardwareGenerations
    *
    * @param hardwareGeneration the hardware generation to delete
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid hardwareGeneration PK
+   * @throws Exception	if request fails, eg invalid hardware generation PK
    */
   public boolean delete(HardwareGeneration hardwareGeneration) throws Exception {
     return delete(hardwareGeneration.getPK());
@@ -344,7 +344,7 @@ public class HardwareGenerations
    *
    * @param pk 		the ID of the hardware generation
    * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid hardwareGeneration PK
+   * @throws Exception	if request fails, eg invalid hardware generation PK
    */
   public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
