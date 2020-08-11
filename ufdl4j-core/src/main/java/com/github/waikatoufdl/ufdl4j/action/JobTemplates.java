@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
+import com.github.waikatoufdl.ufdl4j.action.Jobs.Job;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
@@ -18,6 +19,7 @@ import org.apache.http.entity.ContentType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Encapsulates job template operations.
@@ -693,5 +695,66 @@ public class JobTemplates
       return true;
     else
       throw new FailedRequestException("Failed to remove parameter '" + name + "' from job template: " + pk, response);
+  }
+
+  /**
+   * Creates a job from the given template, docker image and values.
+   *
+   * @param jobTemplate	the job template
+   * @param dockerImage	the image to use
+   * @param inputValues	the input values (name -> value)
+   * @param paramValues	the parameter values (name -> value)
+   * @return		the Job object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Job newJob(JobTemplate jobTemplate, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues) throws Exception {
+    return newJob(jobTemplate.getPK(), dockerImage, inputValues, paramValues);
+  }
+
+  /**
+   * Creates a job from the given template, docker image and values.
+   *
+   * @param pk		the PK of the job template
+   * @param dockerImage	the image to use
+   * @param inputValues	the input values (name -> value)
+   * @param paramValues	the parameter values (name -> value)
+   * @return		the Job object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Job newJob(int pk, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues) throws Exception {
+    Job			result;
+    JsonObject		data;
+    JsonObject		sub;
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("creating job from template: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("docker_image", dockerImage);
+
+    // input values
+    sub = new JsonObject();
+    for (String key: inputValues.keySet())
+      sub.addProperty(key, inputValues.get(key));
+    data.add("input_values", sub);
+
+    // parameter values
+    if (paramValues.size() > 0) {
+      sub = new JsonObject();
+      for (String key: paramValues.keySet())
+	sub.addProperty(key, paramValues.get(key));
+      data.add("parameter_values", sub);
+    }
+
+    request = newPost(getPath() + "/create-job")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      result = new Job(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to create job from template: " + pk, response);
+
+    return result;
   }
 }
