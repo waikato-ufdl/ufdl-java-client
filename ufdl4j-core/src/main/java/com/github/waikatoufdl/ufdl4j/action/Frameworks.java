@@ -180,9 +180,9 @@ public class Frameworks
 
     result = null;
 
-    for (Framework team : list()) {
-      if (team.getName().equals(name)) {
-        result = team;
+    for (Framework framework : list()) {
+      if (framework.getName().equals(name)) {
+        result = framework;
         break;
       }
     }
