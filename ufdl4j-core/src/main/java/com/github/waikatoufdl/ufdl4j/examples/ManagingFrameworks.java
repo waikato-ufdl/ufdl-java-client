@@ -9,7 +9,7 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks.Framework;
 
 /**
- * Example code for managing cuda versions.
+ * Example code for managing frameworks.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
