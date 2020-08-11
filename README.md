@@ -22,6 +22,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.Domains` - managing domains
 * `com.github.waikatoufdl.ufdl4j.action.CudaVersions` - managing CUDA versions
 * `com.github.waikatoufdl.ufdl4j.action.Frameworks` - managing frameworks
+* `com.github.waikatoufdl.ufdl4j.action.HardwareGenerations` - managing hardware generations
 
 ### ufdl4j-image
 
@@ -46,15 +47,16 @@ Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
 
 The core actions that can be accessed via the client:
 
-* `client.users()` - User management
-* `client.teams()` - Team management
-* `client.projects()` - Project management
-* `client.datasets()` - (core) Dataset management
-* `client.licenses()` - Licenses management
-* `client.log()` - Log management
-* `client.domains()` - Domain management
+* `client.users()` - user management
+* `client.teams()` - team management
+* `client.projects()` - project management
+* `client.datasets()` - (core) dataset management
+* `client.licenses()` - licenses management
+* `client.log()` - log management
+* `client.domains()` - domain management
 * `client.cuda()` - CUDA version management
-* `client.frameworks()` - Framework management
+* `client.frameworks()` - framework management
+* `client.hardware()` - hardware generations management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
@@ -124,7 +126,8 @@ Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotation
 * [ManagingLogEntries](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingLogEntries.java) - backend log operations
 * [ManagingDomains](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDomains.java) - domain operations
 * [ManagingCudaVersions](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingCudaVersions.java) - CUDA version operations
-* [ManagingFrameworks](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingCudaVersions.java) - framework operations
+* [ManagingFrameworks](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingFrameworks.java) - framework operations
+* [ManagingHardwareGenerations](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingHardwareGenerations.java) - hardware generations operations
 
 ### ufdl4j-image
 

@@ -10,6 +10,7 @@ import com.github.waikatoufdl.ufdl4j.action.CudaVersions;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks;
+import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
@@ -64,6 +65,9 @@ public class Client
   /** the frameworks. */
   protected Frameworks m_Frameworks;
 
+  /** the hardware generations. */
+  protected HardwareGenerations m_Hardware;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -83,6 +87,7 @@ public class Client
       m_Domains    = action(Domains.class);
       m_Cuda       = action(CudaVersions.class);
       m_Frameworks = action(Frameworks.class);
+      m_Hardware   = action(HardwareGenerations.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -202,6 +207,15 @@ public class Client
    */
   public Frameworks frameworks() {
     return m_Frameworks;
+  }
+
+  /**
+   * Returns the hardware generations action.
+   *
+   * @return		the hardware generations action
+   */
+  public HardwareGenerations hardware() {
+    return m_Hardware;
   }
 
   /**
