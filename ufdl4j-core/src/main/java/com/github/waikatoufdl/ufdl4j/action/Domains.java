@@ -35,7 +35,7 @@ public class Domains
     private static final long serialVersionUID = 3523630902439390574L;
 
     /**
-     * Initializes the user.
+     * Initializes the domain.
      *
      * @param data	the data to use
      */
@@ -44,7 +44,7 @@ public class Domains
     }
 
     /**
-     * Returns the user primary key.
+     * Returns the primary key.
      *
      * @return		the primary key
      */
@@ -95,7 +95,7 @@ public class Domains
   /**
    * For listing the domains.
    *
-   * @return		the list of users
+   * @return		the list of domains
    * @throws Exception	if request fails
    */
   public List<Domain> list() throws Exception {
