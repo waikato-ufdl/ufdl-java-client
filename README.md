@@ -42,9 +42,13 @@ Instantiating the client for communicating with the backend:
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Users.User;
-...
-// instantiate client (automatically refreshes/obtains API tokens when executing actions)
-Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
+
+public static class Test {
+  public static void main(String[] args) throws Exception {
+    // instantiate client (automatically refreshes/obtains API tokens when executing actions)
+    Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
+  }
+}
 ```
 
 The core actions that can be accessed via the client:
@@ -70,37 +74,41 @@ import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Log.LogEntry;
-...
-Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
-// output all users
-System.out.println("\nUsers:");
-for (User user: client.users().list()) {
-  System.out.println(user);
-}
-// output all teams
-System.out.println("\nTeams:");
-for (Team team: client.teams().list()) {
-  System.out.println(team);
-}
-// output all projects
-System.out.println("\nProjects:");
-for (Project project: client.projects().list()) {
-  System.out.println(project);
-}
-// output all datasets
-System.out.println("\nDatasets:");
-for (Dataset dataset: client.datasets().list()) {
-  System.out.println(dataset);
-}
-// output all licenses
-System.out.println("\nLicenses:");
-for (License license: client.licenses().list()) {
-  System.out.println(license);
-}
-// output all log entries
-System.out.println("\nLog:");
-for (LogEntry entry: client.log().list()) {
-  System.out.println(entry);
+
+public static class Test {
+  public static void main(String[] args) throws Exception {
+    Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
+    // output all users
+    System.out.println("\nUsers:");
+    for (User user: client.users().list()) {
+      System.out.println(user);
+    }
+    // output all teams
+    System.out.println("\nTeams:");
+    for (Team team: client.teams().list()) {
+      System.out.println(team);
+    }
+    // output all projects
+    System.out.println("\nProjects:");
+    for (Project project: client.projects().list()) {
+      System.out.println(project);
+    }
+    // output all datasets
+    System.out.println("\nDatasets:");
+    for (Dataset dataset: client.datasets().list()) {
+      System.out.println(dataset);
+    }
+    // output all licenses
+    System.out.println("\nLicenses:");
+    for (License license: client.licenses().list()) {
+      System.out.println(license);
+    }
+    // output all log entries
+    System.out.println("\nLog:");
+    for (LogEntry entry: client.log().list()) {
+      System.out.println(entry);
+    }
+  }
 }
 ```
 
@@ -111,11 +119,15 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
 import java.util.Map;
-...
-Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
-Dataset dataset = client.dataets().load(11);  // load dataset with primary key (PK) 11
-ObjectDetectionDatasets objdet = client.action(ObjectDetectionDatasets.class);
-Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotations for all images in dataset
+
+public static class Test {
+  public static void main(String[] args) throws Exception {
+    Client client = new Client("http://127.0.0.1:8000", "USER", "PW");
+    Dataset dataset = client.dataets().load(11);  // load dataset with primary key (PK) 11
+    ObjectDetectionDatasets objdet = client.action(ObjectDetectionDatasets.class);
+    Map<String,Annotations> all = objdet.getAnntations(dataset);  // load annotations for all images in dataset
+  }
+}
 ```
 
 ## Example classes
