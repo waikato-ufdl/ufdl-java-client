@@ -23,6 +23,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.CudaVersions` - managing CUDA versions
 * `com.github.waikatoufdl.ufdl4j.action.Frameworks` - managing frameworks
 * `com.github.waikatoufdl.ufdl4j.action.HardwareGenerations` - managing hardware generations
+* `com.github.waikatoufdl.ufdl4j.action.DockerImages` - managing docker images
 * `com.github.waikatoufdl.ufdl4j.action.Nodes` - managing nodes
 * `com.github.waikatoufdl.ufdl4j.action.JobTypes` - managing job types
 * `com.github.waikatoufdl.ufdl4j.action.JobTemplates` - managing job templates
@@ -64,6 +65,7 @@ The core actions that can be accessed via the client:
 * `client.cuda()` - CUDA version management
 * `client.frameworks()` - framework management
 * `client.hardware()` - hardware generations management
+* `client.docker()` - docker image management
 * `client.nodes()` - node management
 * `client.jobTypes()` - job type management
 * `client.jobTemplates()` - job template management
@@ -146,6 +148,7 @@ public static class Test {
 * [ManagingCudaVersions](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingCudaVersions.java) - CUDA version operations
 * [ManagingFrameworks](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingFrameworks.java) - framework operations
 * [ManagingHardwareGenerations](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingHardwareGenerations.java) - hardware generations operations
+* [ManagingDockerImages](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDockerImages.java) - docker image operations
 * [ManagingNodes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingNodes.java) - node operations
 * [ManagingJobTypes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTypes.java) - job type operations
 * [ManagingJobTemplates](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTemplate.java) - job template operations

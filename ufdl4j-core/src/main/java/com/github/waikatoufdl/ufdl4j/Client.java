@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j;
 import com.github.waikatoufdl.ufdl4j.action.AbstractAction;
 import com.github.waikatoufdl.ufdl4j.action.CudaVersions;
 import com.github.waikatoufdl.ufdl4j.action.Datasets;
+import com.github.waikatoufdl.ufdl4j.action.DockerImages;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks;
 import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations;
@@ -71,6 +72,9 @@ public class Client
   /** the hardware generations. */
   protected HardwareGenerations m_Hardware;
 
+  /** the docker images. */
+  protected DockerImages m_Docker;
+
   /** the nodes. */
   protected Nodes m_Nodes;
 
@@ -100,6 +104,7 @@ public class Client
       m_Cuda         = action(CudaVersions.class);
       m_Frameworks   = action(Frameworks.class);
       m_Hardware     = action(HardwareGenerations.class);
+      m_Docker       = action(DockerImages.class);
       m_Nodes        = action(Nodes.class);
       m_JobTypes     = action(JobTypes.class);
       m_JobTemplates = action(JobTemplates.class);
@@ -231,6 +236,15 @@ public class Client
    */
   public HardwareGenerations hardware() {
     return m_Hardware;
+  }
+
+  /**
+   * Returns the docker images action.
+   *
+   * @return		the docker images action
+   */
+  public DockerImages docker() {
+    return m_Docker;
   }
 
   /**
