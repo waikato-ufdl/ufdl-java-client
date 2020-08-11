@@ -36,10 +36,10 @@ public class ManagingHardwareGenerations {
     // listing teams
     System.out.println("--> listing hardware generations");
     HardwareGeneration genFermat = null;
-    for (HardwareGeneration cuda : client.hardware().list()) {
-      System.out.println(cuda);
-      if (cuda.getGeneration().equals("Fermat"))
-        genFermat = cuda;
+    for (HardwareGeneration gen : client.hardware().list()) {
+      System.out.println(gen);
+      if (gen.getGeneration().equals("Fermat"))
+        genFermat = gen;
     }
 
     // create 'Fermat' if necessary
