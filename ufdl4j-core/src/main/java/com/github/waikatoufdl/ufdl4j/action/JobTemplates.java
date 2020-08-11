@@ -497,12 +497,12 @@ public class JobTemplates
   /**
    * For reinstating a specific job template.
    *
-   * @param jobTate 	the job template to reinstate
+   * @param jobTemplate 	the job template to reinstate
    * @return		true if successfully reinstated
    * @throws Exception	if request fails, eg invalid job template PK
    */
-  public boolean reinstate(JobTemplate jobTate) throws Exception {
-    return reinstate(jobTate.getPK());
+  public boolean reinstate(JobTemplate jobTemplate) throws Exception {
+    return reinstate(jobTemplate.getPK());
   }
 
   /**
@@ -527,5 +527,171 @@ public class JobTemplates
       return true;
     else
       throw new FailedRequestException("Failed to reinstate job template: " + pk, response);
+  }
+
+  /**
+   * For adding an input to a job template.
+   *
+   * @param jobTemplate the job template to update
+   * @param name	the name of the input
+   * @param type 	the type of the input
+   * @param options 	the (optional) options
+   * @return		true if successfully added
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean addInput(JobTemplate jobTemplate, String name, String type, String options) throws Exception {
+    return addInput(jobTemplate.getPK(), name, type, options);
+  }
+
+  /**
+   * For adding an input to a job template.
+   *
+   * @param pk 		the job template to update
+   * @param name	the name of the input
+   * @param type 	the type of the input
+   * @param options 	the (optional) options
+   * @return		true if successfully added
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean addInput(int pk, String name, String type, String options) throws Exception {
+    JsonResponse 	response;
+    JsonObject		data;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Adding input '" + name + "' to job template with PK: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("type", type);
+    data.addProperty("options", options);
+    request  = newPost(getPath() + pk + "/inputs/" + name)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to add input '" + name + "' to job template: " + pk, response);
+  }
+
+  /**
+   * For removing an input from a job template.
+   *
+   * @param jobTemplate the job template to update
+   * @param name	the name of the input
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean deleteInput(JobTemplate jobTemplate, String name) throws Exception {
+    return deleteInput(jobTemplate.getPK(), name);
+  }
+
+  /**
+   * For adding an input to a job template.
+   *
+   * @param pk 		the job template to update
+   * @param name	the name of the input
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean deleteInput(int pk, String name) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Removing input '" + name + "' from job template with PK: " + pk);
+
+    request  = newDelete(getPath() + pk + "/inputs/" + name);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to remove input '" + name + "' from job template: " + pk, response);
+  }
+
+  /**
+   * For adding an parameter to a job template.
+   *
+   * @param jobTemplate the job template to update
+   * @param name	the name of the parameter
+   * @param type 	the type of the parameter
+   * @param options 	the (optional) options
+   * @return		true if successfully added
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean addParameter(JobTemplate jobTemplate, String name, String type, String options) throws Exception {
+    return addParameter(jobTemplate.getPK(), name, type, options);
+  }
+
+  /**
+   * For adding an parameter to a job template.
+   *
+   * @param pk 		the job template to update
+   * @param name	the name of the parameter
+   * @param type 	the type of the parameter
+   * @param options 	the (optional) options
+   * @return		true if successfully added
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean addParameter(int pk, String name, String type, String options) throws Exception {
+    JsonResponse 	response;
+    JsonObject		data;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Adding parameter '" + name + "' to job template with PK: " + pk);
+
+    data = new JsonObject();
+    data.addProperty("type", type);
+    data.addProperty("options", options);
+    request  = newPost(getPath() + pk + "/parameters/" + name)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to add parameter '" + name + "' to job template: " + pk, response);
+  }
+
+  /**
+   * For removing an parameter from a job template.
+   *
+   * @param jobTemplate the job template to update
+   * @param name	the name of the parameter
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean deleteParameter(JobTemplate jobTemplate, String name) throws Exception {
+    return deleteParameter(jobTemplate.getPK(), name);
+  }
+
+  /**
+   * For adding an parameter to a job template.
+   *
+   * @param pk 		the job template to update
+   * @param name	the name of the parameter
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public boolean deleteParameter(int pk, String name) throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Removing parameter '" + name + "' from job template with PK: " + pk);
+
+    request  = newDelete(getPath() + pk + "/parameters/" + name);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to remove parameter '" + name + "' from job template: " + pk, response);
   }
 }
