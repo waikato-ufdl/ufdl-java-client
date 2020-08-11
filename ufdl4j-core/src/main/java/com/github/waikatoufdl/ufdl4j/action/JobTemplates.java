@@ -588,7 +588,7 @@ public class JobTemplates
   }
 
   /**
-   * For adding an input to a job template.
+   * For removing an input from a job template.
    *
    * @param pk 		the job template to update
    * @param name	the name of the input
@@ -613,7 +613,7 @@ public class JobTemplates
   }
 
   /**
-   * For adding an parameter to a job template.
+   * For adding a parameter to a job template.
    *
    * @param jobTemplate the job template to update
    * @param name	the name of the parameter
@@ -627,7 +627,7 @@ public class JobTemplates
   }
 
   /**
-   * For adding an parameter to a job template.
+   * For adding a parameter to a job template.
    *
    * @param pk 		the job template to update
    * @param name	the name of the parameter
@@ -659,7 +659,7 @@ public class JobTemplates
   }
 
   /**
-   * For removing an parameter from a job template.
+   * For removing a parameter from a job template.
    *
    * @param jobTemplate the job template to update
    * @param name	the name of the parameter
@@ -671,7 +671,7 @@ public class JobTemplates
   }
 
   /**
-   * For adding an parameter to a job template.
+   * For removing a parameter from a job template.
    *
    * @param pk 		the job template to update
    * @param name	the name of the parameter
