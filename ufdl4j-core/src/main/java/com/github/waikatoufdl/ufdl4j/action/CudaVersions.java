@@ -189,9 +189,9 @@ public class CudaVersions
 
     result = null;
 
-    for (CudaVersion team : list()) {
-      if (team.getVersion().equals(version)) {
-        result = team;
+    for (CudaVersion cuda : list()) {
+      if (cuda.getVersion().equals(version)) {
+        result = cuda;
         break;
       }
     }
