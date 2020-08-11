@@ -63,7 +63,7 @@ public class ManagingHardwareGenerations {
     genFermat = client.hardware().partialUpdate(genFermat, null, null, 9.0);
     System.out.println(genFermat);
 
-    // delete '99'
+    // delete 'Fermat'
     System.out.println("deleting hardware generation '" + genFermat + "'? " + client.hardware().delete(genFermat));
 
     client.close();
