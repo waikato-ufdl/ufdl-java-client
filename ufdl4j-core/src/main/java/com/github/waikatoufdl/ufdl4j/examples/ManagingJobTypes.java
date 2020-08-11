@@ -36,10 +36,10 @@ public class ManagingJobTypes {
     // listing teams
     System.out.println("--> listing job types");
     JobType blahjobtype = null;
-    for (JobType cuda : client.jobTypes().list()) {
-      System.out.println(cuda);
-      if (cuda.getName().equals("blah"))
-        blahjobtype = cuda;
+    for (JobType types : client.jobTypes().list()) {
+      System.out.println(types);
+      if (types.getName().equals("blah"))
+        blahjobtype = types;
     }
 
     // create 'blah' if necessary
