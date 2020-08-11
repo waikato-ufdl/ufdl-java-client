@@ -11,6 +11,7 @@ import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks;
 import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations;
+import com.github.waikatoufdl.ufdl4j.action.JobTemplates;
 import com.github.waikatoufdl.ufdl4j.action.JobTypes;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
@@ -76,6 +77,9 @@ public class Client
   /** the jobtypes. */
   protected JobTypes m_JobTypes;
 
+  /** the job templates. */
+  protected JobTemplates m_JobTemplates;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -86,18 +90,19 @@ public class Client
     m_Connection = new Connection();
     m_Actions    = new HashMap<>();
     try {
-      m_Users      = action(Users.class);
-      m_Datasets   = action(Datasets.class);
-      m_Projects   = action(Projects.class);
-      m_Teams      = action(Teams.class);
-      m_Licenses   = action(Licenses.class);
-      m_Log        = action(Log.class);
-      m_Domains    = action(Domains.class);
-      m_Cuda       = action(CudaVersions.class);
-      m_Frameworks = action(Frameworks.class);
-      m_Hardware   = action(HardwareGenerations.class);
-      m_Nodes      = action(Nodes.class);
-      m_JobTypes   = action(JobTypes.class);
+      m_Users        = action(Users.class);
+      m_Datasets     = action(Datasets.class);
+      m_Projects     = action(Projects.class);
+      m_Teams        = action(Teams.class);
+      m_Licenses     = action(Licenses.class);
+      m_Log          = action(Log.class);
+      m_Domains      = action(Domains.class);
+      m_Cuda         = action(CudaVersions.class);
+      m_Frameworks   = action(Frameworks.class);
+      m_Hardware     = action(HardwareGenerations.class);
+      m_Nodes        = action(Nodes.class);
+      m_JobTypes     = action(JobTypes.class);
+      m_JobTemplates = action(JobTemplates.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -244,6 +249,15 @@ public class Client
    */
   public JobTypes jobTypes() {
     return m_JobTypes;
+  }
+
+  /**
+   * Returns the job templates action.
+   *
+   * @return		the job templates action
+   */
+  public JobTemplates jobTemplates() {
+    return m_JobTemplates;
   }
 
   /**
