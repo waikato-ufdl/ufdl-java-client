@@ -9,12 +9,14 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -292,16 +294,16 @@ public class DockerImages
    * @param cudaVersion the minimum cuda version
    * @param framework 	the framework PK
    * @param domain 	the domain this image applies to
-   * @param task 	the task this image is for
+   * @param tasks 	the tasks this image is for
    * @param minHardware	the minimum hardware generation
    * @param cpu 	whether image runs on CPU as well
    * @return		the DockerImage object, null if failed to create
    * @throws Exception	if request fails or docker image already exists
    */
   public DockerImage create(String name, String version, String url,
-                            String registryUrl, String registryUser, String registryPassword,
-                            String cudaVersion, int framework, String domain,
-                            String task, String minHardware, boolean cpu) throws Exception {
+			    String registryUrl, String registryUser, String registryPassword,
+			    String cudaVersion, int framework, String domain,
+			    String[] tasks, String minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -319,7 +321,7 @@ public class DockerImages
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
-    data.addProperty("task", task);
+    data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
     request = newPost(getPath())
@@ -346,18 +348,18 @@ public class DockerImages
    * @param cudaVersion the new minimum cuda version
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
-   * @param task 	the new task this image is for
+   * @param tasks 	the new tasks this image is for
    * @param minHardware	the new minimum hardware generation
    * @param cpu 	the new whether image runs on CPU as well
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(DockerImage obj, String name, String version, String url,
-                            String registryUrl, String registryUser, String registryPassword,
-                            String cudaVersion, int framework, String domain,
-                            String task, String minHardware, boolean cpu) throws Exception {
+			    String registryUrl, String registryUser, String registryPassword,
+			    String cudaVersion, int framework, String domain,
+			    String[] tasks, String minHardware, boolean cpu) throws Exception {
     return update(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, task, minHardware, cpu);
+      cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
 
   /**
@@ -373,16 +375,16 @@ public class DockerImages
    * @param cudaVersion the new minimum cuda version
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
-   * @param task 	the new task this image is for
+   * @param tasks 	the new task this image is for
    * @param minHardware	the new minimum hardware generation
    * @param cpu 	the new whether image runs on CPU as well
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(int pk, String name, String version, String url,
-                            String registryUrl, String registryUser, String registryPassword,
-                            String cudaVersion, int framework, String domain,
-                            String task, String minHardware, boolean cpu) throws Exception {
+			    String registryUrl, String registryUser, String registryPassword,
+			    String cudaVersion, int framework, String domain,
+			    String[] tasks, String minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -400,7 +402,7 @@ public class DockerImages
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
-    data.addProperty("task", task);
+    data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
     request = newPut(getPath() + pk)
@@ -427,18 +429,18 @@ public class DockerImages
    * @param cudaVersion the new minimum cuda version, ignored if null
    * @param framework 	the new framework PK, ignored if null
    * @param domain 	the new domain this image applies to, ignored if null
-   * @param task 	the new task this image is for, ignored if null
+   * @param tasks 	the new task this image is for, ignored if null
    * @param minHardware	the new minimum hardware generation, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(DockerImage obj, String name, String version, String url,
-                            String registryUrl, String registryUser, String registryPassword,
-                            String cudaVersion, Integer framework, String domain,
-                            String task, String minHardware, Boolean cpu) throws Exception {
+				   String registryUrl, String registryUser, String registryPassword,
+				   String cudaVersion, Integer framework, String domain,
+				   String[] tasks, String minHardware, Boolean cpu) throws Exception {
     return partialUpdate(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, task, minHardware, cpu);
+      cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
 
   /**
@@ -454,16 +456,16 @@ public class DockerImages
    * @param cudaVersion the new minimum cuda version, ignored if null
    * @param framework 	the new framework PK, ignored if null
    * @param domain 	the new domain this image applies to, ignored if null
-   * @param task 	the new task this image is for, ignored if null
+   * @param tasks 	the new tasks this image is for, ignored if null
    * @param minHardware	the new minimum hardware generation, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(int pk, String name, String version, String url,
-                            String registryUrl, String registryUser, String registryPassword,
-                            String cudaVersion, Integer framework, String domain,
-                            String task, String minHardware, Boolean cpu) throws Exception {
+				   String registryUrl, String registryUser, String registryPassword,
+				   String cudaVersion, Integer framework, String domain,
+				   String[] tasks, String minHardware, Boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -490,8 +492,8 @@ public class DockerImages
       data.addProperty("framework", framework);
     if (domain != null)
       data.addProperty("domain", domain);
-    if (task != null)
-      data.addProperty("task", task);
+    if (tasks != null)
+      data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     if (minHardware != null)
       data.addProperty("min_hardware_generation", minHardware);
     if (cpu != null)

@@ -45,7 +45,7 @@ public class ManagingDockerImages {
     // create 'blah' if necessary
     if (blahimg == null) {
       System.out.println("--> creating docker image");
-      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", "train", "Pascal", false);
+      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", new String[]{"train"}, "Pascal", false);
       System.out.println(blahimg);
     }
 
@@ -55,7 +55,7 @@ public class ManagingDockerImages {
 
     // updating blah
     System.out.println("--> updating docker image");
-    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", "train", "Pascal", false);
+    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", new String[]{"train"}, "Pascal", false);
     System.out.println(blahimg);
 
     // partially updating blahimg
