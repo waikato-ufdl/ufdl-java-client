@@ -10,6 +10,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
+import com.github.waikatoufdl.ufdl4j.core.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -141,8 +142,17 @@ public class DockerImages
      *
      * @return		the task
      */
-    public String getTask() {
-      return getString("task");
+    public String[] getTasks() {
+      String[]	result;
+      Object[]	tasks;
+      int	i;
+
+      tasks = JsonUtils.asList(getData(), "tasks", new ArrayList()).toArray();
+      result = new String[tasks.length];
+      for (i = 0; i < tasks.length; i++)
+        result[i] = "" + tasks[i];
+
+      return result;
     }
 
     /**
@@ -170,7 +180,7 @@ public class DockerImages
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion();
+      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", domain=" + getDomain() + ", tasks=" + Utils.arrayToString(getTasks());
     }
   }
 
