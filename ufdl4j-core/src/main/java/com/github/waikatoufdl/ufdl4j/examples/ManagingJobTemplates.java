@@ -45,13 +45,16 @@ public class ManagingJobTemplates {
     // create 'blah' if necessary
     if (blahtemplate == null) {
       System.out.println("--> creating job template");
-      blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
+      blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo ${num}");
       System.out.println(blahtemplate);
+      client.jobTemplates().addInput(blahtemplate, "dataset", "dataset", " to-subdir");
+      client.jobTemplates().addParameter(blahtemplate, "num", "int", "10");
     }
 
     // load blah
     System.out.println("--> loading job template");
     blahtemplate = client.jobTemplates().load("blah");
+    System.out.println(blahtemplate);
 
     // updating blah
     System.out.println("--> updating job template");
