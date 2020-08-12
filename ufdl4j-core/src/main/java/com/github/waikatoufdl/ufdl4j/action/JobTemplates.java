@@ -112,6 +112,8 @@ public class JobTemplates
       return getString("type");
     }
 
+    // TODO inputs/parameters
+
     /**
      * Returns the executor class.
      *
