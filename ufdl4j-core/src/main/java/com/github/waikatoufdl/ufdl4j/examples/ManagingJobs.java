@@ -153,7 +153,7 @@ public class ManagingJobs {
 
     // delete template
     System.out.println("--> deleting job template");
-    System.out.println(client.jobTemplates().delete(tftemplate, true));
+    System.out.println(client.jobTemplates().delete(tftemplate, false));
 
     // delete dataset
     System.out.println("--> deleting dataset");
