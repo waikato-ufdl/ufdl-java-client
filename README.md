@@ -27,6 +27,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.Nodes` - managing nodes
 * `com.github.waikatoufdl.ufdl4j.action.JobTypes` - managing job types
 * `com.github.waikatoufdl.ufdl4j.action.JobTemplates` - managing job templates
+* `com.github.waikatoufdl.ufdl4j.action.Jobs` - managing jobs
 
 ### ufdl4j-image
 
@@ -69,6 +70,7 @@ The core actions that can be accessed via the client:
 * `client.nodes()` - node management
 * `client.jobTypes()` - job type management
 * `client.jobTemplates()` - job template management
+* `client.jobs()` - job management
 
 ```java
 import com.github.waikatoufdl.ufdl4j.Client;

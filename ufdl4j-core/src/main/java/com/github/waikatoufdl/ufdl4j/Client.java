@@ -14,6 +14,7 @@ import com.github.waikatoufdl.ufdl4j.action.Frameworks;
 import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations;
 import com.github.waikatoufdl.ufdl4j.action.JobTemplates;
 import com.github.waikatoufdl.ufdl4j.action.JobTypes;
+import com.github.waikatoufdl.ufdl4j.action.Jobs;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Nodes;
@@ -84,6 +85,9 @@ public class Client
   /** the job templates. */
   protected JobTemplates m_JobTemplates;
 
+  /** the jobs. */
+  protected Jobs m_Jobs;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -108,6 +112,7 @@ public class Client
       m_Nodes        = action(Nodes.class);
       m_JobTypes     = action(JobTypes.class);
       m_JobTemplates = action(JobTemplates.class);
+      m_Jobs         = action(Jobs.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -272,6 +277,15 @@ public class Client
    */
   public JobTemplates jobTemplates() {
     return m_JobTemplates;
+  }
+
+  /**
+   * Returns the jobs action.
+   *
+   * @return		the jobs action
+   */
+  public Jobs jobs() {
+    return m_Jobs;
   }
 
   /**
