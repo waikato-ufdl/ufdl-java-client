@@ -35,42 +35,42 @@ public class ManagingJobTemplates {
 
     // listing templates
     System.out.println("--> listing job templates");
-    JobTemplate blahjobtype = null;
-    for (JobTemplate templates : client.jobTemplates().list()) {
-      System.out.println(templates);
-      if (templates.getName().equals("blah"))
-        blahjobtype = templates;
+    JobTemplate blahtemplate = null;
+    for (JobTemplate template : client.jobTemplates().list()) {
+      System.out.println(template);
+      if (template.getName().equals("blah"))
+        blahtemplate = template;
     }
 
     // create 'blah' if necessary
-    if (blahjobtype == null) {
+    if (blahtemplate == null) {
       System.out.println("--> creating job template");
-      blahjobtype = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
-      System.out.println(blahjobtype);
+      blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
+      System.out.println(blahtemplate);
     }
 
     // load blah
     System.out.println("--> loading job template");
-    blahjobtype = client.jobTemplates().load("blah");
+    blahtemplate = client.jobTemplates().load("blah");
 
     // updating blah
     System.out.println("--> updating job template");
-    blahjobtype = client.jobTemplates().update(blahjobtype, "blah2", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
-    System.out.println(blahjobtype);
+    blahtemplate = client.jobTemplates().update(blahtemplate, "blah2", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
+    System.out.println(blahtemplate);
 
     // partially updating blahtemplate
     System.out.println("--> partially updating job template");
-    blahjobtype = client.jobTemplates().partialUpdate(blahjobtype, "blah", null, "project", null, null, null, null, null, null);
-    System.out.println(blahjobtype);
+    blahtemplate = client.jobTemplates().partialUpdate(blahtemplate, "blah", null, "project", null, null, null, null, null, null);
+    System.out.println(blahtemplate);
 
     // soft delete 'blah'
-    System.out.println("soft deleting job template '" + blahjobtype + "'? " + client.jobTemplates().delete(blahjobtype, false));
+    System.out.println("soft deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, false));
 
     // reinstate 'blah'
-    System.out.println("reinstating job template '" + blahjobtype + "'? " + client.jobTemplates().reinstate(blahjobtype));
+    System.out.println("reinstating job template '" + blahtemplate + "'? " + client.jobTemplates().reinstate(blahtemplate));
 
     // hard delete 'blah'
-    System.out.println("hard deleting job template '" + blahjobtype + "'? " + client.jobTemplates().delete(blahjobtype, true));
+    System.out.println("hard deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, true));
 
     client.close();
   }
