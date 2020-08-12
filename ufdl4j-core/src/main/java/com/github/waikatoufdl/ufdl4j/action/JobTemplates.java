@@ -140,6 +140,15 @@ public class JobTemplates
     }
 
     /**
+     * Returns the creator ID.
+     *
+     * @return		the ID
+     */
+    public int getCreator() {
+      return getInt("creator", -1);
+    }
+
+    /**
      * Returns the creation date/time.
      *
      * @return		the date/time, can be null
@@ -620,12 +629,12 @@ public class JobTemplates
    * @param jobTemplate the job template to update
    * @param name	the name of the parameter
    * @param type 	the type of the parameter
-   * @param options 	the (optional) options
+   * @param defaultValue 	the default value
    * @return		true if successfully added
    * @throws Exception	if request fails, eg invalid job template PK
    */
-  public boolean addParameter(JobTemplate jobTemplate, String name, String type, String options) throws Exception {
-    return addParameter(jobTemplate.getPK(), name, type, options);
+  public boolean addParameter(JobTemplate jobTemplate, String name, String type, String defaultValue) throws Exception {
+    return addParameter(jobTemplate.getPK(), name, type, defaultValue);
   }
 
   /**
@@ -634,11 +643,11 @@ public class JobTemplates
    * @param pk 		the job template to update
    * @param name	the name of the parameter
    * @param type 	the type of the parameter
-   * @param options 	the (optional) options
+   * @param defaultValue 	the default value
    * @return		true if successfully added
    * @throws Exception	if request fails, eg invalid job template PK
    */
-  public boolean addParameter(int pk, String name, String type, String options) throws Exception {
+  public boolean addParameter(int pk, String name, String type, String defaultValue) throws Exception {
     JsonResponse 	response;
     JsonObject		data;
     Request 		request;
@@ -650,7 +659,7 @@ public class JobTemplates
 
     data = new JsonObject();
     data.addProperty("type", type);
-    data.addProperty("options", options);
+    data.addProperty("default", defaultValue);
     request  = newPost(getPath() + pk + "/parameters/" + name)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -747,7 +756,7 @@ public class JobTemplates
       data.add("parameter_values", sub);
     }
 
-    request = newPost(getPath() + "/create-job")
+    request = newPost(getPath() + pk + "/create-job")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
