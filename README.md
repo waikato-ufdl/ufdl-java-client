@@ -153,7 +153,8 @@ public static class Test {
 * [ManagingDockerImages](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingDockerImages.java) - docker image operations
 * [ManagingNodes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingNodes.java) - node operations
 * [ManagingJobTypes](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTypes.java) - job type operations
-* [ManagingJobTemplates](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTemplate.java) - job template operations
+* [ManagingJobTemplates](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobTemplates.java) - job template operations
+* [ManagingJobs](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingJobs.java) - job operations
 
 ### ufdl4j-image
 
