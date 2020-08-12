@@ -495,14 +495,14 @@ public class JobTemplates
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("deleting job template with PK: " + pk);
+    getLogger().info("deleting job template with PK (hard=" + hard + "): " + pk);
 
     request  = newDelete(getPath() + pk + (hard ? "/hard" : "/"));
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to delete job template: " + pk, response);
+      throw new FailedRequestException("Failed to delete job template (hard=" + hard + "): " + pk, response);
   }
 
   /**
