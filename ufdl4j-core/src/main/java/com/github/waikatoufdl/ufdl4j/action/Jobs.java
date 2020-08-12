@@ -87,7 +87,7 @@ public class Jobs
      *
      * @return		the node, null if none set
      */
-    public String getnode() {
+    public String getNode() {
       return getString("node");
     }
 
