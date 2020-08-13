@@ -22,6 +22,7 @@ import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +117,57 @@ public class JobTemplates
       return getString("type");
     }
 
-    // TODO inputs/parameters
+    /**
+     * Returns the inputs as a list of maps (name/type/options).
+     *
+     * @return		the inputs
+     */
+    public List<Map<String,String>> getInputs() {
+      List<Map<String,String>>  result;
+      JsonArray			inputs;
+      JsonObject		inputObj;
+      int			i;
+      Map<String,String>	inputMap;
+
+      result = new ArrayList<>();
+      inputs = getData().getAsJsonArray("inputs");
+      for (i = 0; i < inputs.size(); i++) {
+	inputObj = inputs.get(i).getAsJsonObject();
+	inputMap = new HashMap<>();
+	inputMap.put("name", inputObj.get("name").getAsString());
+	inputMap.put("type", inputObj.get("type").getAsString());
+	inputMap.put("options", inputObj.has("options") ? inputObj.get("options").getAsString() : "");
+	result.add(inputMap);
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the parameters as a list of maps (name/type/default).
+     *
+     * @return		the parameters
+     */
+    public List<Map<String,String>> getParameters() {
+      List<Map<String,String>>  result;
+      JsonArray 		parameters;
+      JsonObject 		paramObj;
+      int			i;
+      Map<String,String> 	paramMap;
+
+      result = new ArrayList<>();
+      parameters = getData().getAsJsonArray("parameters");
+      for (i = 0; i < parameters.size(); i++) {
+	paramObj = parameters.get(i).getAsJsonObject();
+	paramMap = new HashMap<>();
+	paramMap.put("name", paramObj.get("name").getAsString());
+	paramMap.put("type", paramObj.get("type").getAsString());
+	paramMap.put("default", paramObj.has("default") ? paramObj.get("default").getAsString() : "");
+	result.add(paramMap);
+      }
+
+      return result;
+    }
 
     /**
      * Returns the executor class.
@@ -179,7 +230,7 @@ public class JobTemplates
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion();
+      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", inputs=" + getInputs() + ", params=" + getParameters();
     }
   }
 
