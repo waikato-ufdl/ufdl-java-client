@@ -67,21 +67,21 @@ public class Jobs
     }
 
     /**
-     * Returns the docker image.
+     * Returns the docker image PK.
      *
      * @return		the image
      */
-    public String getDockerImage() {
-      return getString("docker_image");
+    public int getDockerImage() {
+      return getData().get("docker_image").getAsJsonObject().get("pk").getAsInt();
     }
 
     /**
-     * Returns the job template.
+     * Returns the job template PK.
      *
      * @return		the template
      */
-    public String getJobTemplate() {
-      return getString("template");
+    public int getJobTemplate() {
+      return getData().get("template").getAsJsonObject().get("pk").getAsInt();
     }
 
     /**

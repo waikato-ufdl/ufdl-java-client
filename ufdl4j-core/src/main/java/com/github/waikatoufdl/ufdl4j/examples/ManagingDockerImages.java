@@ -6,7 +6,9 @@
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
+import com.github.waikatoufdl.ufdl4j.action.CudaVersions.CudaVersion;
 import com.github.waikatoufdl.ufdl4j.action.DockerImages.DockerImage;
+import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations.HardwareGeneration;
 
 /**
  * Example code for managing docker images.
@@ -43,9 +45,11 @@ public class ManagingDockerImages {
     }
 
     // create 'blah' if necessary
+    CudaVersion cuda10 = client.cuda().load("10.0");
+    HardwareGeneration hwPascal = client.hardware().load("Pascal");
     if (blahimg == null) {
       System.out.println("--> creating docker image");
-      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", new String[]{"train"}, "Pascal", false);
+      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false);
       System.out.println(blahimg);
     }
 
@@ -55,7 +59,7 @@ public class ManagingDockerImages {
 
     // updating blah
     System.out.println("--> updating docker image");
-    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", "10.0", 1, "ic", new String[]{"train"}, "Pascal", false);
+    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false);
     System.out.println(blahimg);
 
     // partially updating blahimg

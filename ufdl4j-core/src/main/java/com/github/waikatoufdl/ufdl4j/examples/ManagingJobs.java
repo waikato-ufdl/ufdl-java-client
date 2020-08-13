@@ -53,7 +53,7 @@ public class ManagingJobs {
     }
 
     // create team?
-    if (client.teams().list().size() == 0) {
+    if (client.teams().load("blahteam") == null) {
       System.out.println("--> creating team");
       System.out.println(client.teams().create("blahteam"));
     }
@@ -165,7 +165,7 @@ public class ManagingJobs {
 
     // delete team?
     if (client.teams().load("blahteam") != null)
-       client.teams().delete(client.teams().load("blahteam"), true);
+       client.teams().delete(client.teams().load("blahteam"), false);
 
     client.close();
   }

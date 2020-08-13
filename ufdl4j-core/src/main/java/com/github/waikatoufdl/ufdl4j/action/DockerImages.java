@@ -114,12 +114,12 @@ public class DockerImages
     }
 
     /**
-     * Returns the CUDA version.
+     * Returns the CUDA version PK.
      *
      * @return		the version
      */
-    public String getCudaVersion() {
-      return getString("cuda_version");
+    public int getCudaVersion() {
+      return getInt("cuda_version");
     }
 
     /**
@@ -159,12 +159,12 @@ public class DockerImages
     }
 
     /**
-     * Returns the minimum hardware generation.
+     * Returns the minimum hardware generation PK.
      *
      * @return		the generation
      */
-    public String getMinHardwareGeneration() {
-      return getString("min_hardware_generation");
+    public int getMinHardwareGeneration() {
+      return getInt("min_hardware_generation");
     }
 
     /**
@@ -326,19 +326,19 @@ public class DockerImages
    * @param registryUrl 	the url of the registry
    * @param registryUser 	the user to use for connecting to the registry
    * @param registryPassword 	the password to use for the registry
-   * @param cudaVersion the minimum cuda version
+   * @param cudaVersion the minimum cuda version PK
    * @param framework 	the framework PK
    * @param domain 	the domain this image applies to
    * @param tasks 	the tasks this image is for
-   * @param minHardware	the minimum hardware generation
+   * @param minHardware	the minimum hardware generation PK
    * @param cpu 	whether image runs on CPU as well
    * @return		the DockerImage object, null if failed to create
    * @throws Exception	if request fails or docker image already exists
    */
   public DockerImage create(String name, String version, String url,
 			    String registryUrl, String registryUser, String registryPassword,
-			    String cudaVersion, int framework, String domain,
-			    String[] tasks, String minHardware, boolean cpu) throws Exception {
+			    int cudaVersion, int framework, String domain,
+			    String[] tasks, int minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -380,19 +380,19 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry
    * @param registryUser 	the new user to use for connecting to the registry
    * @param registryPassword 	the new password to use for the registry
-   * @param cudaVersion the new minimum cuda version
+   * @param cudaVersion the new minimum cuda version PK
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
    * @param tasks 	the new tasks this image is for
-   * @param minHardware	the new minimum hardware generation
+   * @param minHardware	the new minimum hardware generation PK
    * @param cpu 	the new whether image runs on CPU as well
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(DockerImage obj, String name, String version, String url,
 			    String registryUrl, String registryUser, String registryPassword,
-			    String cudaVersion, int framework, String domain,
-			    String[] tasks, String minHardware, boolean cpu) throws Exception {
+			    int cudaVersion, int framework, String domain,
+			    String[] tasks, int minHardware, boolean cpu) throws Exception {
     return update(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
       cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
@@ -407,19 +407,19 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry
    * @param registryUser 	the new user to use for connecting to the registry
    * @param registryPassword 	the new password to use for the registry
-   * @param cudaVersion the new minimum cuda version
+   * @param cudaVersion the new minimum cuda version PK
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
    * @param tasks 	the new task this image is for
-   * @param minHardware	the new minimum hardware generation
+   * @param minHardware	the new minimum hardware generation PK
    * @param cpu 	the new whether image runs on CPU as well
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(int pk, String name, String version, String url,
 			    String registryUrl, String registryUser, String registryPassword,
-			    String cudaVersion, int framework, String domain,
-			    String[] tasks, String minHardware, boolean cpu) throws Exception {
+			    int cudaVersion, int framework, String domain,
+			    String[] tasks, int minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -461,19 +461,19 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry, ignored if null
    * @param registryUser 	the new user to use for connecting to the registry, ignored if null
    * @param registryPassword 	the new password to use for the registry, ignored if null
-   * @param cudaVersion the new minimum cuda version, ignored if null
+   * @param cudaVersion the new minimum cuda version PK, ignored if null
    * @param framework 	the new framework PK, ignored if null
    * @param domain 	the new domain this image applies to, ignored if null
    * @param tasks 	the new task this image is for, ignored if null
-   * @param minHardware	the new minimum hardware generation, ignored if null
+   * @param minHardware	the new minimum hardware generation PK, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(DockerImage obj, String name, String version, String url,
 				   String registryUrl, String registryUser, String registryPassword,
-				   String cudaVersion, Integer framework, String domain,
-				   String[] tasks, String minHardware, Boolean cpu) throws Exception {
+				   Integer cudaVersion, Integer framework, String domain,
+				   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
     return partialUpdate(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
       cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
@@ -499,8 +499,8 @@ public class DockerImages
    */
   public DockerImage partialUpdate(int pk, String name, String version, String url,
 				   String registryUrl, String registryUser, String registryPassword,
-				   String cudaVersion, Integer framework, String domain,
-				   String[] tasks, String minHardware, Boolean cpu) throws Exception {
+				   Integer cudaVersion, Integer framework, String domain,
+				   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;

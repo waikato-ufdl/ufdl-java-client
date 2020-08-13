@@ -97,19 +97,44 @@ public class Teams
     }
 
     /**
-     * Returns the members of the team.
+     * Returns the members of the team (names).
      *
      * @return		the members
      */
     public List<String> members() {
       List<String>	result;
       List		list;
+      JsonObject	jobj;
 
       result = new ArrayList<>();
       list = getList("members", null);
       if (list != null) {
-        for (Object o: list)
-          result.add(o.toString());
+        for (Object o: list) {
+          jobj = (JsonObject) o;
+          result.add(jobj.get("username").getAsString());
+        }
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the members of the team (PKs).
+     *
+     * @return		the members
+     */
+    public List<Integer> membersPK() {
+      List<Integer>	result;
+      List		list;
+      JsonObject	jobj;
+
+      result = new ArrayList<>();
+      list = getList("members", null);
+      if (list != null) {
+        for (Object o: list) {
+          jobj = (JsonObject) o;
+          result.add(jobj.get("pk").getAsInt());
+        }
       }
 
       return result;

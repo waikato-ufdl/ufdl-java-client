@@ -80,8 +80,8 @@ public class Nodes
      *
      * @return		the generation
      */
-    public String getHardwareGeneration() {
-      return getString("hardware_generation");
+    public int getHardwareGeneration() {
+      return getInt("hardware_generation");
     }
 
     /**
