@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -118,6 +121,17 @@ public class HardwareGenerations
    * @throws Exception	if request fails
    */
   public List<HardwareGeneration> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the hardware generations.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of hardware generations
+   * @throws Exception	if request fails
+   */
+  public List<HardwareGeneration> list(Filter filter) throws Exception {
     List<HardwareGeneration>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -125,10 +139,12 @@ public class HardwareGenerations
     Request 		request;
     int			i;
 
-    getLogger().info("listing hardware generations");
+    getLogger().info("listing hardware generations" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -139,7 +155,7 @@ public class HardwareGenerations
       }
     }
     else {
-      throw new FailedRequestException("Failed to list hardware generations!", response);
+      throw new FailedRequestException("Failed to list hardware generations!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -183,18 +199,25 @@ public class HardwareGenerations
    * @throws Exception	if request fails
    */
   public HardwareGeneration load(String generation) throws Exception {
-    HardwareGeneration result;
+    HardwareGeneration 	result;
+    Filter		filter;
 
     getLogger().info("loading hardware generation: " + generation);
 
     result = null;
 
-    for (HardwareGeneration team : list()) {
-      if (team.getGeneration().equals(generation)) {
-        result = team;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("generation", generation),
       }
+    );
+    for (HardwareGeneration gen : list(filter)) {
+      result = gen;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load hardware generation: " + generation);
 
     return result;
   }

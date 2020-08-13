@@ -11,6 +11,10 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactNumber;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -206,6 +210,17 @@ public class JobTemplates
    * @throws Exception	if request fails
    */
   public List<JobTemplate> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the job templates.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of job templates
+   * @throws Exception	if request fails
+   */
+  public List<JobTemplate> list(Filter filter) throws Exception {
     List<JobTemplate>	result;
     JsonResponse 	response;
     JsonElement		element;
@@ -213,10 +228,12 @@ public class JobTemplates
     Request 		request;
     int			i;
 
-    getLogger().info("listing job templates");
+    getLogger().info("listing job templates" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -227,7 +244,7 @@ public class JobTemplates
       }
     }
     else {
-      throw new FailedRequestException("Failed to list job templates!", response);
+      throw new FailedRequestException("Failed to list job templates!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -270,19 +287,27 @@ public class JobTemplates
    * @return		the (first matching) job template object, null if failed to locate
    * @throws Exception	if request fails
    */
-  public JobTemplate load(String name) throws Exception {
+  public JobTemplate load(String name, int version) throws Exception {
     JobTemplate	result;
+    Filter	filter;
 
-    getLogger().info("loading job template: " + name);
+    getLogger().info("loading job template: " + name + "/" + version);
 
     result = null;
 
-    for (JobTemplate template : list()) {
-      if (template.getName().equals(name)) {
-        result = template;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
+        new ExactNumber("version", version),
       }
+    );
+    for (JobTemplate template : list(filter)) {
+      result = template;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load job template: " + name + "/" + version);
 
     return result;
   }

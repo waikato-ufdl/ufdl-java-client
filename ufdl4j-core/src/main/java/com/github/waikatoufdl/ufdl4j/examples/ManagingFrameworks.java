@@ -51,7 +51,7 @@ public class ManagingFrameworks {
 
     // load blah
     System.out.println("--> loading framework");
-    blahframework = client.frameworks().load("blah");
+    blahframework = client.frameworks().load("blah", "1.0");
 
     // updating blah
     System.out.println("--> updating framework");

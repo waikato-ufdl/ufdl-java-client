@@ -11,6 +11,9 @@ import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.Utils;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -211,6 +214,17 @@ public class DockerImages
    * @throws Exception	if request fails
    */
   public List<DockerImage> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the docker images.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of docker images
+   * @throws Exception	if request fails
+   */
+  public List<DockerImage> list(Filter filter) throws Exception {
     List<DockerImage>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -218,10 +232,12 @@ public class DockerImages
     Request 		request;
     int			i;
 
-    getLogger().info("listing docker images");
+    getLogger().info("listing docker images" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -232,7 +248,7 @@ public class DockerImages
       }
     }
     else {
-      throw new FailedRequestException("Failed to list docker images!", response);
+      throw new FailedRequestException("Failed to list docker images!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -272,22 +288,31 @@ public class DockerImages
    * For loading a specific docker image by name.
    *
    * @param name 	the name
-   * @return		the (frist matching) docker image object, null if failed to locate
+   * @param version 	the version
+   * @return		the docker image object, null if failed to locate
    * @throws Exception	if request fails
    */
-  public DockerImage load(String name) throws Exception {
+  public DockerImage load(String name, String version) throws Exception {
     DockerImage	result;
+    Filter	filter;
 
-    getLogger().info("loading docker image: " + name);
+    getLogger().info("loading docker image: " + name + "/" + version);
 
     result = null;
 
-    for (DockerImage image : list()) {
-      if (image.getName().equals(name)) {
-        result = image;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
+        new ExactString("version", version),
       }
+    );
+    for (DockerImage image : list(filter)) {
+      result = image;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load docker image: " + name + "/" + version);
 
     return result;
   }

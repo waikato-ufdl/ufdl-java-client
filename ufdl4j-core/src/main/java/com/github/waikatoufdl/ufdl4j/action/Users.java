@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -173,6 +176,17 @@ public class Users
    * @throws Exception	if request fails
    */
   public List<User> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the users.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of users
+   * @throws Exception	if request fails
+   */
+  public List<User> list(Filter filter) throws Exception {
     List<User>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -180,10 +194,12 @@ public class Users
     Request 		request;
     int			i;
 
-    getLogger().info("listing users");
+    getLogger().info("listing users" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -194,7 +210,7 @@ public class Users
       }
     }
     else {
-      throw new FailedRequestException("Failed to list users!", response);
+      throw new FailedRequestException("Failed to list users!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -239,17 +255,24 @@ public class Users
    */
   public User load(String name) throws Exception {
     User	result;
+    Filter	filter;
 
     getLogger().info("loading user with name: " + name);
 
     result = null;
 
-    for (User user: list()) {
-      if (user.getUserName().equals(name)) {
-        result = user;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("username", name),
       }
+    );
+    for (User user: list(filter)) {
+      result = user;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load user: " + name);
 
     return result;
   }

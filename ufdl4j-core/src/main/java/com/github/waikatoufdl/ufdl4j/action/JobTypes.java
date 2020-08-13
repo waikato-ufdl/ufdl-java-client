@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -100,17 +103,30 @@ public class JobTypes
    * @throws Exception	if request fails
    */
   public List<JobType> list() throws Exception {
-    List<JobType>		result;
+    return list(null);
+  }
+
+  /**
+   * For listing the job types.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of job types
+   * @throws Exception	if request fails
+   */
+  public List<JobType> list(Filter filter) throws Exception {
+    List<JobType>	result;
     JsonResponse 	response;
     JsonElement		element;
     JsonArray		array;
     Request 		request;
     int			i;
 
-    getLogger().info("listing job types");
+    getLogger().info("listing job types" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -121,7 +137,7 @@ public class JobTypes
       }
     }
     else {
-      throw new FailedRequestException("Failed to list job types!", response);
+      throw new FailedRequestException("Failed to list job types!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -166,17 +182,24 @@ public class JobTypes
    */
   public JobType load(String name) throws Exception {
     JobType	result;
+    Filter	filter;
 
     getLogger().info("loading job type: " + name);
 
     result = null;
 
-    for (JobType team : list()) {
-      if (team.getName().equals(name)) {
-        result = team;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
       }
+    );
+    for (JobType type : list(filter)) {
+      result = type;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load job type: " + name);
 
     return result;
   }

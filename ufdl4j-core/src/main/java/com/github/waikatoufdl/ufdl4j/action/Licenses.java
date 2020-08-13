@@ -11,6 +11,9 @@ import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -601,6 +604,17 @@ public class Licenses
    * @throws Exception	if request fails
    */
   public List<License> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the licenses.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of licenses
+   * @throws Exception	if request fails
+   */
+  public List<License> list(Filter filter) throws Exception {
     List<License>	result;
     JsonResponse 	response;
     JsonElement		element;
@@ -608,10 +622,12 @@ public class Licenses
     Request 		request;
     int			i;
 
-    getLogger().info("listing licenses");
+    getLogger().info("listing licenses" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -622,7 +638,7 @@ public class Licenses
       }
     }
     else {
-      throw new FailedRequestException("Failed to list licenses!", response);
+      throw new FailedRequestException("Failed to list licenses!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -955,17 +971,24 @@ public class Licenses
    */
   public License load(String name) throws Exception {
     License	result;
+    Filter	filter;
 
     getLogger().info("loading license with name: " + name);
 
     result = null;
 
-    for (License license : list()) {
-      if (license.getName().equals(name)) {
-        result = license;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
       }
+    );
+    for (License license : list(filter)) {
+      result = license;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load license: " + name);
 
     return result;
   }

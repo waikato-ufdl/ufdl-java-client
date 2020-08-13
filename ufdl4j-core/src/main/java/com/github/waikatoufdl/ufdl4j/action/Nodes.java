@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -146,6 +149,17 @@ public class Nodes
    * @throws Exception	if request fails
    */
   public List<Node> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the nodes.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of nodes
+   * @throws Exception	if request fails
+   */
+  public List<Node> list(Filter filter) throws Exception {
     List<Node>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -153,10 +167,12 @@ public class Nodes
     Request 		request;
     int			i;
 
-    getLogger().info("listing nodes");
+    getLogger().info("listing nodes" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -167,7 +183,7 @@ public class Nodes
       }
     }
     else {
-      throw new FailedRequestException("Failed to list nodes!", response);
+      throw new FailedRequestException("Failed to list nodes!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -212,17 +228,24 @@ public class Nodes
    */
   public Node load(String ip) throws Exception {
     Node	result;
+    Filter	filter;
 
     getLogger().info("loading node: " + ip);
 
     result = null;
 
-    for (Node node : list()) {
-      if (node.getIP().equals(ip)) {
-        result = node;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("ip", ip),
       }
+    );
+    for (Node node : list(filter)) {
+      result = node;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load node: " + ip);
 
     return result;
   }

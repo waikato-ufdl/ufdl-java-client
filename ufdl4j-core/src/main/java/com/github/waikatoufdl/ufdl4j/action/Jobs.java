@@ -15,9 +15,11 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -210,6 +212,17 @@ public class Jobs
    * @throws Exception	if request fails
    */
   public List<Job> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the jobs.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of jobs
+   * @throws Exception	if request fails
+   */
+  public List<Job> list(Filter filter) throws Exception {
     List<Job>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -217,10 +230,12 @@ public class Jobs
     Request 		request;
     int			i;
 
-    getLogger().info("listing jobs");
+    getLogger().info("listing jobs" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -231,7 +246,7 @@ public class Jobs
       }
     }
     else {
-      throw new FailedRequestException("Failed to list jobs!", response);
+      throw new FailedRequestException("Failed to list jobs!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;

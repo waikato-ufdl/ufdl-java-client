@@ -9,9 +9,11 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +101,17 @@ public class Domains
    * @throws Exception	if request fails
    */
   public List<Domain> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the domains.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of domains
+   * @throws Exception	if request fails
+   */
+  public List<Domain> list(Filter filter) throws Exception {
     List<Domain>	result;
     JsonResponse 	response;
     JsonElement		element;
@@ -106,10 +119,12 @@ public class Domains
     Request 		request;
     int			i;
 
-    getLogger().info("listing domains");
+    getLogger().info("listing domains" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -120,7 +135,7 @@ public class Domains
       }
     }
     else {
-      throw new FailedRequestException("Failed to list domains!", response);
+      throw new FailedRequestException("Failed to list domains!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;

@@ -10,6 +10,9 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -139,17 +142,30 @@ public class Projects
    * @throws Exception	if request fails
    */
   public List<Project> list() throws Exception {
-    List<Project>		result;
+    return list(null);
+  }
+
+  /**
+   * For listing the projects.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of projects
+   * @throws Exception	if request fails
+   */
+  public List<Project> list(Filter filter) throws Exception {
+    List<Project>	result;
     JsonResponse 	response;
     JsonElement		element;
     JsonArray		array;
     Request 		request;
     int			i;
 
-    getLogger().info("listing projects");
+    getLogger().info("listing projects" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -160,7 +176,7 @@ public class Projects
       }
     }
     else {
-      throw new FailedRequestException("Failed to list projects!", response);
+      throw new FailedRequestException("Failed to list projects!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -205,17 +221,24 @@ public class Projects
    */
   public Project load(String name) throws Exception {
     Project	result;
+    Filter	filter;
 
     getLogger().info("loading project with name: " + name);
 
     result = null;
 
-    for (Project project : list()) {
-      if (project.getName().equals(name)) {
-        result = project;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
       }
+    );
+    for (Project project : list(filter)) {
+      result = project;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load project: " + name);
 
     return result;
   }

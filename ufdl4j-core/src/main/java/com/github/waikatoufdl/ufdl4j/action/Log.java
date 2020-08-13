@@ -9,6 +9,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -138,6 +139,17 @@ public class Log
    * @throws Exception	if request fails
    */
   public List<LogEntry> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the log entries.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of log entries
+   * @throws Exception	if request fails
+   */
+  public List<LogEntry> list(Filter filter) throws Exception {
     List<LogEntry>	result;
     JsonResponse 	response;
     JsonElement		element;
@@ -145,10 +157,12 @@ public class Log
     Request 		request;
     int			i;
 
-    getLogger().info("listing log entries");
+    getLogger().info("listing log entries" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -159,7 +173,7 @@ public class Log
       }
     }
     else {
-      throw new FailedRequestException("Failed to list log entries!", response);
+      throw new FailedRequestException("Failed to list log entries!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;

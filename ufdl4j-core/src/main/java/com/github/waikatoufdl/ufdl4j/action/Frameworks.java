@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -109,6 +112,17 @@ public class Frameworks
    * @throws Exception	if request fails
    */
   public List<Framework> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the frameworks.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of frameworks
+   * @throws Exception	if request fails
+   */
+  public List<Framework> list(Filter filter) throws Exception {
     List<Framework>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -116,10 +130,12 @@ public class Frameworks
     Request 		request;
     int			i;
 
-    getLogger().info("listing frameworks");
+    getLogger().info("listing frameworks" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -130,7 +146,7 @@ public class Frameworks
       }
     }
     else {
-      throw new FailedRequestException("Failed to list frameworks!", response);
+      throw new FailedRequestException("Failed to list frameworks!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -173,19 +189,27 @@ public class Frameworks
    * @return		the (first matching) framework object, null if failed to locate
    * @throws Exception	if request fails
    */
-  public Framework load(String name) throws Exception {
+  public Framework load(String name, String version) throws Exception {
     Framework	result;
+    Filter	filter;
 
-    getLogger().info("loading framework: " + name);
+    getLogger().info("loading framework: " + name + "/" + version);
 
     result = null;
 
-    for (Framework framework : list()) {
-      if (framework.getName().equals(name)) {
-        result = framework;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
+        new ExactString("version", version),
       }
+    );
+    for (Framework framework : list(filter)) {
+      result = framework;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load framework: " + name + "/" + version);
 
     return result;
   }

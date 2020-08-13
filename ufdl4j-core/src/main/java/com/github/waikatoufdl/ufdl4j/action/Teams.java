@@ -11,6 +11,9 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -150,6 +153,17 @@ public class Teams
    * @throws Exception	if request fails
    */
   public List<Team> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the teams.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of teams
+   * @throws Exception	if request fails
+   */
+  public List<Team> list(Filter filter) throws Exception {
     List<Team>		result;
     JsonResponse 	response;
     JsonElement		element;
@@ -157,10 +171,12 @@ public class Teams
     Request 		request;
     int			i;
 
-    getLogger().info("listing teams");
+    getLogger().info("listing teams" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -171,7 +187,7 @@ public class Teams
       }
     }
     else {
-      throw new FailedRequestException("Failed to list teams!", response);
+      throw new FailedRequestException("Failed to list teams!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -216,17 +232,24 @@ public class Teams
    */
   public Team load(String name) throws Exception {
     Team	result;
+    Filter	filter;
 
     getLogger().info("loading team with name: " + name);
 
     result = null;
 
-    for (Team team : list()) {
-      if (team.getName().equals(name)) {
-        result = team;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("name", name),
       }
+    );
+    for (Team team : list(filter)) {
+      result = team;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load team: " + name);
 
     return result;
   }

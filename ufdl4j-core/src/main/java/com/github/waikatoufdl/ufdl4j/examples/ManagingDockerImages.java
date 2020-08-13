@@ -51,7 +51,7 @@ public class ManagingDockerImages {
 
     // load blah
     System.out.println("--> loading docker image");
-    blahimg = client.docker().load("blah");
+    blahimg = client.docker().load("blah", "1.0");
 
     // updating blah
     System.out.println("--> updating docker image");

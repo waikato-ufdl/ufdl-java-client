@@ -19,7 +19,8 @@ import java.util.logging.Level;
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
 public abstract class AbstractJsonObjectWrapper
-  extends AbstractLoggingObject {
+  extends AbstractLoggingObject
+  implements JsonObjectSupplier {
 
   private static final long serialVersionUID = 8986254238262104142L;
 
@@ -288,10 +289,21 @@ public abstract class AbstractJsonObjectWrapper
   }
 
   /**
+   * Returns the JSON structure.
+   *
+   * @return		the json
+   */
+  @Override
+  public JsonObject toJsonObject() {
+    return m_Data;
+  }
+
+  /**
    * Returns the stored data as pretty printed string.
    *
    * @return		the pretty json
    */
+  @Override
   public String toPrettyPrint() {
     return JsonUtils.prettyPrint(m_Data);
   }

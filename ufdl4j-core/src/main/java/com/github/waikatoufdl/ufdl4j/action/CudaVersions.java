@@ -9,6 +9,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
+import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -118,6 +121,17 @@ public class CudaVersions
    * @throws Exception	if request fails
    */
   public List<CudaVersion> list() throws Exception {
+    return list(null);
+  }
+
+  /**
+   * For listing the cuda versions.
+   *
+   * @param filter 	the filter to apply, can be null
+   * @return		the list of cuda versions
+   * @throws Exception	if request fails
+   */
+  public List<CudaVersion> list(Filter filter) throws Exception {
     List<CudaVersion>	result;
     JsonResponse 	response;
     JsonElement		element;
@@ -125,10 +139,12 @@ public class CudaVersions
     Request 		request;
     int			i;
 
-    getLogger().info("listing cuda versions");
+    getLogger().info("listing cuda versions" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
     request  = newGet(getPath());
+    if (filter != null)
+      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -139,7 +155,7 @@ public class CudaVersions
       }
     }
     else {
-      throw new FailedRequestException("Failed to list cuda versions!", response);
+      throw new FailedRequestException("Failed to list cuda versions!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
     }
 
     return result;
@@ -184,17 +200,24 @@ public class CudaVersions
    */
   public CudaVersion load(String version) throws Exception {
     CudaVersion	result;
+    Filter	filter;
 
     getLogger().info("loading cuda version: " + version);
 
     result = null;
 
-    for (CudaVersion cuda : list()) {
-      if (cuda.getVersion().equals(version)) {
-        result = cuda;
-        break;
+    filter = new Filter(
+      new AbstractExpression[]{
+        new ExactString("version", version),
       }
+    );
+    for (CudaVersion cuda : list(filter)) {
+      result = cuda;
+      break;
     }
+
+    if (result == null)
+      getLogger().warning("failed to load cuda version: " + version);
 
     return result;
   }

@@ -53,7 +53,7 @@ public class ManagingJobTemplates {
 
     // load blah
     System.out.println("--> loading job template");
-    blahtemplate = client.jobTemplates().load("blah");
+    blahtemplate = client.jobTemplates().load("blah", 1);
     System.out.println(blahtemplate);
 
     // updating blah
