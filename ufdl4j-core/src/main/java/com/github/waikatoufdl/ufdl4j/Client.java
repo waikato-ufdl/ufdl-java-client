@@ -18,6 +18,7 @@ import com.github.waikatoufdl.ufdl4j.action.Jobs;
 import com.github.waikatoufdl.ufdl4j.action.Licenses;
 import com.github.waikatoufdl.ufdl4j.action.Log;
 import com.github.waikatoufdl.ufdl4j.action.Nodes;
+import com.github.waikatoufdl.ufdl4j.action.PretrainedModels;
 import com.github.waikatoufdl.ufdl4j.action.Projects;
 import com.github.waikatoufdl.ufdl4j.action.Teams;
 import com.github.waikatoufdl.ufdl4j.action.Users;
@@ -76,6 +77,9 @@ public class Client
   /** the docker images. */
   protected DockerImages m_Docker;
 
+  /** the pretrained models. */
+  protected PretrainedModels m_PretrainedModels;
+
   /** the nodes. */
   protected Nodes m_Nodes;
 
@@ -98,21 +102,22 @@ public class Client
     m_Connection = new Connection();
     m_Actions    = new HashMap<>();
     try {
-      m_Users        = action(Users.class);
-      m_Datasets     = action(Datasets.class);
-      m_Projects     = action(Projects.class);
-      m_Teams        = action(Teams.class);
-      m_Licenses     = action(Licenses.class);
-      m_Log          = action(Log.class);
-      m_Domains      = action(Domains.class);
-      m_Cuda         = action(CudaVersions.class);
-      m_Frameworks   = action(Frameworks.class);
-      m_Hardware     = action(HardwareGenerations.class);
-      m_Docker       = action(DockerImages.class);
-      m_Nodes        = action(Nodes.class);
-      m_JobTypes     = action(JobTypes.class);
-      m_JobTemplates = action(JobTemplates.class);
-      m_Jobs         = action(Jobs.class);
+      m_Users            = action(Users.class);
+      m_Datasets         = action(Datasets.class);
+      m_Projects         = action(Projects.class);
+      m_Teams            = action(Teams.class);
+      m_Licenses         = action(Licenses.class);
+      m_Log              = action(Log.class);
+      m_Domains          = action(Domains.class);
+      m_Cuda             = action(CudaVersions.class);
+      m_Frameworks       = action(Frameworks.class);
+      m_Hardware         = action(HardwareGenerations.class);
+      m_Docker           = action(DockerImages.class);
+      m_PretrainedModels = action(PretrainedModels.class);
+      m_Nodes            = action(Nodes.class);
+      m_JobTypes         = action(JobTypes.class);
+      m_JobTemplates     = action(JobTemplates.class);
+      m_Jobs             = action(Jobs.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to setup client!", e);
@@ -250,6 +255,15 @@ public class Client
    */
   public DockerImages docker() {
     return m_Docker;
+  }
+
+  /**
+   * Returns the pretrained models action.
+   *
+   * @return		the pretrained models action
+   */
+  public PretrainedModels pretrainedModels() {
+    return m_PretrainedModels;
   }
 
   /**
