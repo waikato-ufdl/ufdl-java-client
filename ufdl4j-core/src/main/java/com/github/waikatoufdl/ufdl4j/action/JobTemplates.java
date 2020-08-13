@@ -335,7 +335,7 @@ public class JobTemplates
    * For loading a specific job template by name.
    *
    * @param name 	the name
-   * @return		the (first matching) job template object, null if failed to locate
+   * @return		the job template object, null if failed to locate
    * @throws Exception	if request fails
    */
   public JobTemplate load(String name, int version) throws Exception {
