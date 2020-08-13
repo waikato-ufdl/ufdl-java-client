@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.auth;
 
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
+import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tika.io.IOUtils;
@@ -133,7 +134,7 @@ public class LocalStorage
       }
       fwriter = new FileWriter(config);
       bwriter = new BufferedWriter(fwriter);
-      bwriter.write(data.toString());
+      bwriter.write(JsonUtils.prettyPrint(data));
       bwriter.flush();
       fwriter.flush();
     }
