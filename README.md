@@ -140,6 +140,7 @@ public static class Test {
 
 ### ufdl4j-core
 
+* [FilterExample](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/FilterExample.java) - general filter example (filtering requires knowledge of field names used by backend API)
 * [ManagingUsers](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingUsers.java) - listing, creating, deleting users
 * [ManagingTeams](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingTeams.java) - same for teams
 * [ManagingProjects](ufdl4j-core/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingProjects.java) - same for projects
