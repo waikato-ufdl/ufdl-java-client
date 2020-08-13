@@ -73,7 +73,8 @@ public class ManagingJobTemplates {
     System.out.println("reinstating job template '" + blahtemplate + "'? " + client.jobTemplates().reinstate(blahtemplate));
 
     // hard delete 'blah'
-    System.out.println("hard deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, true));
+    // TODO hard delete doesn't work at the moment
+    //System.out.println("hard deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, true));
 
     client.close();
   }
