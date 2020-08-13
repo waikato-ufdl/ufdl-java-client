@@ -6,7 +6,6 @@
 package com.github.waikatoufdl.ufdl4j.auth;
 
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.tika.io.IOUtils;
@@ -160,7 +159,7 @@ public class LocalStorage
     Tokens	result;
     JsonObject	data;
     JsonObject  server;
-    JsonArray   auth;
+    JsonObject  auth;
 
     result = new Tokens();
     data   = load();
@@ -168,11 +167,11 @@ public class LocalStorage
       server = data.getAsJsonObject(context.getServer().getURL());
       if (server.has(context.getUser())) {
         try {
-          auth = server.getAsJsonArray(context.getUser());
-          if (auth.size() != 2)
-            getLogger().warning("Expected two values (access/refresh) in token array, but got: " + auth.size());
+          auth = server.getAsJsonObject(context.getUser());
+          if (!auth.has("access") || !auth.has("refresh"))
+            getLogger().warning("Expected two values (access/refresh) in token array, but got: " + auth);
           else
-            result = new Tokens(auth.get(1).getAsString(), auth.get(0).getAsString());
+            result = new Tokens(auth.get("refresh").getAsString(), auth.get("access").getAsString());
         }
         catch (Exception e) {
           getLogger().log(Level.SEVERE, "Failed to read tokens from: " + data);
@@ -202,7 +201,7 @@ public class LocalStorage
   public String store(Authentication context, Tokens tokens) {
     String	result;
     JsonObject	data;
-    JsonArray	auth;
+    JsonObject	auth;
     JsonObject  server;
 
     if (!tokens.isValid()) {
@@ -216,9 +215,9 @@ public class LocalStorage
       server = data.getAsJsonObject(context.getServer().getURL());
     else
       server = new JsonObject();
-    auth = new JsonArray();
-    auth.add(tokens.getAccessToken());
-    auth.add(tokens.getRefreshToken());
+    auth = new JsonObject();
+    auth.addProperty("access", tokens.getAccessToken());
+    auth.addProperty("refresh", tokens.getRefreshToken());
     server.add(context.getUser(), auth);
     data.add(context.getServer().getURL(), server);
 
