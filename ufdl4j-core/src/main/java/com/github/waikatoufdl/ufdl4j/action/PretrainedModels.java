@@ -146,7 +146,7 @@ public class PretrainedModels
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", framework=" + getFramework() + ", domain=" + getDomain() + ", url=" + getURL();
+      return "pk=" + getPK() + ", name=" + getName() + ", framework=" + getFramework() + ", domain=" + getDomain() + ", url=" + getURL();
     }
   }
 
