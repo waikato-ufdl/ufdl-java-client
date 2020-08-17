@@ -38,7 +38,7 @@ public class ManagingPretrainedModel {
     PretrainedModel blahpre = null;
     for (PretrainedModel template : client.pretrainedModels().list()) {
       System.out.println(template);
-      if (template.getDescription().equals("blah"))  // TODO use name
+      if (template.getName().equals("blah"))
         blahpre = template;
     }
 
@@ -46,11 +46,12 @@ public class ManagingPretrainedModel {
     if (blahpre == null) {
       System.out.println("--> creating pretrained model");
       blahpre = client.pretrainedModels().create(
+        "blah",
         client.frameworks().list().get(0).getPK(),
         "ic",
         client.licenses().list().get(0).getPK(),
-        "http://some/where",
-        "blah");
+        "http://example.com/where",
+        "");
       System.out.println(blahpre);
     }
 
@@ -58,11 +59,12 @@ public class ManagingPretrainedModel {
     System.out.println("--> updating pretrained model");
     blahpre = client.pretrainedModels().update(
       blahpre,
+      "blah",
       client.frameworks().list().get(0).getPK(),
       "od",
       client.licenses().list().get(0).getPK(),
-      "http://some/where/else",
-      "blah");
+      "http://example.com/where/else",
+      "");
     System.out.println(blahpre);
 
     // partially updating blahtemplate
@@ -70,9 +72,10 @@ public class ManagingPretrainedModel {
     blahpre = client.pretrainedModels().partialUpdate(
       blahpre,
       null,
+      null,
       "ic",
       null,
-      "http://some/where",
+      "http://example.com/where",
       null);
 
     System.out.println(blahpre);
