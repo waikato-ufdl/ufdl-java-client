@@ -58,7 +58,14 @@ public class PretrainedModels
       return getInt("pk");
     }
 
-    // TODO return name
+    /**
+     * Returns the name.
+     *
+     * @return		the name
+     */
+    public String getName() {
+      return getString("name");
+    }
 
     /**
      * Returns the framework PK.
@@ -268,6 +275,7 @@ public class PretrainedModels
   /**
    * Creates a pretrained model object.
    *
+   * @param name 	the name
    * @param framework   the framework PK
    * @param domain 	the domain
    * @param license	the license PK
@@ -276,7 +284,7 @@ public class PretrainedModels
    * @return		the PretrainedModel object, null if failed to create
    * @throws Exception	if request fails or pretrained model already exists
    */
-  public PretrainedModel create(int framework, String domain, int license, String url, String description) throws Exception {
+  public PretrainedModel create(String name, int framework, String domain, int license, String url, String description) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -285,7 +293,7 @@ public class PretrainedModels
     getLogger().info("creating pretrained model: " + framework + "/" + domain + "/" + url);
 
     data = new JsonObject();
-    // TODO name
+    data.addProperty("name", name);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
     data.addProperty("licence", license);
@@ -306,6 +314,7 @@ public class PretrainedModels
    * Updates the pretrained model.
    *
    * @param obj 	the pretrained model to update
+   * @param name 	the new name
    * @param framework   the new framework PK
    * @param domain 	the new domain
    * @param license	the new license PK
@@ -314,14 +323,15 @@ public class PretrainedModels
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(PretrainedModel obj, int framework, String domain, int license, String url, String description) throws Exception {
-    return update(obj.getPK(), framework, domain, license, url, description);
+  public PretrainedModel update(PretrainedModel obj, String name, int framework, String domain, int license, String url, String description) throws Exception {
+    return update(obj.getPK(), name, framework, domain, license, url, description);
   }
 
   /**
    * Updates the pretrained model.
    *
    * @param pk 		the PK of the pretrained model to update
+   * @param name 	the new name
    * @param framework   the new framework PK
    * @param domain 	the new domain
    * @param license	the new license PK
@@ -330,7 +340,7 @@ public class PretrainedModels
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(int pk, int framework, String domain, int license, String url, String description) throws Exception {
+  public PretrainedModel update(int pk, String name, int framework, String domain, int license, String url, String description) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -339,6 +349,7 @@ public class PretrainedModels
     getLogger().info("updating pretrained model: " + pk);
 
     data = new JsonObject();
+    data.addProperty("name", name);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
     data.addProperty("licence", license);
@@ -359,6 +370,7 @@ public class PretrainedModels
    * (Partially) Updates the pretrained model identified by the object, using only the non-null arguments.
    *
    * @param obj	the user to update
+   * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
    * @param domain 	the new domain, ignored if null
    * @param license	the new license PK, ignored if null
@@ -367,14 +379,15 @@ public class PretrainedModels
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(PretrainedModel obj, Integer framework, String domain, Integer license, String url, String description) throws Exception {
-    return partialUpdate(obj.getPK(), framework, domain, license, url, description);
+  public PretrainedModel partialUpdate(PretrainedModel obj, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
+    return partialUpdate(obj.getPK(), name, framework, domain, license, url, description);
   }
 
   /**
    * (Partially) Updates the pretrained model identified by the PK, using only the non-null arguments.
    *
    * @param pk 		the PK of the user to update
+   * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
    * @param domain 	the new domain, ignored if null
    * @param license	the new license PK, ignored if null
@@ -383,7 +396,7 @@ public class PretrainedModels
    * @return		the pretrained model object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(int pk, Integer framework, String domain, Integer license, String url, String description) throws Exception {
+  public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -392,6 +405,8 @@ public class PretrainedModels
     getLogger().info("partially updating pretrained model: " + pk);
 
     data = new JsonObject();
+    if (name != null)
+      data.addProperty("name", name);
     if (framework != null)
       data.addProperty("framework", framework);
     if (domain != null)
