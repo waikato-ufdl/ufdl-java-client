@@ -10,7 +10,7 @@ import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonObject;
 
 /**
- * TODO: What class does.
+ * For imposing order on the filtering result.
  *
  * @author FracPete (fracpete at waikato dot ac dot nz)
  */
