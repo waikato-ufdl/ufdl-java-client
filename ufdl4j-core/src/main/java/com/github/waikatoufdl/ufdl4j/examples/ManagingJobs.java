@@ -127,7 +127,7 @@ public class ManagingJobs {
     // create 'tftest' template if necessary
     if (tftemplate == null) {
       System.out.println("--> creating job template");
-      tftemplate = client.jobTemplates().create("tftest", 1, "public", tfframework.getPK(), "ic", "train", "my.funky.Executor", "", "echo ${num}");
+      tftemplate = client.jobTemplates().create("tftest", 1, "public", tfframework.getPK(), "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
       client.jobTemplates().addInput(tftemplate, "dataset", "dataset", "");
       client.jobTemplates().addParameter(tftemplate, "num", "int", "10");
       System.out.println(tftemplate);

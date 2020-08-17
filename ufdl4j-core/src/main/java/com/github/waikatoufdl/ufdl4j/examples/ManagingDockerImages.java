@@ -49,7 +49,7 @@ public class ManagingDockerImages {
     HardwareGeneration hwPascal = client.hardware().load("Pascal");
     if (blahimg == null) {
       System.out.println("--> creating docker image");
-      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false);
+      blahimg = client.docker().create("blah", "1.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false, client.licenses().list().get(0).getPK());
       System.out.println(blahimg);
     }
 
@@ -59,12 +59,12 @@ public class ManagingDockerImages {
 
     // updating blah
     System.out.println("--> updating docker image");
-    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false);
+    blahimg = client.docker().update(blahimg, "blah", "2.0", "some:443/where/image", "some:443", "user", "pw", cuda10.getPK(), 1, "ic", new String[]{"train"}, hwPascal.getPK(), false, client.licenses().list().get(0).getPK());
     System.out.println(blahimg);
 
     // partially updating blahimg
     System.out.println("--> partially updating docker image");
-    blahimg = client.docker().partialUpdate(blahimg, "1.0", null, null, null, null, null, null, null, null, null, null, null);
+    blahimg = client.docker().partialUpdate(blahimg, "1.0", null, null, null, null, null, null, null, null, null, null, null, null);
     System.out.println(blahimg);
 
     // delete 'blah'

@@ -45,7 +45,7 @@ public class ManagingJobTemplates {
     // create 'blah' if necessary
     if (blahtemplate == null) {
       System.out.println("--> creating job template");
-      blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo ${num}");
+      blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
       System.out.println(blahtemplate);
       client.jobTemplates().addInput(blahtemplate, "dataset", "dataset", " to-subdir");
       client.jobTemplates().addParameter(blahtemplate, "num", "int", "10");
@@ -58,12 +58,12 @@ public class ManagingJobTemplates {
 
     // updating blah
     System.out.println("--> updating job template");
-    blahtemplate = client.jobTemplates().update(blahtemplate, "blah2", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1");
+    blahtemplate = client.jobTemplates().update(blahtemplate, "blah2", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1", client.licenses().list().get(0).getPK());
     System.out.println(blahtemplate);
 
     // partially updating blahtemplate
     System.out.println("--> partially updating job template");
-    blahtemplate = client.jobTemplates().partialUpdate(blahtemplate, "blah", null, "project", null, null, null, null, null, null);
+    blahtemplate = client.jobTemplates().partialUpdate(blahtemplate, "blah", null, "project", null, null, null, null, null, null, null);
     System.out.println(blahtemplate);
 
     // soft delete 'blah'
