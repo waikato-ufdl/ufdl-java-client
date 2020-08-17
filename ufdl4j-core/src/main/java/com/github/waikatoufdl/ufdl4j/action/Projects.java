@@ -10,9 +10,8 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -221,18 +220,12 @@ public class Projects
    */
   public Project load(String name) throws Exception {
     Project	result;
-    Filter	filter;
 
     getLogger().info("loading project with name: " + name);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-      }
-    );
-    for (Project project : list(filter)) {
+    for (Project project : list(new NameFilter(name))) {
       result = project;
       break;
     }

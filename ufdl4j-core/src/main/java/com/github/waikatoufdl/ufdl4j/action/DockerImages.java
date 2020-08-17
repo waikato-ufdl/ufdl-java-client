@@ -11,9 +11,8 @@ import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.Utils;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameAndVersionFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -275,7 +274,7 @@ public class DockerImages
     if (response.ok()) {
       element = response.json();
       if (element.isJsonObject())
-	result = new DockerImage(element.getAsJsonObject());
+        result = new DockerImage(element.getAsJsonObject());
     }
     else {
       throw new FailedRequestException("Failed to load docker image: " + pk, response);
@@ -294,19 +293,12 @@ public class DockerImages
    */
   public DockerImage load(String name, String version) throws Exception {
     DockerImage	result;
-    Filter	filter;
 
     getLogger().info("loading docker image: " + name + "/" + version);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-        new ExactString("version", version),
-      }
-    );
-    for (DockerImage image : list(filter)) {
+    for (DockerImage image : list(new NameAndVersionFilter(name, version))) {
       result = image;
       break;
     }
@@ -336,9 +328,9 @@ public class DockerImages
    * @throws Exception	if request fails or docker image already exists
    */
   public DockerImage create(String name, String version, String url,
-			    String registryUrl, String registryUser, String registryPassword,
-			    int cudaVersion, int framework, String domain,
-			    String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String registryUrl, String registryUser, String registryPassword,
+                            int cudaVersion, int framework, String domain,
+                            String[] tasks, int minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -390,9 +382,9 @@ public class DockerImages
    * @throws Exception	if request fails
    */
   public DockerImage update(DockerImage obj, String name, String version, String url,
-			    String registryUrl, String registryUser, String registryPassword,
-			    int cudaVersion, int framework, String domain,
-			    String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String registryUrl, String registryUser, String registryPassword,
+                            int cudaVersion, int framework, String domain,
+                            String[] tasks, int minHardware, boolean cpu) throws Exception {
     return update(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
       cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
@@ -417,9 +409,9 @@ public class DockerImages
    * @throws Exception	if request fails
    */
   public DockerImage update(int pk, String name, String version, String url,
-			    String registryUrl, String registryUser, String registryPassword,
-			    int cudaVersion, int framework, String domain,
-			    String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String registryUrl, String registryUser, String registryPassword,
+                            int cudaVersion, int framework, String domain,
+                            String[] tasks, int minHardware, boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -471,9 +463,9 @@ public class DockerImages
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(DockerImage obj, String name, String version, String url,
-				   String registryUrl, String registryUser, String registryPassword,
-				   Integer cudaVersion, Integer framework, String domain,
-				   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
+                                   String registryUrl, String registryUser, String registryPassword,
+                                   Integer cudaVersion, Integer framework, String domain,
+                                   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
     return partialUpdate(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
       cudaVersion, framework, domain, tasks, minHardware, cpu);
   }
@@ -498,9 +490,9 @@ public class DockerImages
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(int pk, String name, String version, String url,
-				   String registryUrl, String registryUser, String registryPassword,
-				   Integer cudaVersion, Integer framework, String domain,
-				   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
+                                   String registryUrl, String registryUser, String registryPassword,
+                                   Integer cudaVersion, Integer framework, String domain,
+                                   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;

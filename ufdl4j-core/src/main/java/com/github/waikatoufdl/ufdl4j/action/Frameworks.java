@@ -9,9 +9,8 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameAndVersionFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -173,7 +172,7 @@ public class Frameworks
     if (response.ok()) {
       element = response.json();
       if (element.isJsonObject())
-	result = new Framework(element.getAsJsonObject());
+        result = new Framework(element.getAsJsonObject());
     }
     else {
       throw new FailedRequestException("Failed to load framework: " + pk, response);
@@ -191,19 +190,12 @@ public class Frameworks
    */
   public Framework load(String name, String version) throws Exception {
     Framework	result;
-    Filter	filter;
 
     getLogger().info("loading framework: " + name + "/" + version);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-        new ExactString("version", version),
-      }
-    );
-    for (Framework framework : list(filter)) {
+    for (Framework framework : list(new NameAndVersionFilter(name, version))) {
       result = framework;
       break;
     }

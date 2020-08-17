@@ -13,6 +13,7 @@ import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.GenericFilter;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactNumber;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
@@ -346,7 +347,7 @@ public class JobTemplates
 
     result = null;
 
-    filter = new Filter(
+    filter = new GenericFilter(
       new AbstractExpression[]{
         new ExactString("name", name),
         new ExactNumber("version", version),

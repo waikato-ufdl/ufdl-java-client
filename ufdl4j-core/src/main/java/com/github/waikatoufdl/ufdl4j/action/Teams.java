@@ -11,9 +11,8 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -257,18 +256,12 @@ public class Teams
    */
   public Team load(String name) throws Exception {
     Team	result;
-    Filter	filter;
 
     getLogger().info("loading team with name: " + name);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-      }
-    );
-    for (Team team : list(filter)) {
+    for (Team team : list(new NameFilter(name))) {
       result = team;
       break;
     }

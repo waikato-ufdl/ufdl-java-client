@@ -11,6 +11,7 @@ import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.GenericFilter;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -206,7 +207,7 @@ public class HardwareGenerations
 
     result = null;
 
-    filter = new Filter(
+    filter = new GenericFilter(
       new AbstractExpression[]{
         new ExactString("generation", generation),
       }

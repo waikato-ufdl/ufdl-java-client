@@ -9,9 +9,8 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.VersionFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -200,18 +199,12 @@ public class CudaVersions
    */
   public CudaVersion load(String version) throws Exception {
     CudaVersion	result;
-    Filter	filter;
 
     getLogger().info("loading cuda version: " + version);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("version", version),
-      }
-    );
-    for (CudaVersion cuda : list(filter)) {
+    for (CudaVersion cuda : list(new VersionFilter(version))) {
       result = cuda;
       break;
     }

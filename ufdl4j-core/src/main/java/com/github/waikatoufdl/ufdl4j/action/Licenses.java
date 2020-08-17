@@ -11,9 +11,8 @@ import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -971,18 +970,12 @@ public class Licenses
    */
   public License load(String name) throws Exception {
     License	result;
-    Filter	filter;
 
     getLogger().info("loading license with name: " + name);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-      }
-    );
-    for (License license : list(filter)) {
+    for (License license : list(new NameFilter(name))) {
       result = license;
       break;
     }

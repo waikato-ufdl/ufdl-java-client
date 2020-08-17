@@ -17,9 +17,8 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -275,18 +274,12 @@ public class Datasets
    */
   public Dataset load(String name) throws Exception {
     Dataset	result;
-    Filter	filter;
 
     getLogger().info("loading dataset with name: " + name);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-      }
-    );
-    for (Dataset dataset : list(filter)) {
+    for (Dataset dataset : list(new NameFilter(name))) {
       result = dataset;
       break;
     }

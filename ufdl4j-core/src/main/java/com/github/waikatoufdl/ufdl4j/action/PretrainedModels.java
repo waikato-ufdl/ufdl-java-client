@@ -10,9 +10,8 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
-import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -250,18 +249,12 @@ public class PretrainedModels
    */
   public PretrainedModel load(String name) throws Exception {
     PretrainedModel	result;
-    Filter	filter;
 
     getLogger().info("loading pretrained model: " + name);
 
     result = null;
 
-    filter = new Filter(
-      new AbstractExpression[]{
-        new ExactString("name", name),
-      }
-    );
-    for (PretrainedModel template : list(filter)) {
+    for (PretrainedModel template : list(new NameFilter(name))) {
       result = template;
       break;
     }

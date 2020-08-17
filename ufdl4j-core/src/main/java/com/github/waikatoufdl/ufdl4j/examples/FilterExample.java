@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.examples;
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.GenericFilter;
 import com.github.waikatoufdl.ufdl4j.filter.OrderBy;
 import com.github.waikatoufdl.ufdl4j.filter.field.Contains;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactNumber;
@@ -41,7 +42,7 @@ public class FilterExample {
       client = new Client(args[0], args[1], args[1]);
 
     // general filter setup
-    Filter filter = new Filter(
+    Filter filter = new GenericFilter(
       new AbstractExpression[]{
 	new Or(
 	  new AbstractExpression[]{
