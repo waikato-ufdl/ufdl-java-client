@@ -176,6 +176,15 @@ public class DockerImages
     }
 
     /**
+     * Returns the license.
+     *
+     * @return		the license
+     */
+    public int getLicense() {
+      return getInt("licence", -1);
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
@@ -324,13 +333,14 @@ public class DockerImages
    * @param tasks 	the tasks this image is for
    * @param minHardware	the minimum hardware generation PK
    * @param cpu 	whether image runs on CPU as well
+   * @param license 	the license PK
    * @return		the DockerImage object, null if failed to create
    * @throws Exception	if request fails or docker image already exists
    */
   public DockerImage create(String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
                             int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -351,6 +361,7 @@ public class DockerImages
     data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
+    data.addProperty("licence", license);
     request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -378,15 +389,16 @@ public class DockerImages
    * @param tasks 	the new tasks this image is for
    * @param minHardware	the new minimum hardware generation PK
    * @param cpu 	the new whether image runs on CPU as well
+   * @param license 	the new license PK
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(DockerImage obj, String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
                             int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
     return update(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, tasks, minHardware, cpu);
+      cudaVersion, framework, domain, tasks, minHardware, cpu, license);
   }
 
   /**
@@ -405,13 +417,14 @@ public class DockerImages
    * @param tasks 	the new task this image is for
    * @param minHardware	the new minimum hardware generation PK
    * @param cpu 	the new whether image runs on CPU as well
+   * @param license 	the new license PK
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(int pk, String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
                             int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu) throws Exception {
+                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -432,6 +445,7 @@ public class DockerImages
     data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
+    data.addProperty("licence", license);
     request = newPut(getPath() + pk)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -459,15 +473,16 @@ public class DockerImages
    * @param tasks 	the new task this image is for, ignored if null
    * @param minHardware	the new minimum hardware generation PK, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
+   * @param license 	the new license PK, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(DockerImage obj, String name, String version, String url,
                                    String registryUrl, String registryUser, String registryPassword,
                                    Integer cudaVersion, Integer framework, String domain,
-                                   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
+                                   String[] tasks, Integer minHardware, Boolean cpu, Integer license) throws Exception {
     return partialUpdate(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, tasks, minHardware, cpu);
+      cudaVersion, framework, domain, tasks, minHardware, cpu, license);
   }
 
   /**
@@ -486,13 +501,14 @@ public class DockerImages
    * @param tasks 	the new tasks this image is for, ignored if null
    * @param minHardware	the new minimum hardware generation, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
+   * @param license 	the new license PK, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(int pk, String name, String version, String url,
                                    String registryUrl, String registryUser, String registryPassword,
                                    Integer cudaVersion, Integer framework, String domain,
-                                   String[] tasks, Integer minHardware, Boolean cpu) throws Exception {
+                                   String[] tasks, Integer minHardware, Boolean cpu, Integer license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -525,6 +541,8 @@ public class DockerImages
       data.addProperty("min_hardware_generation", minHardware);
     if (cpu != null)
       data.addProperty("cpu", cpu);
+    if (license != null)
+      data.addProperty("licence", license);
     request = newPatch(getPath() + pk)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);

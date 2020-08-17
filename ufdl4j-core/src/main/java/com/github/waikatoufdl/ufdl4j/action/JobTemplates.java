@@ -189,6 +189,15 @@ public class JobTemplates
     }
 
     /**
+     * Returns the license.
+     *
+     * @return		the license
+     */
+    public int getLicense() {
+      return getInt("licence", -1);
+    }
+
+    /**
      * Returns the template body.
      *
      * @return		the body
@@ -376,10 +385,11 @@ public class JobTemplates
    * @param executor 	the executor class
    * @param packages 	the required packages (pip)
    * @param body 	the actual template
+   * @param license 	the license PK
    * @return		the JobTemplate object, null if failed to create
    * @throws Exception	if request fails or job template already exists
    */
-  public JobTemplate create(String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body) throws Exception {
+  public JobTemplate create(String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -396,6 +406,7 @@ public class JobTemplates
     data.addProperty("type", type);
     data.addProperty("executor_class", executor);
     data.addProperty("required_packages", packages);
+    data.addProperty("licence", license);
     data.addProperty("body", body);
     request = newPost(getPath())
       .body(data.toString(), ContentType.APPLICATION_JSON);
@@ -421,11 +432,12 @@ public class JobTemplates
    * @param executor 	the new executor class
    * @param packages 	the new required packages (pip)
    * @param body 	the new actual template
+   * @param license 	the new license PK
    * @return		the job template object
    * @throws Exception	if request fails
    */
-  public JobTemplate update(JobTemplate obj, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body) throws Exception {
-    return update(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body);
+  public JobTemplate update(JobTemplate obj, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
+    return update(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body, license);
   }
 
   /**
@@ -441,10 +453,11 @@ public class JobTemplates
    * @param executor 	the new executor class
    * @param packages 	the new required packages (pip)
    * @param body 	the new actual template
+   * @param license 	the new license PK
    * @return		the job template object
    * @throws Exception	if request fails
    */
-  public JobTemplate update(int pk, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body) throws Exception {
+  public JobTemplate update(int pk, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -461,6 +474,7 @@ public class JobTemplates
     data.addProperty("type", type);
     data.addProperty("executor_class", executor);
     data.addProperty("required_packages", packages);
+    data.addProperty("licence", license);
     data.addProperty("body", body);
     request = newPut(getPath() + pk)
       .body(data.toString(), ContentType.APPLICATION_JSON);
@@ -486,11 +500,12 @@ public class JobTemplates
    * @param executor 	the new executor class, ignored if null
    * @param packages 	the new required packages (pip), ignored if null
    * @param body 	the new actual template, ignored if null
+   * @param license 	the new license PK, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobTemplate partialUpdate(JobTemplate obj, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body) throws Exception {
-    return partialUpdate(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body);
+  public JobTemplate partialUpdate(JobTemplate obj, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
+    return partialUpdate(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body, license);
   }
 
   /**
@@ -506,10 +521,11 @@ public class JobTemplates
    * @param executor 	the new executor class, ignored if null
    * @param packages 	the new required packages (pip), ignored if null
    * @param body 	the new actual template, ignored if null
+   * @param license 	the new license PK, ignored if null
    * @return		the job template object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobTemplate partialUpdate(int pk, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body) throws Exception {
+  public JobTemplate partialUpdate(int pk, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -534,6 +550,8 @@ public class JobTemplates
       data.addProperty("executor_class", executor);
     if (packages != null)
       data.addProperty("required_packages", packages);
+    if (license != null)
+      data.addProperty("licence", license);
     if (body != null)
       data.addProperty("body", body);
     request = newPatch(getPath() + pk)
