@@ -158,12 +158,12 @@ public class DockerImages
     }
 
     /**
-     * Returns the minimum hardware generation PK.
+     * Returns the minimum hardware generation.
      *
-     * @return		the generation
+     * @return		the generation, can be null if it runs on cpu
      */
     public int getMinHardwareGeneration() {
-      return getInt("min_hardware_generation");
+      return getInt("min_hardware_generation", -1);
     }
 
     /**
