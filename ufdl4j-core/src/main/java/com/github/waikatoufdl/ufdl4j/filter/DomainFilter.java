@@ -7,7 +7,7 @@ package com.github.waikatoufdl.ufdl4j.filter;
 
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
-import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
+import com.github.waikatoufdl.ufdl4j.filter.field.ExactNumber;
 import com.google.gson.JsonObject;
 
 /**
@@ -22,17 +22,15 @@ public class DomainFilter
   private static final long serialVersionUID = -7995513145236262468L;
 
   /** the domain. */
-  protected String m_Domain;
+  protected int m_Domain;
 
   /**
    * Initializes the filter.
    *
    * @param domain	the name to filter
    */
-  public DomainFilter(String domain) {
+  public DomainFilter(int domain) {
     super();
-    if (domain == null)
-      throw new IllegalArgumentException("Domain cannot be null!");
     m_Domain = domain;
   }
 
@@ -41,7 +39,7 @@ public class DomainFilter
    *
    * @return		the domain
    */
-  public String getDomain() {
+  public int getDomain() {
     return m_Domain;
   }
 
@@ -54,7 +52,7 @@ public class DomainFilter
   public JsonObject toJsonObject() {
     return new GenericFilter(
       new AbstractExpression[]{
-	new ExactString("domain", m_Domain),
+	new ExactNumber("domain", m_Domain),
       }
     ).toJsonObject();
   }
