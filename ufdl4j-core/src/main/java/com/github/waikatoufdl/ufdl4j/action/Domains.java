@@ -10,6 +10,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
+import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -167,6 +168,31 @@ public class Domains
     else {
       throw new FailedRequestException("Failed to load domain: " + pk, response);
     }
+
+    return result;
+  }
+
+  /**
+   * For loading a specific license by name.
+   *
+   * @param name 	the license name
+   * @return		the license object, null if failed to create
+   * @throws Exception	if request fails
+   */
+  public Domain load(String name) throws Exception {
+    Domain	result;
+
+    getLogger().info("loading domain with name: " + name);
+
+    result = null;
+
+    for (Domain domain : list(new NameFilter(name))) {
+      result = domain;
+      break;
+    }
+
+    if (result == null)
+      getLogger().warning("failed to load domain: " + name);
 
     return result;
   }
