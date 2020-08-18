@@ -138,6 +138,7 @@ public class JobTemplates
 	inputMap.put("name", inputObj.get("name").getAsString());
 	inputMap.put("type", inputObj.get("type").getAsString());
 	inputMap.put("options", inputObj.has("options") ? inputObj.get("options").getAsString() : "");
+	inputMap.put("help", inputObj.has("help") ? inputObj.get("help").getAsString() : "");
 	result.add(inputMap);
       }
 
@@ -164,6 +165,7 @@ public class JobTemplates
 	paramMap.put("name", paramObj.get("name").getAsString());
 	paramMap.put("type", paramObj.get("type").getAsString());
 	paramMap.put("default", paramObj.has("default") ? paramObj.get("default").getAsString() : "");
+	paramMap.put("help", paramObj.has("help") ? paramObj.get("help").getAsString() : "");
 	result.add(paramMap);
       }
 
