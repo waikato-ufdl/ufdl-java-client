@@ -40,6 +40,52 @@ public class Jobs
   private static final long serialVersionUID = 7013386269355130329L;
 
   /**
+   * Container class for a single job output.
+   */
+  public static class JobOutput
+    extends AbstractJsonObjectWrapper {
+
+    private static final long serialVersionUID = 1081824028559386319L;
+
+    /**
+     * Initializes the job output.
+     *
+     * @param data	the data to use
+     */
+    public JobOutput(JsonObject data) {
+      super(data);
+    }
+
+    /**
+     * Returns the name of the output.
+     *
+     * @return		the name
+     */
+    public String getName() {
+      return getString("name");
+    }
+
+    /**
+     * Returns the type of the output.
+     *
+     * @return		the type
+     */
+    public String getType() {
+      return getString("type");
+    }
+
+    /**
+     * Returns a short description of the state.
+     *
+     * @return		the description
+     */
+    @Override
+    public String toString() {
+      return "name=" + getName() + ", type=" + getType();
+    }
+  }
+
+  /**
    * Container class for job information.
    */
   public static class Job
@@ -124,6 +170,26 @@ public class Jobs
 	values = getData().getAsJsonObject("parameter_values");
 	for (String key : values.keySet())
 	  result.put(key, "" + values.get(key));
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the outputs, if any.
+     *
+     * @return		the outputs
+     */
+    public List<JobOutput> getOutputs() {
+      List<JobOutput>	result;
+      JsonArray		outputs;
+      int		i;
+
+      result = new ArrayList<>();
+      if (getData().has("outputs")) {
+	outputs = getData().getAsJsonArray("outputs");
+	for (i = 0; i < outputs.size(); i++)
+	  result.add(new JobOutput(outputs.get(i).getAsJsonObject()));
       }
 
       return result;
