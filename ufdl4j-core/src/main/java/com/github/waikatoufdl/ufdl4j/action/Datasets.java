@@ -829,6 +829,51 @@ public class Datasets
   }
 
   /**
+   * For merging two datasets.
+   *
+   * @param dataset 	the dataset to merge into
+   * @param source 	the dataset to merge data from
+   * @param delete 	whether to delete the source dataset after the merge
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean merge(Dataset dataset, Dataset source, boolean delete) throws Exception {
+    return merge(dataset.getPK(), source.getPK(), delete);
+  }
+
+  /**
+   * For merging two datasets.
+   *
+   * @param pk 		the dataset PK to merge into
+   * @param source_pk 	the dataset PK to merge data from
+   * @param delete 	whether to delete the source dataset after the merge
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public boolean merge(int pk, int source_pk, boolean delete) throws Exception {
+    JsonResponse 	response;
+    JsonObject		data;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+    if (source_pk == -1)
+      throw new IllegalArgumentException("Invalid source PK: " + source_pk);
+
+    getLogger().info("merging dataset PK " + pk + " with source PK " + source_pk + " (delete=" + delete + ")");
+
+    data = new JsonObject();
+    data.addProperty("delete", delete);
+    request  = newPost(getPath() + pk + "/merge/" + source_pk)
+      .body(data.toString(), ContentType.APPLICATION_JSON);
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to merge dataset PK " + pk + " with source PK " + source_pk + " (delete=" + delete + ")", response);
+  }
+
+  /**
    * For deleting a specific dataset.
    *
    * @param dataset 	the dataset to delete
