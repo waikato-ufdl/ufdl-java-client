@@ -47,8 +47,8 @@ public class ManagingJobTemplates {
       System.out.println("--> creating job template");
       blahtemplate = client.jobTemplates().create("blah", 1, "public", 1, "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
       System.out.println(blahtemplate);
-      client.jobTemplates().addInput(blahtemplate, "dataset", "dataset", " to-subdir");
-      client.jobTemplates().addParameter(blahtemplate, "num", "int", "10");
+      client.jobTemplates().addInput(blahtemplate, "dataset", "dataset", " to-subdir", "help");
+      client.jobTemplates().addParameter(blahtemplate, "num", "int", "10", "help");
     }
 
     // load blah
