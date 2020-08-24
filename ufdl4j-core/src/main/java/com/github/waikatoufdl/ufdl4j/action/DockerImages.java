@@ -6,7 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
-import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
@@ -36,7 +36,7 @@ public class DockerImages
    * Container class for docker image information.
    */
   public static class DockerImage
-    extends AbstractJsonObjectWrapper {
+    extends AbstractJsonObjectWrapperWithPK {
 
     private static final long serialVersionUID = 3523630902439390574L;
 

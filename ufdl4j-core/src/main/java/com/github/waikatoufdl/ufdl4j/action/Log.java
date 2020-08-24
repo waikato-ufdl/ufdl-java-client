@@ -6,7 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
-import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -34,7 +34,7 @@ public class Log
    * Container class for log entry information.
    */
   public static class LogEntry
-    extends AbstractJsonObjectWrapper {
+    extends AbstractJsonObjectWrapperWithPK {
 
     private static final long serialVersionUID = 3523630902439390574L;
 

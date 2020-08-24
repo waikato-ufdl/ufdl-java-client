@@ -12,6 +12,7 @@ import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
@@ -89,7 +90,7 @@ public class Jobs
    * Container class for job information.
    */
   public static class Job
-    extends AbstractJsonObjectWrapper
+    extends AbstractJsonObjectWrapperWithPK
     implements SoftDeleteObject {
 
     private static final long serialVersionUID = 3523630902439390574L;
