@@ -17,6 +17,7 @@ public enum Permissions
 
   R("R"),  // read
   W("W"),  // write
+  X("X"),  // job execution
   A("A");  // admin
 
   /** the string to use as display. */
