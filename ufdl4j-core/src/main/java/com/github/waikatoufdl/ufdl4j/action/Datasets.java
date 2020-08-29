@@ -7,7 +7,6 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.request.Request;
-import com.github.fracpete.requests4j.request.URLBuilder;
 import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.Response;
@@ -22,7 +21,9 @@ import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.http.NameValuePair;
 import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -767,7 +768,7 @@ public class Datasets
     FileResponse 	response;
     Request 		request;
     String 		filetype;
-    URLBuilder builder;
+    List<NameValuePair>	pairs;
 
     getLogger().info("downloading dataset with id: " + pk);
 
@@ -778,11 +779,11 @@ public class Datasets
     else
       throw new IllegalArgumentException("Only zip or tar.gz available for download: " + output);
 
-    builder = new URLBuilder()
-      .append("filetype", filetype);
-    if (params.length > 0)
-      builder.append("annotations_args", params);
-    request = newGet(getPath() + pk + "/download" + builder.build());
+    pairs = new ArrayList<>();
+    pairs.add(new BasicNameValuePair("filetype", filetype));
+    for (String param: params)
+      pairs.add(new BasicNameValuePair("annotations_args", param));
+    request = newGet(getPath() + pk + "/download", pairs.toArray(new NameValuePair[0]));
     response = download(request, output);
     if (!response.ok())
       throw new FailedRequestException("Failed to download dataset: " + pk, response);

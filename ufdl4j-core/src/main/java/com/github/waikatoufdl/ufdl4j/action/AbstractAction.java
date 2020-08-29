@@ -11,6 +11,7 @@ import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import org.apache.http.NameValuePair;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -84,6 +85,21 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
+    return m_Connection.session().get(url).allowRedirects(true);
+  }
+
+  /**
+   * Creates a new GET request.
+   *
+   * @param path	the path to use (server gets automatically added)
+   * @param params 	the key-value pairs for the GET request URL
+   * @return		the GET request
+   * @throws MalformedURLException	if invalid URL
+   */
+  protected Request newGet(String path, NameValuePair... params) throws MalformedURLException {
+    String	url;
+
+    url = m_Connection.server().build(path, params);
     return m_Connection.session().get(url).allowRedirects(true);
   }
 
