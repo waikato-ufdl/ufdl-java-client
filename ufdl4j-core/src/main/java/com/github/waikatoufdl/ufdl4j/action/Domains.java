@@ -56,12 +56,21 @@ public class Domains
     }
 
     /**
-     * Returns the message.
+     * Returns the name.
      *
-     * @return		the message
+     * @return		the name
      */
     public String getName() {
       return getString("name", "");
+    }
+
+    /**
+     * Returns the description.
+     *
+     * @return		the description
+     */
+    public String getDescription() {
+      return getString("description", "");
     }
 
     /**
@@ -71,7 +80,7 @@ public class Domains
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName();
+      return "pk=" + getPK() + ", name=" + getName() + ", description=" + getDescription();
     }
   }
 
