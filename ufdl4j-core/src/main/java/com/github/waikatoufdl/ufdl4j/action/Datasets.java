@@ -21,9 +21,7 @@ import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.NameValuePair;
 import org.apache.http.entity.ContentType;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -768,7 +766,9 @@ public class Datasets
     FileResponse 	response;
     Request 		request;
     String 		filetype;
-    List<NameValuePair>	pairs;
+    JsonObject		data;
+    JsonObject		parameters;
+    StringBuilder	parametersStr;
 
     getLogger().info("downloading dataset with id: " + pk);
 
@@ -779,11 +779,19 @@ public class Datasets
     else
       throw new IllegalArgumentException("Only zip or tar.gz available for download: " + output);
 
-    pairs = new ArrayList<>();
-    pairs.add(new BasicNameValuePair("filetype", filetype));
-    for (String param: params)
-      pairs.add(new BasicNameValuePair("annotations_args", param));
-    request = newGet(getPath() + pk + "/download", pairs.toArray(new NameValuePair[0]));
+    parametersStr = new StringBuilder();
+    for (String param: params) {
+      if (parametersStr.length() > 0)
+        parametersStr.append(" ");
+      parametersStr.append(param);
+    }
+    data = new JsonObject();
+    data.addProperty("filetype", filetype);
+    parameters = new JsonObject();
+    data.add("params", parameters);
+    parameters.addProperty("annotations_args", parametersStr.toString());
+    request = newGet(getPath() + pk + "/download")
+      .body(data.toString(), ContentType.APPLICATION_JSON);
     response = download(request, output);
     if (!response.ok())
       throw new FailedRequestException("Failed to download dataset: " + pk, response);
