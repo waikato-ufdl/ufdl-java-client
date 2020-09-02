@@ -127,7 +127,7 @@ public class ManagingJobs {
     // create 'tftest' template if necessary
     if (tftemplate == null) {
       System.out.println("--> creating job template");
-      tftemplate = client.jobTemplates().create("tftest", 1, "public", tfframework.getPK(), "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
+      tftemplate = client.jobTemplates().create("tftest", 1, "just a test", "public", tfframework.getPK(), "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
       client.jobTemplates().addInput(tftemplate, "dataset", "dataset", "", "help");
       client.jobTemplates().addParameter(tftemplate, "num", "int", "10", "help");
       System.out.println(tftemplate);
@@ -139,7 +139,7 @@ public class ManagingJobs {
     inputs.put("dataset", "" + tfdataset.getPK());
     Map<String,String> params = new HashMap<>();
     params.put("num", "11");
-    Job tfjob = client.jobTemplates().newJob(tftemplate, tfimg.getPK(), inputs, params);
+    Job tfjob = client.jobTemplates().newJob(tftemplate, tfimg.getPK(), inputs, params, "example job using tftest");
     System.out.println(tfjob);
 
     // listing jobs

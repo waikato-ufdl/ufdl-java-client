@@ -83,6 +83,15 @@ public class JobTemplates
     }
 
     /**
+     * Returns the description.
+     *
+     * @return		the description, null if not available
+     */
+    public String getDescription() {
+      return getString("description", null);
+    }
+
+    /**
      * Returns the scope.
      *
      * @return		the scope
@@ -380,6 +389,7 @@ public class JobTemplates
    *
    * @param name 	the name
    * @param version	the version
+   * @param description	the description
    * @param scope 	the scope
    * @param framework   the framework PK
    * @param domain 	the domain
@@ -391,7 +401,7 @@ public class JobTemplates
    * @return		the JobTemplate object, null if failed to create
    * @throws Exception	if request fails or job template already exists
    */
-  public JobTemplate create(String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
+  public JobTemplate create(String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -402,6 +412,7 @@ public class JobTemplates
     data = new JsonObject();
     data.addProperty("name", name);
     data.addProperty("version", version);
+    data.addProperty("description", description);
     data.addProperty("scope", scope);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
@@ -427,6 +438,7 @@ public class JobTemplates
    * @param obj 	the job template to update
    * @param name 	the new name
    * @param version	the new version
+   * @param description	the new description
    * @param scope 	the new scope
    * @param framework   the new framework PK
    * @param domain 	the new domain
@@ -438,8 +450,8 @@ public class JobTemplates
    * @return		the job template object
    * @throws Exception	if request fails
    */
-  public JobTemplate update(JobTemplate obj, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
-    return update(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body, license);
+  public JobTemplate update(JobTemplate obj, String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
+    return update(obj.getPK(), name, version, description, scope, framework, domain, type, executor, packages, body, license);
   }
 
   /**
@@ -448,6 +460,7 @@ public class JobTemplates
    * @param pk 		the PK of the job template to update
    * @param name 	the new name
    * @param version	the new version
+   * @param description	the new description
    * @param scope 	the new scope
    * @param framework   the new framework PK
    * @param domain 	the new domain
@@ -459,7 +472,7 @@ public class JobTemplates
    * @return		the job template object
    * @throws Exception	if request fails
    */
-  public JobTemplate update(int pk, String name, int version, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
+  public JobTemplate update(int pk, String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -470,6 +483,7 @@ public class JobTemplates
     data = new JsonObject();
     data.addProperty("name", name);
     data.addProperty("version", version);
+    data.addProperty("description", description);
     data.addProperty("scope", scope);
     data.addProperty("framework", framework);
     data.addProperty("domain", domain);
@@ -495,6 +509,7 @@ public class JobTemplates
    * @param obj	the user to update
    * @param name 	the new name, ignored if null
    * @param version	the new version, ignored if null
+   * @param description	the new description, ignored if null
    * @param scope 	the new scope, ignored if null
    * @param framework   the new framework PK, ignored if null
    * @param domain 	the new domain, ignored if null
@@ -506,8 +521,8 @@ public class JobTemplates
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobTemplate partialUpdate(JobTemplate obj, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
-    return partialUpdate(obj.getPK(), name, version, scope, framework, domain, type, executor, packages, body, license);
+  public JobTemplate partialUpdate(JobTemplate obj, String name, Integer version, String description, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
+    return partialUpdate(obj.getPK(), name, version, description, scope, framework, domain, type, executor, packages, body, license);
   }
 
   /**
@@ -516,6 +531,7 @@ public class JobTemplates
    * @param pk 		the PK of the user to update
    * @param name 	the new name, ignored if null
    * @param version	the new version, ignored if null
+   * @param description	the new description, ignored if null
    * @param scope 	the new scope, ignored if null
    * @param framework   the new framework PK, ignored if null
    * @param domain 	the new domain, ignored if null
@@ -527,7 +543,7 @@ public class JobTemplates
    * @return		the job template object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobTemplate partialUpdate(int pk, String name, Integer version, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
+  public JobTemplate partialUpdate(int pk, String name, Integer version, String description, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
     JobTemplate		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -540,6 +556,8 @@ public class JobTemplates
       data.addProperty("name", name);
     if (version != null)
       data.addProperty("version", version);
+    if (description != null)
+      data.addProperty("description", description);
     if (scope != null)
       data.addProperty("scope", scope);
     if (framework != null)
@@ -818,11 +836,12 @@ public class JobTemplates
    * @param dockerImage	the image to use
    * @param inputValues	the input values (name -> value)
    * @param paramValues	the parameter values (name -> value)
+   * @param description the description, ignored if null or empty
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(JobTemplate jobTemplate, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues) throws Exception {
-    return newJob(jobTemplate.getPK(), dockerImage, inputValues, paramValues);
+  public Job newJob(JobTemplate jobTemplate, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues, String description) throws Exception {
+    return newJob(jobTemplate.getPK(), dockerImage, inputValues, paramValues, description);
   }
 
   /**
@@ -832,10 +851,11 @@ public class JobTemplates
    * @param dockerImage	the image to use
    * @param inputValues	the input values (name -> value)
    * @param paramValues	the parameter values (name -> value)
+   * @param description the description, ignored if null or empty
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(int pk, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues) throws Exception {
+  public Job newJob(int pk, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues, String description) throws Exception {
     Job			result;
     JsonObject		data;
     JsonObject		sub;
@@ -846,6 +866,8 @@ public class JobTemplates
 
     data = new JsonObject();
     data.addProperty("docker_image", dockerImage);
+    if ((description != null) && !description.isEmpty())
+      data.addProperty("description", description);
 
     // input values
     sub = new JsonObject();

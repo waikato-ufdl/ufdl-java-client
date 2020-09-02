@@ -242,6 +242,15 @@ public class Jobs
     }
 
     /**
+     * Returns the description.
+     *
+     * @return		the description, can be null
+     */
+    public String getDescription() {
+      return getString("description", null);
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
