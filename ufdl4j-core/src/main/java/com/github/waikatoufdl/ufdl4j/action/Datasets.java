@@ -768,7 +768,7 @@ public class Datasets
     String 		filetype;
     JsonObject		data;
     JsonObject		parameters;
-    StringBuilder	parametersStr;
+    JsonArray		parameterArray;
 
     getLogger().info("downloading dataset with id: " + pk);
 
@@ -779,17 +779,14 @@ public class Datasets
     else
       throw new IllegalArgumentException("Only zip or tar.gz available for download: " + output);
 
-    parametersStr = new StringBuilder();
-    for (String param: params) {
-      if (parametersStr.length() > 0)
-        parametersStr.append(" ");
-      parametersStr.append(param);
-    }
+    parameterArray = new JsonArray();
+    for (String param: params)
+      parameterArray.add(param);
     data = new JsonObject();
     data.addProperty("filetype", filetype);
     parameters = new JsonObject();
     data.add("params", parameters);
-    parameters.addProperty("annotations_args", parametersStr.toString());
+    parameters.add("annotations_args", parameterArray);
     request = newGet(getPath() + pk + "/download")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = download(request, output);
