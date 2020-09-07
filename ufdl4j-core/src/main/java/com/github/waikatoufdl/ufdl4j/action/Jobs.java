@@ -141,6 +141,15 @@ public class Jobs
     }
 
     /**
+     * Returns the error encountered.
+     *
+     * @return		the error, null if none encountered
+     */
+    public String getError() {
+      return getString("error", null);
+    }
+
+    /**
      * Returns the input values (key -> value).
      *
      * @return		the values
