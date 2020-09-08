@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameAndVersionFilter;
@@ -33,7 +34,8 @@ public class Frameworks
    * Container class for framework information.
    */
   public static class Framework
-    extends AbstractJsonObjectWrapperWithPK {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -71,6 +73,16 @@ public class Frameworks
      */
     public String getVersion() {
       return getString("version");
+    }
+
+    /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getName() + "/" + getVersion();
     }
 
     /**
@@ -132,7 +144,7 @@ public class Frameworks
     getLogger().info("listing frameworks" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -225,7 +237,7 @@ public class Frameworks
     data = new JsonObject();
     data.addProperty("name", name);
     data.addProperty("version", version);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

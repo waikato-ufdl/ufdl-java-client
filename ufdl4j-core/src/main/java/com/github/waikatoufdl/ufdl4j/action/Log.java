@@ -160,7 +160,7 @@ public class Log
     getLogger().info("listing log entries" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -267,7 +267,7 @@ public class Log
     data.addProperty("creation_time", ts.toString());
     data.addProperty("level", level);
     data.addProperty("message", message);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

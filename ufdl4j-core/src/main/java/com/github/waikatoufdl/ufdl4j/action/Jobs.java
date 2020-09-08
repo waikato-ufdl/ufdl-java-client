@@ -318,7 +318,7 @@ public class Jobs
     getLogger().info("listing jobs" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);

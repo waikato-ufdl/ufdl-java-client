@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
@@ -33,7 +34,8 @@ public class Domains
    * Container class for log entry information.
    */
   public static class Domain
-    extends AbstractJsonObjectWrapperWithPK {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -71,6 +73,16 @@ public class Domains
      */
     public String getDescription() {
       return getString("description", "");
+    }
+
+    /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getName();
     }
 
     /**
@@ -132,7 +144,7 @@ public class Domains
     getLogger().info("listing domains" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);

@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -35,7 +36,8 @@ public class HardwareGenerations
    * Container class for hardware generation information.
    */
   public static class HardwareGeneration
-    extends AbstractJsonObjectWrapperWithPK {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -82,6 +84,16 @@ public class HardwareGenerations
      */
     public Double getMaxComputeCapability() {
       return getDouble("max_compute_capability");
+    }
+
+    /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getGeneration();
     }
 
     /**
@@ -143,7 +155,7 @@ public class HardwareGenerations
     getLogger().info("listing hardware generations" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -244,7 +256,7 @@ public class HardwareGenerations
     data.addProperty("generation", generation);
     data.addProperty("min_compute_capability", min);
     data.addProperty("max_compute_capability", max);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

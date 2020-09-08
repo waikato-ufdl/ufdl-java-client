@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -36,7 +37,8 @@ public class Nodes
    * Container class for node information.
    */
   public static class Node
-    extends AbstractJsonObjectWrapperWithPK {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -65,6 +67,15 @@ public class Nodes
      */
     public String getIP() {
       return getString("ip");
+    }
+
+    /**
+     * Returns the index.
+     *
+     * @return		the index
+     */
+    public int getIndex() {
+      return getInt("index");
     }
 
     /**
@@ -110,6 +121,15 @@ public class Nodes
      */
     public LocalDateTime getLastSeen() {
       return getDateTime("last_seen", null);
+    }
+
+    /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    public String getShortDescription() {
+      return getIP() + "/" + getIndex();
     }
 
     /**
@@ -171,7 +191,7 @@ public class Nodes
     getLogger().info("listing nodes" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -211,7 +231,7 @@ public class Nodes
     if (response.ok()) {
       element = response.json();
       if (element.isJsonObject())
-	result = new Node(element.getAsJsonObject());
+        result = new Node(element.getAsJsonObject());
     }
     else {
       throw new FailedRequestException("Failed to load node: " + pk, response);
@@ -276,7 +296,7 @@ public class Nodes
     data.addProperty("hardware_generation", generation);
     data.addProperty("gpu_mem", gpu);
     data.addProperty("cpu_mem", cpu);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

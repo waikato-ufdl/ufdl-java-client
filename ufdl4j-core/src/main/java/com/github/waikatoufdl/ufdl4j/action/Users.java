@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -36,7 +37,8 @@ public class Users
    * Container class for user information.
    */
   public static class User
-    extends AbstractJsonObjectWrapperWithPK {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -140,6 +142,16 @@ public class Users
     }
 
     /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getUserName();
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
@@ -198,7 +210,7 @@ public class Users
     getLogger().info("listing users" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -303,7 +315,7 @@ public class Users
     data.addProperty("first_name", firstName);
     data.addProperty("last_name", lastName);
     data.addProperty("email", email);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

@@ -8,6 +8,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -36,7 +37,7 @@ public class PretrainedModels
    */
   public static class PretrainedModel
     extends AbstractJsonObjectWrapperWithPK
-    implements SoftDeleteObject {
+    implements SoftDeleteObject, JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -140,6 +141,16 @@ public class PretrainedModels
     }
 
     /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getName();
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
@@ -198,7 +209,7 @@ public class PretrainedModels
     getLogger().info("listing pretrained models" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -299,7 +310,7 @@ public class PretrainedModels
     data.addProperty("licence", license);
     data.addProperty("url", url);
     data.addProperty("description", description);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())

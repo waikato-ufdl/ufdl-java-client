@@ -14,6 +14,7 @@ import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -44,7 +45,7 @@ public class Datasets
    */
   public static class Dataset
     extends AbstractJsonObjectWrapperWithPK
-    implements SoftDeleteObject {
+    implements SoftDeleteObject, JsonObjectWithShortDescription {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -157,6 +158,16 @@ public class Datasets
     }
 
     /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getName() + "/" + getVersion();
+    }
+
+    /**
      * Returns a short description of the state.
      *
      * @return		the state
@@ -215,7 +226,7 @@ public class Datasets
     getLogger().info("listing datasets" + (filter == null ? "" : ", filter: " + filter.toJsonObject()));
 
     result   = new ArrayList<>();
-    request  = newGet(getPath());
+    request  = newPost(getPath() + "list");
     if (filter != null)
       request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
@@ -332,7 +343,7 @@ public class Datasets
     data.addProperty("licence", license);
     data.addProperty("is_public", isPublic);
     data.addProperty("tags", tags);
-    request = newPost(getPath())
+    request = newPost(getPath() + "create")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
     if (response.ok())
@@ -787,7 +798,7 @@ public class Datasets
     parameters = new JsonObject();
     data.add("params", parameters);
     parameters.add("annotations_args", parameterArray);
-    request = newGet(getPath() + pk + "/download")
+    request = newPost(getPath() + pk + "/download")
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = download(request, output);
     if (!response.ok())
@@ -840,11 +851,12 @@ public class Datasets
    * @param dataset 	the dataset to merge into
    * @param source 	the dataset to merge data from
    * @param delete 	whether to delete the source dataset after the merge
+   * @param hard 	whether to performa a hard delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid dataset PK
    */
-  public boolean merge(Dataset dataset, Dataset source, boolean delete) throws Exception {
-    return merge(dataset.getPK(), source.getPK(), delete);
+  public boolean merge(Dataset dataset, Dataset source, boolean delete, boolean hard) throws Exception {
+    return merge(dataset.getPK(), source.getPK(), delete, hard);
   }
 
   /**
@@ -853,10 +865,11 @@ public class Datasets
    * @param pk 		the dataset PK to merge into
    * @param source_pk 	the dataset PK to merge data from
    * @param delete 	whether to delete the source dataset after the merge
+   * @param hard 	whether to performa a hard delete
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid dataset PK
    */
-  public boolean merge(int pk, int source_pk, boolean delete) throws Exception {
+  public boolean merge(int pk, int source_pk, boolean delete, boolean hard) throws Exception {
     JsonResponse 	response;
     JsonObject		data;
     Request 		request;
@@ -870,6 +883,8 @@ public class Datasets
 
     data = new JsonObject();
     data.addProperty("delete", delete);
+    if (delete)
+      data.addProperty("hard", hard);
     request  = newPost(getPath() + pk + "/merge/" + source_pk)
       .body(data.toString(), ContentType.APPLICATION_JSON);
     response = execute(request);
