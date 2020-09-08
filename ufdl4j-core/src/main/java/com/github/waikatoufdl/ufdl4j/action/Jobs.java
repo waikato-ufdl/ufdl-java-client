@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.ByteArrayAttachment;
 import com.github.fracpete.requests4j.attachment.FileAttachment;
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.Response;
@@ -20,7 +21,6 @@ import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -320,7 +320,7 @@ public class Jobs
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();

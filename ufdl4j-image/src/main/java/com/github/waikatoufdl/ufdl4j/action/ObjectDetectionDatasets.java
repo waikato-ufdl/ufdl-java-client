@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
@@ -12,7 +13,6 @@ import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -482,7 +482,6 @@ public class ObjectDetectionDatasets
     JsonObject		data;
     JsonArray		array;
     JsonResponse 	response;
-    List		list;
 
     getLogger().info("setting annotations for '" + name + "' from: " + pk);
 
@@ -493,7 +492,7 @@ public class ObjectDetectionDatasets
     for (Annotation ann: annotations)
       array.add(ann.getData());
     request  = newPost(getPath() + pk + "/annotations/" + name)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = true;

@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
@@ -15,7 +16,6 @@ import com.github.waikatoufdl.ufdl4j.filter.VersionFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +155,7 @@ public class CudaVersions
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -249,7 +249,7 @@ public class CudaVersions
     data.addProperty("full_version", fullVersion);
     data.addProperty("min_driver_version", minDriverVersion);
     request = newPost(getPath() + "create")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new CudaVersion(response.jsonObject());
@@ -296,7 +296,7 @@ public class CudaVersions
     data.addProperty("full_version", fullVersion);
     data.addProperty("min_driver_version", minDriverVersion);
     request = newPut(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new CudaVersion(response.jsonObject());
@@ -346,7 +346,7 @@ public class CudaVersions
     if (minDriverVersion != null)
       data.addProperty("min_driver_version", minDriverVersion);
     request = newPatch(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new CudaVersion(response.jsonObject());

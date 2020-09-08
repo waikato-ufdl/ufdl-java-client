@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.action.Users.User;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
@@ -17,7 +18,6 @@ import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -211,7 +211,7 @@ public class Teams
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -301,7 +301,7 @@ public class Teams
     data = new JsonObject();
     data.addProperty("name", team);
     request = newPost(getPath() + "create")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Team(response.jsonObject());
@@ -342,7 +342,7 @@ public class Teams
     data = new JsonObject();
     data.addProperty("name", team);
     request = newPut(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Team(response.jsonObject());
@@ -456,7 +456,7 @@ public class Teams
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
     request  = newPatch(getPath() + pk + "/memberships")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;
@@ -496,7 +496,7 @@ public class Teams
     data.addProperty("username", user.getUserName());
     data.addProperty("permissions", permissions.toString());
     request  = newPatch(getPath() + pk + "/memberships")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;
@@ -533,7 +533,7 @@ public class Teams
     data.addProperty("method", "remove");
     data.addProperty("username", user.getUserName());
     request  = newPatch(getPath() + pk + "/memberships")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;

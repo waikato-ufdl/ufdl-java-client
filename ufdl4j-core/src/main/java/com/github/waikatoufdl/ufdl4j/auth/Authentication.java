@@ -5,11 +5,11 @@
 
 package com.github.waikatoufdl.ufdl4j.auth;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.waikatoufdl.ufdl4j.context.Server;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.util.logging.Level;
 
@@ -164,7 +164,7 @@ public class Authentication
     body.addProperty(KEY_PASSWORD, m_Password);
     response = m_Server.getSession()
       .post(m_Server.build(URL_OBTAIN))
-      .body(body.toString(), ContentType.APPLICATION_JSON)
+      .body(body.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8)
       .execute(new JsonResponse());
     if (response.ok()) {
       tokens   = response.jsonObject();
@@ -198,7 +198,7 @@ public class Authentication
     body.addProperty(KEY_REFRESH, m_Tokens.getRefreshToken());
     response = m_Server.getSession()
       .post(m_Server.build(URL_REFRESH))
-      .body(body.toString(), ContentType.APPLICATION_JSON)
+      .body(body.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8)
       .execute(new JsonResponse());
     if (response.ok()) {
       tokens   = response.jsonObject();

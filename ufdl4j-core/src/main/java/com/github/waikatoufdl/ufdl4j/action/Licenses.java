@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
@@ -17,7 +18,6 @@ import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -638,7 +638,7 @@ public class Licenses
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -677,7 +677,7 @@ public class Licenses
     data.addProperty("name", name);
     data.addProperty("url", url);
     request  = newPost(getPath() + "create")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -727,7 +727,7 @@ public class Licenses
     data.addProperty("name", name);
     data.addProperty("url", url);
     request  = newPut(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -779,7 +779,7 @@ public class Licenses
     if (url != null)
       data.addProperty("url", url);
     request  = newPatch(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -818,7 +818,7 @@ public class Licenses
     data.addProperty("type", type);
     data.add("names", JsonUtils.toArray(Arrays.asList(names)));
     request  = newPatch(getPath() + pk + "/subdescriptors")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;

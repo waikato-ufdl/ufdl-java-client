@@ -5,6 +5,7 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.action.Jobs.Job;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
@@ -20,7 +21,6 @@ import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -316,7 +316,7 @@ public class JobTemplates
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -433,7 +433,7 @@ public class JobTemplates
     data.addProperty("licence", license);
     data.addProperty("body", body);
     request = newPost(getPath() + "create")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new JobTemplate(response.jsonObject());
@@ -504,7 +504,7 @@ public class JobTemplates
     data.addProperty("licence", license);
     data.addProperty("body", body);
     request = newPut(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new JobTemplate(response.jsonObject());
@@ -586,7 +586,7 @@ public class JobTemplates
     if (body != null)
       data.addProperty("body", body);
     request = newPatch(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new JobTemplate(response.jsonObject());
@@ -709,7 +709,7 @@ public class JobTemplates
     data.addProperty("options", options);
     data.addProperty("help", help);
     request  = newPost(getPath() + pk + "/inputs/" + name)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;
@@ -795,7 +795,7 @@ public class JobTemplates
     data.addProperty("default", defaultValue);
     data.addProperty("help", help);
     request  = newPost(getPath() + pk + "/parameters/" + name)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;
@@ -895,7 +895,7 @@ public class JobTemplates
     }
 
     request = newPost(getPath() + pk + "/create-job")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Job(response.jsonObject());

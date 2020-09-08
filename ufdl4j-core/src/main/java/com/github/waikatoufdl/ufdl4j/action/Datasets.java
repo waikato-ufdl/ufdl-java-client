@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.attachment.FileAttachment;
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.FileResponse;
@@ -22,7 +23,6 @@ import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -228,7 +228,7 @@ public class Datasets
     result   = new ArrayList<>();
     request  = newPost(getPath() + "list");
     if (filter != null)
-      request.body(filter.toJsonObject().toString(), ContentType.APPLICATION_JSON);
+      request.body(filter.toJsonObject().toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       element = response.json();
@@ -344,7 +344,7 @@ public class Datasets
     data.addProperty("is_public", isPublic);
     data.addProperty("tags", tags);
     request = newPost(getPath() + "create")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Dataset(response.jsonObject());
@@ -400,7 +400,7 @@ public class Datasets
     data.addProperty("is_public", isPublic);
     data.addProperty("tags", tags);
     request = newPut(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Dataset(response.jsonObject());
@@ -462,7 +462,7 @@ public class Datasets
     if (tags != null)
       data.addProperty("tags", tags);
     request = newPatch(getPath() + pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = new Dataset(response.jsonObject());
@@ -671,7 +671,7 @@ public class Datasets
     data = new JsonObject();
     data.addProperty("metadata", metadata);
     request = newPost(getPath() + pk + "/metadata/" + name)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;
@@ -799,7 +799,7 @@ public class Datasets
     data.add("params", parameters);
     parameters.add("annotations_args", parameterArray);
     request = newPost(getPath() + pk + "/download")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = download(request, output);
     if (!response.ok())
       throw new FailedRequestException("Failed to download dataset: " + pk, response);
@@ -837,7 +837,7 @@ public class Datasets
     data = new JsonObject();
     data.addProperty("new_name", newName);
     request = newPost(getPath() + pk + "/copy")
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (!response.ok())
       throw new FailedRequestException("Failed to copy dataset: " + pk, response);
@@ -886,7 +886,7 @@ public class Datasets
     if (delete)
       data.addProperty("hard", hard);
     request  = newPost(getPath() + pk + "/merge/" + source_pk)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       return true;

@@ -7,8 +7,9 @@ package com.github.waikatoufdl.ufdl4j.context;
 
 import com.github.fracpete.requests4j.Session;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
+import okhttp3.HttpUrl;
+
+import java.util.logging.Level;
 
 /**
  * The server context.
@@ -62,35 +63,22 @@ public class Server
    * @return		the full URL
    */
   public String build(String path) {
-    if (!path.startsWith("/"))
-      path = "/" + path;
-    try {
-      return new URIBuilder(getURL())
-	.setPath(path)
-	.build().toURL().toString();
-    }
-    catch (Exception e) {
-      return getURL() + path;
-    }
-  }
+    HttpUrl.Builder 	builder;
+    String[]		segments;
+    int			i;
 
-  /**
-   * Combines the URL with the path.
-   *
-   * @param path	the path to use
-   * @param params 	the parameters to append (for GET)
-   * @return		the full URL
-   */
-  public String build(String path, NameValuePair... params) {
-    if (!path.startsWith("/"))
-      path = "/" + path;
     try {
-      return new URIBuilder(getURL())
-	.setPath(path)
-        .setParameters(params)
-	.build().toURL().toString();
+      builder = HttpUrl.parse(getURL()).newBuilder();
+      segments = path.split("\\/");
+      for (i = 0; i < segments.length; i++)
+	builder.addPathSegment(segments[i]);
+
+      return builder.build().toString();
     }
     catch (Exception e) {
+      getLogger().log(Level.WARNING, "Failed to build URL!", e);
+      if (!path.startsWith("/"))
+	path = "/" + path;
       return getURL() + path;
     }
   }

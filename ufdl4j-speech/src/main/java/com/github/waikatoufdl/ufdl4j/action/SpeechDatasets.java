@@ -5,12 +5,12 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.http.entity.ContentType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -231,7 +231,7 @@ public class SpeechDatasets
     data     = new JsonObject();
     data.addProperty("transcription", transcript);
     request  = newPost(getPath() + pk + "/transcriptions/" + name)
-      .body(data.toString(), ContentType.APPLICATION_JSON);
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok()) {
       result = true;
