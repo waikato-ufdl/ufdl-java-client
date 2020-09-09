@@ -365,7 +365,7 @@ public class Frameworks
 
     getLogger().info("deleting framework with PK: " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk);
     response = execute(request);
     if (response.ok())
       return true;

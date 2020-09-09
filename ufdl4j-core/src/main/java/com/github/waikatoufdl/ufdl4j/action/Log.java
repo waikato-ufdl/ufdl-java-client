@@ -305,7 +305,7 @@ public class Log
 
     getLogger().info("deleting log entry with PK: " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk);
     response = execute(request);
     if (response.ok())
       return true;

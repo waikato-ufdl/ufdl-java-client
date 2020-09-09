@@ -445,7 +445,7 @@ public class Nodes
 
     getLogger().info("deleting node with PK: " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk);
     response = execute(request);
     if (response.ok())
       return true;

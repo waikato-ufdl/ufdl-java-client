@@ -391,7 +391,7 @@ public class HardwareGenerations
 
     getLogger().info("deleting hardware generation with PK: " + pk);
 
-    request  = newDelete(getPath() + pk + "/");
+    request  = newDelete(getPath() + pk);
     response = execute(request);
     if (response.ok())
       return true;

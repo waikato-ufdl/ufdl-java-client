@@ -625,7 +625,7 @@ public class JobTemplates
 
     getLogger().info("deleting job template with PK (hard=" + hard + "): " + pk);
 
-    request  = newDelete(getPath() + pk + (hard ? "/hard" : "/"));
+    request  = newDelete(getPath() + pk + (hard ? "/hard" : ""));
     response = execute(request);
     if (response.ok())
       return true;
