@@ -83,7 +83,7 @@ public class Server
       result = getURL() + path;
     }
 
-    if (!result.endsWith("/"))
+    if (path.endsWith("/") && !result.endsWith("/"))
       result += "/";
 
     return result;
