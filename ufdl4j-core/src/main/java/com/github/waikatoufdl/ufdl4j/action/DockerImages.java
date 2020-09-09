@@ -365,7 +365,7 @@ public class DockerImages
     data.addProperty("version", version);
     data.addProperty("url", url);
     data.addProperty("registry_url", registryUrl);
-    data.addProperty("registry_user", registryUser);
+    data.addProperty("registry_username", registryUser);
     data.addProperty("registry_password", registryPassword);
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
@@ -449,7 +449,7 @@ public class DockerImages
     data.addProperty("version", version);
     data.addProperty("url", url);
     data.addProperty("registry_url", registryUrl);
-    data.addProperty("registry_user", registryUser);
+    data.addProperty("registry_username", registryUser);
     data.addProperty("registry_password", registryPassword);
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
@@ -538,7 +538,7 @@ public class DockerImages
     if (registryUrl != null)
       data.addProperty("registry_url", registryUrl);
     if (registryUser != null)
-      data.addProperty("registry_user", registryUser);
+      data.addProperty("registry_username", registryUser);
     if (registryPassword != null)
       data.addProperty("registry_password", registryPassword);
     if (cudaVersion != null)
