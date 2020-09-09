@@ -63,6 +63,7 @@ public class Server
    * @return		the full URL
    */
   public String build(String path) {
+    String		result;
     HttpUrl.Builder 	builder;
     String[]		segments;
     int			i;
@@ -73,14 +74,19 @@ public class Server
       for (i = 0; i < segments.length; i++)
 	builder.addPathSegment(segments[i]);
 
-      return builder.build().toString();
+      result = builder.build().toString();
     }
     catch (Exception e) {
       getLogger().log(Level.WARNING, "Failed to build URL!", e);
       if (!path.startsWith("/"))
 	path = "/" + path;
-      return getURL() + path;
+      result = getURL() + path;
     }
+
+    if (!result.endsWith("/"))
+      result += "/";
+
+    return result;
   }
 
   /**
