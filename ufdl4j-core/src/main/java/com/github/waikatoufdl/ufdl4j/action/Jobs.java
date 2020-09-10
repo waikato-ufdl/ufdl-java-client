@@ -134,10 +134,10 @@ public class Jobs
     /**
      * Returns the node executing the job.
      *
-     * @return		the node, null if none set
+     * @return		the node ID, -1 if none set
      */
-    public String getNode() {
-      return getString("node", null);
+    public int getNode() {
+      return getInt("node", -1);
     }
 
     /**
