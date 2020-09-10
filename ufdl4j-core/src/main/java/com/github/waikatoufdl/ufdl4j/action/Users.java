@@ -335,11 +335,12 @@ public class Users
    * @param firstName 	the user's first name
    * @param lastName 	the user's last name
    * @param email 	the user's email address
+   * @param isActive 	the user's active state
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public User update(User userObj, String user, String password, String firstName, String lastName, String email) throws Exception {
-    return update(userObj.getPK(), user, password, firstName, lastName, email);
+  public User update(User userObj, String user, String password, String firstName, String lastName, String email, boolean isActive) throws Exception {
+    return update(userObj.getPK(), user, password, firstName, lastName, email, isActive);
   }
 
   /**
@@ -351,10 +352,11 @@ public class Users
    * @param firstName 	the user's first name
    * @param lastName 	the user's last name
    * @param email 	the user's email address
+   * @param isActive 	the user's active state
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public User update(int pk, String user, String password, String firstName, String lastName, String email) throws Exception {
+  public User update(int pk, String user, String password, String firstName, String lastName, String email, boolean isActive) throws Exception {
     User		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -368,6 +370,7 @@ public class Users
     data.addProperty("first_name", firstName);
     data.addProperty("last_name", lastName);
     data.addProperty("email", email);
+    data.addProperty("is_active", isActive);
     request = newPut(getPath() + pk)
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
