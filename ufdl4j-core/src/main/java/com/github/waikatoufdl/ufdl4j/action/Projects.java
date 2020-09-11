@@ -142,7 +142,7 @@ public class Projects
    */
   @Override
   public String getPath() {
-    return "/v1/core/projects/";
+    return "/v1/projects/";
   }
 
   /**

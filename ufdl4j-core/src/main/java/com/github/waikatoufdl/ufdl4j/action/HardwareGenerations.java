@@ -124,7 +124,7 @@ public class HardwareGenerations
    */
   @Override
   public String getPath() {
-    return "/v1/core/hardware/";
+    return "/v1/hardware/";
   }
 
   /**

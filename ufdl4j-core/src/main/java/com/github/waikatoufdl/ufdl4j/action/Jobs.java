@@ -287,7 +287,7 @@ public class Jobs
    */
   @Override
   public String getPath() {
-    return "/v1/core/jobs/";
+    return "/v1/jobs/";
   }
 
   /**

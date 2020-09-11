@@ -605,7 +605,7 @@ public class Licenses
    */
   @Override
   public String getPath() {
-    return "/v1/core/licences/";
+    return "/v1/licences/";
   }
 
   /**

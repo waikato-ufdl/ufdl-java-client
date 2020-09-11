@@ -178,7 +178,7 @@ public class Teams
    */
   @Override
   public String getPath() {
-    return "/v1/core/teams/";
+    return "/v1/teams/";
   }
 
   /**

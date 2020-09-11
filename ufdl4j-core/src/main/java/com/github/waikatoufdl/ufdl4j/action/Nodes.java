@@ -160,7 +160,7 @@ public class Nodes
    */
   @Override
   public String getPath() {
-    return "/v1/core/nodes/";
+    return "/v1/nodes/";
   }
 
   /**

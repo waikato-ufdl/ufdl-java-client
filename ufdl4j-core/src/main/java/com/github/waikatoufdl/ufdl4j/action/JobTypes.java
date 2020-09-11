@@ -104,7 +104,7 @@ public class JobTypes
    */
   @Override
   public String getPath() {
-    return "/v1/core/job-types/";
+    return "/v1/job-types/";
   }
 
   /**

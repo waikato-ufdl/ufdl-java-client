@@ -178,7 +178,7 @@ public class PretrainedModels
    */
   @Override
   public String getPath() {
-    return "/v1/core/pretrained-models/";
+    return "/v1/pretrained-models/";
   }
 
   /**

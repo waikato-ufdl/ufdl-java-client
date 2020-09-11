@@ -283,7 +283,7 @@ public class JobTemplates
    */
   @Override
   public String getPath() {
-    return "/v1/core/job-templates/";
+    return "/v1/job-templates/";
   }
 
   /**

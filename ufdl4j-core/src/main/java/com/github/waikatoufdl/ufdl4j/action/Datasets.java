@@ -195,7 +195,7 @@ public class Datasets
    */
   @Override
   public String getPath() {
-    return "/v1/core/datasets/";
+    return "/v1/datasets/";
   }
 
   /**

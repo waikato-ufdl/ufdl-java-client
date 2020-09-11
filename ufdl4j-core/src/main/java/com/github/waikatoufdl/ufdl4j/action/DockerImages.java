@@ -224,7 +224,7 @@ public class DockerImages
    */
   @Override
   public String getPath() {
-    return "/v1/core/docker/";
+    return "/v1/docker/";
   }
 
   /**

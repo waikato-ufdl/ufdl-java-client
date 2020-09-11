@@ -122,7 +122,7 @@ public class CudaVersions
    */
   @Override
   public String getPath() {
-    return "/v1/core/cuda/";
+    return "/v1/cuda/";
   }
 
   /**

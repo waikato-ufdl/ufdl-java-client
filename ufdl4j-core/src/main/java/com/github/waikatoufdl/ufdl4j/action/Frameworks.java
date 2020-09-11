@@ -113,7 +113,7 @@ public class Frameworks
    */
   @Override
   public String getPath() {
-    return "/v1/core/frameworks/";
+    return "/v1/frameworks/";
   }
 
   /**

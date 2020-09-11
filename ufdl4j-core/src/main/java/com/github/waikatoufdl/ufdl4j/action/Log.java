@@ -129,7 +129,7 @@ public class Log
    */
   @Override
   public String getPath() {
-    return "/v1/core/log/";
+    return "/v1/log/";
   }
 
   /**

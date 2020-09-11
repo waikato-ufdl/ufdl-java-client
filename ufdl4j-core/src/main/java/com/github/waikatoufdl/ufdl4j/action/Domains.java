@@ -113,7 +113,7 @@ public class Domains
    */
   @Override
   public String getPath() {
-    return "/v1/core/domains/";
+    return "/v1/domains/";
   }
 
   /**

@@ -179,7 +179,7 @@ public class Users
    */
   @Override
   public String getPath() {
-    return "/v1/core/users/";
+    return "/v1/users/";
   }
 
   /**
