@@ -811,7 +811,7 @@ public class Datasets
    * For copying a dataset.
    *
    * @param dataset	the dataset to copy
-   * @param newName	the new name
+   * @param newName	the new name, if null or empty increments the version number
    * @return		true if successful
    * @throws Exception	if request fails
    */
@@ -823,7 +823,7 @@ public class Datasets
    * For copying a dataset.
    *
    * @param pk 		the primary key of the dataset to copy
-   * @param newName	the new name
+   * @param newName	the new name, if null or empty increments the version number
    * @return		true if successful
    * @throws Exception	if request fails
    */
@@ -835,7 +835,8 @@ public class Datasets
     getLogger().info("copying dataset with id: " + pk);
 
     data = new JsonObject();
-    data.addProperty("new_name", newName);
+    if ((newName != null) && !newName.isEmpty())
+      data.addProperty("new_name", newName);
     request = newPost(getPath() + pk + "/copy")
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
