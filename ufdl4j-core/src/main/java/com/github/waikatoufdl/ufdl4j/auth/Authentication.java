@@ -23,9 +23,9 @@ public class Authentication
 
   private static final long serialVersionUID = -30480018943298421L;
 
-  public final static String URL_OBTAIN = "/v1/auth/obtain/";
+  public final static String URL_OBTAIN = "/v1/auth/obtain";
 
-  public final static String URL_REFRESH = "/v1/auth/refresh/";
+  public final static String URL_REFRESH = "/v1/auth/refresh";
 
   public static final String KEY_USERNAME = "username";
 
