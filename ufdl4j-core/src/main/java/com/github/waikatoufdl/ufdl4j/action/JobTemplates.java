@@ -21,7 +21,13 @@ import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.apache.tika.io.IOUtils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -903,5 +909,93 @@ public class JobTemplates
       throw new FailedRequestException("Failed to create job from template: " + pk, response);
 
     return result;
+  }
+
+  /**
+   * For exporting a job template as json.
+   *
+   * @param template  	the template to export
+   * @return		the JSON representation of the template
+   * @throws Exception	if request fails
+   */
+  public JsonObject exportTemplate(JobTemplate template) throws Exception {
+    return exportTemplate(template.getPK());
+  }
+
+  /**
+   * For exporting a job template as json.
+   *
+   * @param pk  	the primary key
+   * @return		the JSON representation of the template
+   * @throws Exception	if request fails
+   */
+  public JsonObject exportTemplate(int pk) throws Exception {
+    Request 		request;
+    JsonResponse	response;
+
+    getLogger().info("exporting job template: " + pk);
+
+    request  = newGet(getPath() + pk + "/export");
+    response = execute(request);
+    if (response.ok())
+      return response.jsonObject();
+    else
+      throw new FailedRequestException("Failed to export job template: " + pk, response);
+  }
+
+  /**
+   * For importing a job template from a json file.
+   *
+   * @param template	the template file to import
+   * @return		the job template
+   * @throws Exception	if request fails
+   */
+  public JobTemplate importTemplate(File template) throws Exception {
+    JsonObject		json;
+    FileReader		freader;
+    BufferedReader	breader;
+
+    if (!template.exists())
+      throw new IOException("File does not exist: " + template);
+    if (template.isDirectory())
+      throw new IOException("Template points to a directory: " + template);
+
+    freader = null;
+    breader = null;
+    try {
+      freader = new FileReader(template);
+      breader = new BufferedReader(freader);
+      json = (JsonObject) JsonParser.parseReader(breader);
+      return importTemplate(json);
+    }
+    catch (Exception e) {
+      throw new IOException("Failed to load job template: " + template, e);
+    }
+    finally {
+      IOUtils.closeQuietly(breader);
+      IOUtils.closeQuietly(freader);
+    }
+  }
+
+  /**
+   * For importing a job template from json.
+   *
+   * @param template	the template to import
+   * @return		the job template
+   * @throws Exception	if request fails
+   */
+  public JobTemplate importTemplate(JsonObject template) throws Exception {
+    Request 		request;
+    JsonResponse	response;
+
+    getLogger().info("importing job template");
+
+    request = newPost(getPath() + "import")
+      .body(template.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
+    response = execute(request);
+    if (response.ok())
+      return new JobTemplate(response.jsonObject());
+    else
+      throw new FailedRequestException("Failed to import job template: " + template, response);
   }
 }
