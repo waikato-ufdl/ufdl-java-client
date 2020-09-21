@@ -28,7 +28,9 @@ import java.io.File;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Encapsulates dataset operations.
@@ -722,6 +724,53 @@ public class Datasets
     }
     else {
       throw new FailedRequestException("Failed to get metadata of file '" + name + "' from dataset " + pk + "!", response);
+    }
+  }
+
+  /**
+   * Retrieves the metadata for the complete dataset (downloads it from the server).
+   * Simple filename-metadata association.
+   *
+   * @param dataset	the dataset
+   * @return		the metadata content as map (file-metadata)
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public Map<String,String> getMetadata(Dataset dataset) throws Exception {
+    return getMetadata(dataset.getPK());
+  }
+
+  /**
+   * Retrieves the metadata for the complete dataset (downloads it from the server).
+   * Simple filename-metadata association.
+   *
+   * @param pk		the dataset ID
+   * @return		the metadata content as map (file-metadata)
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public Map<String,String> getMetadata(int pk) throws Exception {
+    Map<String,String>  result;
+    Request 		request;
+    JsonResponse 	response;
+    JsonElement		element;
+    JsonObject		obj;
+
+    request  = newGet(getPath() + pk + "/metadata");
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject()) {
+        obj = element.getAsJsonObject();
+        result = new HashMap<>();
+        for (String key: obj.keySet())
+          result.put(key, obj.get(key).getAsString());
+	return result;
+      }
+      else {
+	throw new FailedRequestException("Expected JSON response for dataset " + pk + "!", response);
+      }
+    }
+    else {
+      throw new FailedRequestException("Failed to get metadata from dataset " + pk + "!", response);
     }
   }
 
