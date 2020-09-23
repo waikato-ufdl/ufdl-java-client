@@ -34,7 +34,21 @@ public class Connection
    * Initializes the connection.
    */
   public Connection() {
-    m_Session        = new Session();
+    this(-1, -1, -1);
+  }
+
+  /**
+   * Initializes the connection.
+   *
+   * @param connectTimeout  	the timeout in seconds for connecting
+   * @param readTimeout 	the timeout in seconds for reading
+   * @param writeTimeout 	the timeout in seconds for writing
+   */
+  public Connection(int connectTimeout, int readTimeout, int writeTimeout) {
+    m_Session = new Session()
+      .connectTimeout(connectTimeout)
+      .readTimeout(readTimeout)
+      .writeTimeout(writeTimeout);
     m_Server         = new Server();
     m_Authentication = new Authentication();
     server(Server.DEFAULT_HOST);

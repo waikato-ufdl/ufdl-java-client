@@ -41,6 +41,27 @@ public class Client
 
   private static final long serialVersionUID = 4630756838422216386L;
 
+  /** the host. */
+  protected String m_Host;
+
+  /** the user. */
+  protected String m_User;
+
+  /** the password. */
+  protected String m_Password;
+
+  /** the token storage. */
+  protected TokenStorageHandler m_TokenStorage;
+
+  /** the connect timeout. */
+  protected int m_ConnectTimeout;
+
+  /** the read timeout. */
+  protected int m_ReadTimeout;
+
+  /** the write timeout. */
+  protected int m_WriteTimeout;
+
   /** the connection to use. */
   protected Connection m_Connection;
 
@@ -100,28 +121,6 @@ public class Client
    */
   public Client() {
     m_Connection = new Connection();
-    m_Actions    = new HashMap<>();
-    try {
-      m_Users            = action(Users.class);
-      m_Datasets         = action(Datasets.class);
-      m_Projects         = action(Projects.class);
-      m_Teams            = action(Teams.class);
-      m_Licenses         = action(Licenses.class);
-      m_Log              = action(Log.class);
-      m_Domains          = action(Domains.class);
-      m_Cuda             = action(CudaVersions.class);
-      m_Frameworks       = action(Frameworks.class);
-      m_Hardware         = action(HardwareGenerations.class);
-      m_Docker           = action(DockerImages.class);
-      m_PretrainedModels = action(PretrainedModels.class);
-      m_Nodes            = action(Nodes.class);
-      m_JobTypes         = action(JobTypes.class);
-      m_JobTemplates     = action(JobTemplates.class);
-      m_Jobs             = action(Jobs.class);
-    }
-    catch (Exception e) {
-      getLogger().log(Level.SEVERE, "Failed to setup client!", e);
-    }
   }
 
   /**
@@ -144,9 +143,28 @@ public class Client
    * @param storage 	the handler for the tokens
    */
   public Client(String host, String user, String password, TokenStorageHandler storage) {
-    this();
-    connection().server(host);
-    connection().authentication(user, password, storage);
+    this(host, user, password, storage, -1, -1, -1);
+  }
+
+  /**
+   * Initializes the client.
+   *
+   * @param host 		the host to use
+   * @param user 		the user
+   * @param password 		the password
+   * @param storage 		the handler for the tokens
+   * @param connectTimeout  	the timeout in seconds for connecting
+   * @param readTimeout 	the timeout in seconds for reading
+   * @param writeTimeout 	the timeout in seconds for writing
+   */
+  public Client(String host, String user, String password, TokenStorageHandler storage, int connectTimeout, int readTimeout, int writeTimeout) {
+    m_Host           = host;
+    m_User           = user;
+    m_Password       = password;
+    m_TokenStorage   = storage;
+    m_ConnectTimeout = connectTimeout;
+    m_ReadTimeout    = readTimeout;
+    m_WriteTimeout   = writeTimeout;
   }
 
   /**
@@ -154,8 +172,44 @@ public class Client
    *
    * @return		the connection
    */
-  public Connection connection() {
+  public synchronized Connection connection() {
+    if (m_Connection == null) {
+      m_Connection = new Connection(m_ConnectTimeout, m_ReadTimeout, m_WriteTimeout);
+      m_Connection.server(m_Host);
+      m_Connection.authentication(m_User, m_Password, m_TokenStorage);
+    }
     return m_Connection;
+  }
+
+  /**
+   * Initializes the actions if necessary.
+   */
+  protected synchronized void initActions() {
+    if (m_Actions != null)
+      return;
+
+    m_Actions = new HashMap<>();
+    try {
+      m_Users            = action(Users.class);
+      m_Datasets         = action(Datasets.class);
+      m_Projects         = action(Projects.class);
+      m_Teams            = action(Teams.class);
+      m_Licenses         = action(Licenses.class);
+      m_Log              = action(Log.class);
+      m_Domains          = action(Domains.class);
+      m_Cuda             = action(CudaVersions.class);
+      m_Frameworks       = action(Frameworks.class);
+      m_Hardware         = action(HardwareGenerations.class);
+      m_Docker           = action(DockerImages.class);
+      m_PretrainedModels = action(PretrainedModels.class);
+      m_Nodes            = action(Nodes.class);
+      m_JobTypes         = action(JobTypes.class);
+      m_JobTemplates     = action(JobTemplates.class);
+      m_Jobs             = action(Jobs.class);
+    }
+    catch (Exception e) {
+      getLogger().log(Level.SEVERE, "Failed to initialize actions!", e);
+    }
   }
 
   /**
@@ -164,6 +218,7 @@ public class Client
    * @return		the users action
    */
   public Users users() {
+    initActions();
     return m_Users;
   }
 
@@ -173,6 +228,7 @@ public class Client
    * @return		the datasets action
    */
   public Datasets datasets() {
+    initActions();
     return m_Datasets;
   }
 
@@ -182,6 +238,7 @@ public class Client
    * @return		the projects action
    */
   public Projects projects() {
+    initActions();
     return m_Projects;
   }
 
@@ -191,6 +248,7 @@ public class Client
    * @return		the teams action
    */
   public Teams teams() {
+    initActions();
     return m_Teams;
   }
 
@@ -200,6 +258,7 @@ public class Client
    * @return		the licenses action
    */
   public Licenses licenses() {
+    initActions();
     return m_Licenses;
   }
 
@@ -209,6 +268,7 @@ public class Client
    * @return		the log action
    */
   public Log log() {
+    initActions();
     return m_Log;
   }
 
@@ -218,6 +278,7 @@ public class Client
    * @return		the domains action
    */
   public Domains domains() {
+    initActions();
     return m_Domains;
   }
 
@@ -227,6 +288,7 @@ public class Client
    * @return		the cuda versions action
    */
   public CudaVersions cuda() {
+    initActions();
     return m_Cuda;
   }
 
@@ -236,6 +298,7 @@ public class Client
    * @return		the frameworks action
    */
   public Frameworks frameworks() {
+    initActions();
     return m_Frameworks;
   }
 
@@ -245,6 +308,7 @@ public class Client
    * @return		the hardware generations action
    */
   public HardwareGenerations hardware() {
+    initActions();
     return m_Hardware;
   }
 
@@ -254,6 +318,7 @@ public class Client
    * @return		the docker images action
    */
   public DockerImages docker() {
+    initActions();
     return m_Docker;
   }
 
@@ -263,6 +328,7 @@ public class Client
    * @return		the pretrained models action
    */
   public PretrainedModels pretrainedModels() {
+    initActions();
     return m_PretrainedModels;
   }
 
@@ -272,6 +338,7 @@ public class Client
    * @return		the nodes action
    */
   public Nodes nodes() {
+    initActions();
     return m_Nodes;
   }
 
@@ -281,6 +348,7 @@ public class Client
    * @return		the job types action
    */
   public JobTypes jobTypes() {
+    initActions();
     return m_JobTypes;
   }
 
@@ -290,6 +358,7 @@ public class Client
    * @return		the job templates action
    */
   public JobTemplates jobTemplates() {
+    initActions();
     return m_JobTemplates;
   }
 
@@ -299,6 +368,7 @@ public class Client
    * @return		the jobs action
    */
   public Jobs jobs() {
+    initActions();
     return m_Jobs;
   }
 
@@ -315,7 +385,7 @@ public class Client
     T 	result;
 
     result = action.newInstance();
-    result.setConnection(m_Connection);
+    result.setConnection(connection());
 
     return result;
   }
