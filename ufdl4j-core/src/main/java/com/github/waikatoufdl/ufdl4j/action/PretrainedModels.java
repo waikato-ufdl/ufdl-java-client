@@ -7,6 +7,7 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
@@ -18,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -408,7 +410,7 @@ public class PretrainedModels
    * @throws Exception	if request fails
    */
   public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
-    PretrainedModel		result;
+    PretrainedModel	result;
     JsonObject		data;
     JsonResponse 	response;
     Request 		request;
@@ -437,6 +439,44 @@ public class PretrainedModels
       throw new FailedRequestException("Failed to partially update pretrained model: " + pk, response);
 
     return result;
+  }
+
+  /**
+   * For downloading a specific pretrained model.
+   *
+   * @param jobTemplate the pretrained model to download
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid pretrained model PK
+   */
+  public boolean download(PretrainedModel jobTemplate, File output) throws Exception {
+    return download(jobTemplate.getPK(), output);
+  }
+
+  /**
+   * For downloading a specific pretrained model.
+   *
+   * @param pk 		the ID of the pretrained model
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid pretrained model PK
+   */
+  public boolean download(int pk, File output) throws Exception {
+    FileResponse 	response;
+    JsonObject		data;
+    Request 		request;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("downloading pretrained model with PK: " + pk);
+
+    data     = new JsonObject();
+    data.addProperty("filetype", "data");
+    request  = newPost(getPath() + pk + "/download")
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
+    response = download(request, output);
+    if (!response.ok())
+      throw new FailedRequestException("Failed to download dataset: " + pk, response);
+    return true;
   }
 
   /**
