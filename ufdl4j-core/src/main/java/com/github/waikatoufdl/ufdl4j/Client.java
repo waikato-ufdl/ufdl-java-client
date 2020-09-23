@@ -403,6 +403,8 @@ public class Client
   public <T extends AbstractAction> T action(Class<T> action) throws Exception {
     T 	result;
 
+    initActions();
+
     if (m_Actions.containsKey(action))
       return (T) m_Actions.get(action);
 
