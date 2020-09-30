@@ -29,6 +29,7 @@ The following modules are available
 * `com.github.waikatoufdl.ufdl4j.action.JobTypes` - managing job types
 * `com.github.waikatoufdl.ufdl4j.action.JobTemplates` - managing job templates
 * `com.github.waikatoufdl.ufdl4j.action.Jobs` - managing jobs
+* `com.github.waikatoufdl.ufdl4j.action.Generic` - for generic API calls
 
 ### ufdl4j-image
 

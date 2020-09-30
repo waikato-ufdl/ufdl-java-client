@@ -11,6 +11,7 @@ import com.github.waikatoufdl.ufdl4j.action.Datasets;
 import com.github.waikatoufdl.ufdl4j.action.DockerImages;
 import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks;
+import com.github.waikatoufdl.ufdl4j.action.Generic;
 import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations;
 import com.github.waikatoufdl.ufdl4j.action.JobTemplates;
 import com.github.waikatoufdl.ufdl4j.action.JobTypes;
@@ -113,6 +114,9 @@ public class Client
   /** the jobs. */
   protected Jobs m_Jobs;
 
+  /** for generic calls. */
+  protected Generic m_Generic;
+
   /** action singletons. */
   protected Map<Class, AbstractAction> m_Actions;
 
@@ -206,6 +210,7 @@ public class Client
       m_JobTypes         = action(JobTypes.class);
       m_JobTemplates     = action(JobTemplates.class);
       m_Jobs             = action(Jobs.class);
+      m_Generic          = action(Generic.class);
     }
     catch (Exception e) {
       getLogger().log(Level.SEVERE, "Failed to initialize actions!", e);
@@ -370,6 +375,16 @@ public class Client
   public Jobs jobs() {
     initActions();
     return m_Jobs;
+  }
+
+  /**
+   * Returns the generic (API calls) action.
+   *
+   * @return		the generic action
+   */
+  public Generic generic() {
+    initActions();
+    return m_Generic;
   }
 
   /**
