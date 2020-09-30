@@ -17,6 +17,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
+import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
@@ -157,6 +158,29 @@ public class Datasets
      */
     public boolean isPublic() {
       return getBoolean("is_public", false);
+    }
+
+    /**
+     * Returns the file names in the dataset.
+     *
+     * @return		the names
+     */
+    public String[] getFiles() {
+      String[]	result;
+      List	list;
+      int	i;
+
+      if (getData().has("files")) {
+	list = JsonUtils.asList(getData(), "files", new ArrayList());
+	result = new String[list.size()];
+	for (i = 0; i < list.size(); i++)
+	  result[i] = "" + list.get(i);
+      }
+      else {
+	result = new String[0];
+      }
+
+      return result;
     }
 
     /**
