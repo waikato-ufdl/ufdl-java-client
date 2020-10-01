@@ -24,14 +24,30 @@ public class DomainFilter
   /** the domain. */
   protected int m_Domain;
 
+  /** how to order the results. */
+  protected OrderBy[] m_Order;
+
   /**
    * Initializes the filter.
    *
    * @param domain	the name to filter
    */
   public DomainFilter(int domain) {
+    this(domain, null);
+  }
+
+  /**
+   * Initializes the filter.
+   *
+   * @param domain	the name to filter
+   * @param order 	how to order the results, can be null
+   */
+  public DomainFilter(int domain, OrderBy[] order) {
     super();
+    if (order == null)
+      order = new OrderBy[0];
     m_Domain = domain;
+    m_Order  = order;
   }
 
   /**
@@ -44,6 +60,15 @@ public class DomainFilter
   }
 
   /**
+   * Returns how to order the results.
+   *
+   * @return		the ordering
+   */
+  public OrderBy[] getOrder() {
+    return m_Order;
+  }
+
+  /**
    * Returns the JSON structure.
    *
    * @return		the json
@@ -53,7 +78,8 @@ public class DomainFilter
     return new GenericFilter(
       new AbstractExpression[]{
 	new ExactNumber("domain", m_Domain),
-      }
+      },
+      m_Order
     ).toJsonObject();
   }
 
