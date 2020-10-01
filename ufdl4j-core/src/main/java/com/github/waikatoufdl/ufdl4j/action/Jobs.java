@@ -446,11 +446,12 @@ public class Jobs
    *
    * @param job 	the job to update
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @return		the raw data of the output
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public byte[] getOutput(Job job, String name) throws Exception {
-    return getOutput(job.getPK(), name);
+  public byte[] getOutput(Job job, String name, String type) throws Exception {
+    return getOutput(job.getPK(), name, type);
   }
 
   /**
@@ -458,19 +459,20 @@ public class Jobs
    *
    * @param pk		the job ID
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @return		the raw data of the output
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public byte[] getOutput(int pk, String name) throws Exception {
+  public byte[] getOutput(int pk, String name, String type) throws Exception {
     Request 		request;
     BasicResponse 	response;
 
-    request  = newGet(getPath() + pk + "/outputs/" + name);
+    request  = newGet(getPath() + pk + "/outputs/" + name + "/" + type);
     response = execute(request);
     if (response.ok())
       return response.body();
     else
-      throw new FailedRequestException("Failed to retrieve output '" + name + "' from job: " + pk, response);
+      throw new FailedRequestException("Failed to retrieve output '" + name + "/" + type + "' from job: " + pk, response);
   }
 
   /**
@@ -478,12 +480,13 @@ public class Jobs
    *
    * @param job 	the job
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @param output	the file to save the download to
    * @return		true if successfully added/uploaded
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean getOutput(Job job, String name, File output) throws Exception {
-    return getOutput(job.getPK(), name, output);
+  public boolean getOutput(Job job, String name, String type, File output) throws Exception {
+    return getOutput(job.getPK(), name, type, output);
   }
 
   /**
@@ -491,20 +494,21 @@ public class Jobs
    *
    * @param pk		the job ID
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @param output	the file to save the download to
    * @return		true if successfully added/uploaded
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean getOutput(int pk, String name, File output) throws Exception {
+  public boolean getOutput(int pk, String name, String type, File output) throws Exception {
     Request 	request;
     Response 	response;
 
-    request = newGet(getPath() + pk + "/outputs/" + name);
+    request = newGet(getPath() + pk + "/outputs/" + name + "/" + type);
     response = download(request, output);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to download output '" + name + "' from job " + pk + " as: " + output, response);
+      throw new FailedRequestException("Failed to download output '" + name + "/" + type + "' from job " + pk + " as: " + output, response);
   }
 
   /**
@@ -512,12 +516,13 @@ public class Jobs
    *
    * @param job 	the job
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @param stream	the stream to save the output to
    * @return		true if successfully added/uploaded
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean getOutput(Job job, String name, OutputStream stream) throws Exception {
-    return getOutput(job.getPK(), name, stream);
+  public boolean getOutput(Job job, String name, String type, OutputStream stream) throws Exception {
+    return getOutput(job.getPK(), name, type, stream);
   }
 
   /**
@@ -525,20 +530,21 @@ public class Jobs
    *
    * @param pk		the job ID
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @param stream	the stream to save the output to
    * @return		true if successfully added/uploaded
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean getOutput(int pk, String name, OutputStream stream) throws Exception {
+  public boolean getOutput(int pk, String name, String type, OutputStream stream) throws Exception {
     Request 	request;
     StreamResponse response;
 
-    request  = newGet(getPath() + pk + "/outputs/" + name);
+    request  = newGet(getPath() + pk + "/outputs/" + name + "/" + type);
     response = stream(request, stream);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to download output '" + name + "' from job " + pk + " as stream!", response);
+      throw new FailedRequestException("Failed to download output '" + name + "/" + type + "' from job " + pk + " as stream!", response);
   }
 
   /**
@@ -546,11 +552,12 @@ public class Jobs
    *
    * @param job 	the job to update
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean deleteOutput(Job job, String name) throws Exception {
-    return deleteOutput(job.getPK(), name);
+  public boolean deleteOutput(Job job, String name, String type) throws Exception {
+    return deleteOutput(job.getPK(), name, type);
   }
 
   /**
@@ -558,19 +565,20 @@ public class Jobs
    *
    * @param pk		the job ID
    * @param name	the name of the output
+   * @param type 	the type of the output
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean deleteOutput(int pk, String name) throws Exception {
+  public boolean deleteOutput(int pk, String name, String type) throws Exception {
     Request 	request;
     Response response;
 
-    request  = newDelete(getPath() + pk + "/outputs/" + name);
+    request  = newDelete(getPath() + pk + "/outputs/" + name + "/" + type);
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to remove output '" + name + "' from job: " + pk, response);
+      throw new FailedRequestException("Failed to remove output '" + name + "/" + type + "' from job: " + pk, response);
   }
 
   /**
