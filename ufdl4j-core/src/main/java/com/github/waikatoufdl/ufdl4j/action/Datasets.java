@@ -524,13 +524,15 @@ public class Datasets
     Request 	request;
     Response 	response;
 
+    getLogger().info("adding file '" + name + "' to: " + pk);
+
     request = newPost(getPath() + pk + "/files/" + name)
       .attachment(new FileAttachment(file));
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to add file to dataset " + pk + ": " + file, response);
+      throw new FailedRequestException("Failed to add file '" + name + "' to dataset " + pk + ": " + file, response);
   }
 
   /**
@@ -558,6 +560,8 @@ public class Datasets
   public boolean getFile(int pk, String name, File output) throws Exception {
     Request 	request;
     Response 	response;
+
+    getLogger().info("getting file '" + name + "' from: " + pk);
 
     request = newGet(getPath() + pk + "/files/" + name);
     response = download(request, output);
@@ -590,6 +594,8 @@ public class Datasets
   public byte[] getFile(int pk, String name) throws Exception {
     Request 		request;
     BasicResponse 	response;
+
+    getLogger().info("getting file '" + name + "' from: " + pk);
 
     request = newGet(getPath() + pk + "/files/" + name);
     response = execute(request);
@@ -625,6 +631,8 @@ public class Datasets
     Request 		request;
     StreamResponse response;
 
+    getLogger().info("getting file '" + name + "' from: " + pk);
+
     request = newGet(getPath() + pk + "/files/" + name);
     response = stream(request, stream);
     if (response.ok())
@@ -656,6 +664,8 @@ public class Datasets
   public boolean deleteFile(int pk, String name) throws Exception {
     Request 	request;
     Response 	response;
+
+    getLogger().info("deleting file '" + name + "' from: " + pk);
 
     request = newDelete(getPath() + pk + "/files/" + name);
     response = execute(request);
@@ -731,6 +741,8 @@ public class Datasets
     JsonElement		element;
     JsonObject		obj;
 
+    getLogger().info("getting meta-data for file '" + name + "' from: " + pk);
+
     request  = newGet(getPath() + pk + "/metadata/" + name);
     response = execute(request);
     if (response.ok()) {
@@ -777,6 +789,8 @@ public class Datasets
     JsonResponse 	response;
     JsonElement		element;
     JsonObject		obj;
+
+    getLogger().info("getting meta-data for: " + pk);
 
     request  = newGet(getPath() + pk + "/metadata");
     response = execute(request);
