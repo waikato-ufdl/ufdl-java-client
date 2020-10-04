@@ -5,6 +5,9 @@
 
 package com.github.waikatoufdl.ufdl4j.action;
 
+import com.github.fracpete.requests4j.attachment.AbstractAttachment;
+import com.github.fracpete.requests4j.attachment.ByteArrayAttachment;
+import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.FileResponse;
@@ -326,7 +329,7 @@ public class PretrainedModels
   /**
    * Updates the pretrained model.
    *
-   * @param obj 	the pretrained model to update
+   * @param model 	the pretrained model to update
    * @param name 	the new name
    * @param framework   the new framework PK
    * @param domain 	the new domain
@@ -336,8 +339,8 @@ public class PretrainedModels
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(PretrainedModel obj, String name, int framework, String domain, int license, String url, String description) throws Exception {
-    return update(obj.getPK(), name, framework, domain, license, url, description);
+  public PretrainedModel update(PretrainedModel model, String name, int framework, String domain, int license, String url, String description) throws Exception {
+    return update(model.getPK(), name, framework, domain, license, url, description);
   }
 
   /**
@@ -382,7 +385,7 @@ public class PretrainedModels
   /**
    * (Partially) Updates the pretrained model identified by the object, using only the non-null arguments.
    *
-   * @param obj	the user to update
+   * @param model	the model to update
    * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
    * @param domain 	the new domain, ignored if null
@@ -392,8 +395,8 @@ public class PretrainedModels
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(PretrainedModel obj, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
-    return partialUpdate(obj.getPK(), name, framework, domain, license, url, description);
+  public PretrainedModel partialUpdate(PretrainedModel model, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
+    return partialUpdate(model.getPK(), name, framework, domain, license, url, description);
   }
 
   /**
@@ -444,12 +447,12 @@ public class PretrainedModels
   /**
    * For downloading a specific pretrained model.
    *
-   * @param jobTemplate the pretrained model to download
+   * @param model 	the pretrained model to download
    * @return		true if successfully downloaded
    * @throws Exception	if request fails, eg invalid pretrained model PK
    */
-  public boolean download(PretrainedModel jobTemplate, File output) throws Exception {
-    return download(jobTemplate.getPK(), output);
+  public boolean download(PretrainedModel model, File output) throws Exception {
+    return download(model.getPK(), output);
   }
 
   /**
@@ -477,6 +480,88 @@ public class PretrainedModels
     if (!response.ok())
       throw new FailedRequestException("Failed to download dataset: " + pk, response);
     return true;
+  }
+
+  /**
+   * For uploading a pretrained model (replacing any existing one).
+   *
+   * @param pk 		the primary key to associate the model with
+   * @param attachment 	the pretrained model to upload
+   * @return		the pretrained model
+   * @throws Exception	if request fails
+   */
+  protected PretrainedModel upload(int pk, AbstractAttachment attachment) throws Exception {
+    PretrainedModel		result;
+    JsonResponse 	response;
+    JsonElement		element;
+    Request 		request;
+
+    result   = null;
+    request  = newPost(getPath() + pk + "/data")
+      .attachment(attachment);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new PretrainedModel(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to upload pretrained model: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For uploading a pretrained model (replacing any existing one).
+   *
+   * @param model 	the primary key to associate the model with
+   * @param binary 	the pretrained model binary to upload
+   * @return		the pretrained model
+   * @throws Exception	if request fails
+   */
+  public PretrainedModel upload(PretrainedModel model, File binary) throws Exception {
+    getLogger().info("uploading pretrained model for id: " + model);
+    return upload(model.getPK(), new FileAttachment(binary, "data", MediaTypeHelper.OCTECT_STREAM));
+  }
+
+  /**
+   * For uploading a pretrained model (replacing any existing one).
+   *
+   * @param pk 		the primary key to associate the model with
+   * @param binary 	the pretrained model binary to upload
+   * @return		the pretrained model
+   * @throws Exception	if request fails
+   */
+  public PretrainedModel upload(int pk, File binary) throws Exception {
+    getLogger().info("uploading pretrained model for id: " + pk);
+    return upload(pk, new FileAttachment(binary, "data", MediaTypeHelper.OCTECT_STREAM));
+  }
+
+  /**
+   * For uploading a pretrained model (replacing any existing one).
+   *
+   * @param model 	the primary key to associate the model with
+   * @param binary 	the pretrained model binary to upload
+   * @return		the pretrained model
+   * @throws Exception	if request fails
+   */
+  public PretrainedModel upload(PretrainedModel model, byte[] binary) throws Exception {
+    getLogger().info("uploading pretrained model for id: " + model);
+    return upload(model.getPK(), new ByteArrayAttachment(binary, MediaTypeHelper.OCTECT_STREAM));
+  }
+
+  /**
+   * For uploading a pretrained model (replacing any existing one).
+   *
+   * @param pk 		the primary key to associate the model with
+   * @param binary 	the pretrained model binary to upload
+   * @return		the pretrained model
+   * @throws Exception	if request fails
+   */
+  public PretrainedModel upload(int pk, byte[] binary) throws Exception {
+    getLogger().info("uploading pretrained model for id: " + pk);
+    return upload(pk, new ByteArrayAttachment(binary, MediaTypeHelper.OCTECT_STREAM));
   }
 
   /**
