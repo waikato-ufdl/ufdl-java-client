@@ -539,4 +539,47 @@ public class ObjectDetectionDatasets
 
     return result;
   }
+
+  /**
+   * For loading all the labels from a dataset by primary key.
+   *
+   * @param dataset	the dataset to get the labels for
+   * @return		the annotations
+   * @throws Exception	if request fails
+   */
+  public List<String> getLabels(Dataset dataset) throws Exception {
+    return getLabels(dataset.getPK());
+  }
+
+  /**
+   * For loading all the labels from a dataset by primary key.
+   *
+   * @param pk 		the primary key of the dataset to get the labels for
+   * @return		the labels
+   * @throws Exception	if request fails
+   */
+  public List<String> getLabels(int pk) throws Exception {
+    List<String>	result;
+    Request 		request;
+    JsonResponse 	response;
+    List		list;
+
+    getLogger().info("loading labels from: " + pk);
+
+    result   = null;
+    request  = newGet(getPath() + pk + "/labels");
+    response = execute(request);
+    if (response.ok()) {
+      result = new ArrayList<>();
+      list = JsonUtils.asList(response.json().getAsJsonArray());
+      for (Object item: list) {
+	result.add("" + item);
+      }
+    }
+    else {
+      throw new FailedRequestException("Failed to get labels from: " + pk, response);
+    }
+
+    return result;
+  }
 }
