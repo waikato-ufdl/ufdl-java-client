@@ -983,6 +983,50 @@ public class Datasets
   }
 
   /**
+   * For clearing a specific dataset.
+   *
+   * @param dataset 	the dataset to clear
+   * @return		true if successfully cleared
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public Dataset clear(Dataset dataset) throws Exception {
+    return clear(dataset.getPK());
+  }
+
+  /**
+   * For clearing a specific dataset.
+   *
+   * @param pk 		the ID of the dataset to clear
+   * @return		true if successfully cleared
+   * @throws Exception	if request fails, eg invalid dataset PK
+   */
+  public Dataset clear(int pk) throws Exception {
+    Dataset		result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonElement		element;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("clearing dataset with PK: " + pk);
+
+    result   = null;
+    request  = newDelete(getPath() + pk + "/clear");
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Dataset(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to clear dataset: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
    * For deleting a specific dataset.
    *
    * @param dataset 	the dataset to delete
