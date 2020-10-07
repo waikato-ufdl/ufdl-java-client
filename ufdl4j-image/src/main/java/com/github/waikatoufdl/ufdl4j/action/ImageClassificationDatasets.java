@@ -10,11 +10,9 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,8 @@ public class ImageClassificationDatasets
   public static class ImageClassificationDataset
     extends Dataset {
 
+    private static final long serialVersionUID = 2031525681885013068L;
+
     /**
      * Initializes the dataset.
      *
@@ -42,66 +42,6 @@ public class ImageClassificationDatasets
      */
     public ImageClassificationDataset(JsonObject data) {
       super(data);
-    }
-
-    /**
-     * Returns the files of this dataset.
-     *
-     * @return		the files
-     */
-    public List<String> files() {
-      List<String> result;
-      JsonArray array;
-      int i;
-
-      result = new ArrayList<>();
-      if (getData().has("files")) {
-	array = getData().getAsJsonArray("files");
-	for (i = 0; i < array.size(); i++)
-	  result.add(array.get(i).getAsString());
-      }
-      return result;
-    }
-
-    /**
-     * Returns the categories associated with each image.
-     *
-     * @return 		the categories
-     */
-    public Map<String,List<String>> categories() {
-      Map<String,List<String>>	result;
-      JsonObject		categories;
-      List<String>		list;
-
-      result = new HashMap<>();
-      if (m_Data.has("categories")) {
-	categories = m_Data.getAsJsonObject("categories");
-	for (String name : categories.keySet()) {
-	  list = (List<String>) JsonUtils.asList(categories, name, new ArrayList<String>());
-	  Collections.sort(list);
-	  result.put(name, list);
-	}
-      }
-
-      return result;
-    }
-
-    /**
-     * Returns the categories associated with the specified image.
-     *
-     * @param name 	the name of the image to get the categories for
-     * @return 		the categories
-     */
-    public List<String> categories(String name) {
-      List<String>		result;
-      Map<String,List<String>>	all;
-
-      result = new ArrayList<>();
-      all    = categories();
-      if (all.containsKey(name))
-        result = all.get(name);
-
-      return result;
     }
   }
 
