@@ -64,7 +64,8 @@ public class ManagingPretrainedModel {
       "od",
       client.licenses().list().get(0).getPK(),
       "http://example.com/where/else",
-      "blah");
+      "blah",
+      "");
     System.out.println(blahpre);
 
     // partially updating blahtemplate
@@ -76,6 +77,7 @@ public class ManagingPretrainedModel {
       "ic",
       null,
       "http://example.com/where",
+      null,
       null);
 
     System.out.println(blahpre);

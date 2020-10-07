@@ -115,7 +115,16 @@ public class PretrainedModels
      * @return		the description
      */
     public String getDescription() {
-      return getString("description");
+      return getString("description", "");
+    }
+
+    /**
+     * Returns the metadata.
+     *
+     * @return		the metadata
+     */
+    public String getMetaData() {
+      return getString("metadata", "");
     }
 
     /**
@@ -301,6 +310,23 @@ public class PretrainedModels
    * @throws Exception	if request fails or pretrained model already exists
    */
   public PretrainedModel create(String name, int framework, String domain, int license, String url, String description) throws Exception {
+    return create(name, framework, domain, license, url, description, null);
+  }
+
+  /**
+   * Creates a pretrained model object.
+   *
+   * @param name 	the name
+   * @param framework   the framework PK
+   * @param domain 	the domain
+   * @param license	the license PK
+   * @param url		the download URL
+   * @param description	the model description
+   * @param metadata 	the metadata, ignored if null
+   * @return		the PretrainedModel object, null if failed to create
+   * @throws Exception	if request fails or pretrained model already exists
+   */
+  public PretrainedModel create(String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -315,6 +341,8 @@ public class PretrainedModels
     data.addProperty("licence", license);
     data.addProperty("url", url);
     data.addProperty("description", description);
+    if (metadata != null)
+      data.addProperty("metadata", metadata);
     request = newPost(getPath() + "create")
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
@@ -336,11 +364,12 @@ public class PretrainedModels
    * @param license	the new license PK
    * @param url		the new download URL
    * @param description	the new model description
+   * @param metadata	the new metadata
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(PretrainedModel model, String name, int framework, String domain, int license, String url, String description) throws Exception {
-    return update(model.getPK(), name, framework, domain, license, url, description);
+  public PretrainedModel update(PretrainedModel model, String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
+    return update(model.getPK(), name, framework, domain, license, url, description, metadata);
   }
 
   /**
@@ -353,10 +382,11 @@ public class PretrainedModels
    * @param license	the new license PK
    * @param url		the new download URL
    * @param description	the new model description
+   * @param metadata	the new metadata
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(int pk, String name, int framework, String domain, int license, String url, String description) throws Exception {
+  public PretrainedModel update(int pk, String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -371,6 +401,7 @@ public class PretrainedModels
     data.addProperty("licence", license);
     data.addProperty("url", url);
     data.addProperty("description", description);
+    data.addProperty("metadata", metadata);
     request = newPut(getPath() + pk)
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
@@ -392,11 +423,12 @@ public class PretrainedModels
    * @param license	the new license PK, ignored if null
    * @param url		the new download URL, ignored if null
    * @param description	the new model description, ignored if null
+   * @param metadata	the new metadata, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(PretrainedModel model, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
-    return partialUpdate(model.getPK(), name, framework, domain, license, url, description);
+  public PretrainedModel partialUpdate(PretrainedModel model, String name, Integer framework, String domain, Integer license, String url, String description, String metadata) throws Exception {
+    return partialUpdate(model.getPK(), name, framework, domain, license, url, description, metadata);
   }
 
   /**
@@ -409,10 +441,11 @@ public class PretrainedModels
    * @param license	the new license PK, ignored if null
    * @param url		the new download URL, ignored if null
    * @param description	the new model description, ignored if null
+   * @param metadata	the new metadata, ignored if null
    * @return		the pretrained model object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, Integer license, String url, String description) throws Exception {
+  public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, Integer license, String url, String description, String metadata) throws Exception {
     PretrainedModel	result;
     JsonObject		data;
     JsonResponse 	response;
@@ -433,6 +466,8 @@ public class PretrainedModels
       data.addProperty("url", url);
     if (description != null)
       data.addProperty("description", description);
+    if (metadata != null)
+      data.addProperty("metadata", metadata);
     request = newPatch(getPath() + pk)
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
