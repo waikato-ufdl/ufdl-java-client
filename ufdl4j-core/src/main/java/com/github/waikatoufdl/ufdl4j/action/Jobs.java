@@ -656,7 +656,7 @@ public class Jobs
   /**
    * For resetting a specific job.
    *
-   * @param job 	the job to reinstate
+   * @param job 	the job to reset
    * @return		the Job
    * @throws Exception	if request fails, eg invalid job PK
    */
@@ -667,7 +667,7 @@ public class Jobs
   /**
    * For resetting a specific job.
    *
-   * @param pk 		the ID of the job
+   * @param pk 		the ID of the job to reset
    * @return		the Job
    * @throws Exception	if request fails, eg invalid job PK
    */
@@ -684,6 +684,94 @@ public class Jobs
 
     result   = null;
     request  = newDelete(getPath() + pk + "/reset");
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Job(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to reset job: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For aborting a specific job.
+   *
+   * @param job 	the job to abort
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job abort(Job job) throws Exception {
+    return abort(job.getPK());
+  }
+
+  /**
+   * For aborting a specific job.
+   *
+   * @param pk 		the ID of the job to abort
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job abort(int pk) throws Exception {
+    Job			result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonElement		element;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Aborting job with PK: " + pk);
+
+    result   = null;
+    request  = newDelete(getPath() + pk + "/abort");
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Job(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to abor job: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For releasing a specific job.
+   *
+   * @param job 	the job to release
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job release(Job job) throws Exception {
+    return release(job.getPK());
+  }
+
+  /**
+   * For releasing a specific job.
+   *
+   * @param pk 		the ID of the job to release
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job release(int pk) throws Exception {
+    Job			result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonElement		element;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Releasing job with PK: " + pk);
+
+    result   = null;
+    request  = newGet(getPath() + pk + "/release");
     response = execute(request);
     if (response.ok()) {
       element = response.json();
