@@ -657,10 +657,10 @@ public class Jobs
    * For resetting a specific job.
    *
    * @param job 	the job to reinstate
-   * @return		true if successfully reset
+   * @return		the Job
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean reset(Job job) throws Exception {
+  public Job reset(Job job) throws Exception {
     return reset(job.getPK());
   }
 
@@ -668,23 +668,32 @@ public class Jobs
    * For resetting a specific job.
    *
    * @param pk 		the ID of the job
-   * @return		true if successfully reset
+   * @return		the Job
    * @throws Exception	if request fails, eg invalid job PK
    */
-  public boolean reset(int pk) throws Exception {
+  public Job reset(int pk) throws Exception {
+    Job			result;
     JsonResponse 	response;
     Request 		request;
+    JsonElement		element;
 
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
     getLogger().info("Resetting job with PK: " + pk);
 
+    result   = null;
     request  = newDelete(getPath() + pk + "/reset");
     response = execute(request);
-    if (response.ok())
-      return true;
-    else
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+	result = new Job(element.getAsJsonObject());
+    }
+    else {
       throw new FailedRequestException("Failed to reset job: " + pk, response);
+    }
+
+    return result;
   }
 }
