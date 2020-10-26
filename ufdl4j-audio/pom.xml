@@ -9,11 +9,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>ufdl4j-speech</artifactId>
+  <artifactId>ufdl4j-audio</artifactId>
   <packaging>jar</packaging>
 
-  <name>ufdl4j-speech</name>
-  <description>Module for speech related UFDL tasks</description>
+  <name>ufdl4j-audio</name>
+  <description>Module for audio related UFDL tasks</description>
   <organization>
     <name>University of Waikato, Hamilton, NZ</name>
     <url>http://www.waikato.ac.nz/</url>

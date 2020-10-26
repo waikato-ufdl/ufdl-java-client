@@ -30,7 +30,7 @@
   <modules>
     <module>ufdl4j-core</module>
     <module>ufdl4j-image</module>
-    <module>ufdl4j-speech</module>
+    <module>ufdl4j-audio</module>
   </modules>
 
   <profiles>
