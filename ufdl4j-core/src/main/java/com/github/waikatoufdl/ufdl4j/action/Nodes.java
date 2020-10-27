@@ -101,8 +101,8 @@ public class Nodes
      *
      * @return		the memory
      */
-    public int getGPUMemory() {
-      return getInt("gpu_mem");
+    public long getGPUMemory() {
+      return getLong("gpu_mem");
     }
 
     /**
@@ -110,8 +110,8 @@ public class Nodes
      *
      * @return		the memory
      */
-    public int getCPUMemory() {
-      return getInt("cpu_mem");
+    public long getCPUMemory() {
+      return getLong("cpu_mem");
     }
 
     /**
