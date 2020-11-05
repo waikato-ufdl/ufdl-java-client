@@ -452,4 +452,25 @@ public class Nodes
     else
       throw new FailedRequestException("Failed to delete node: " + pk, response);
   }
+
+  /**
+   * Performs a ping.
+   *
+   * @return		true if successfully deleted
+   * @throws Exception	if request fails, eg invalid node PK
+   */
+  public boolean ping() throws Exception {
+    JsonResponse 	response;
+    Request 		request;
+
+    getLogger().info("pinging");
+
+    request  = newGet(getPath());
+    response = execute(request);
+    if (response.ok())
+      return true;
+    else
+      throw new FailedRequestException("Failed to ping!", response);
+
+  }
 }
