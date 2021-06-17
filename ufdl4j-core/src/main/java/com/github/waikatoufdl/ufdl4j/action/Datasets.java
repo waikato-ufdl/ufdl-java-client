@@ -1,6 +1,6 @@
 /*
  * Datasets.java
- * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -17,7 +17,6 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
-import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
@@ -29,6 +28,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,18 +166,36 @@ public class Datasets
      * @return		the names
      */
     public String[] getFiles() {
-      String[]	result;
-      List	list;
-      int	i;
+      String[]		result;
+      JsonObject  	jobj;
 
       if (getData().has("files")) {
-	list = JsonUtils.asList(getData(), "files", new ArrayList());
-	result = new String[list.size()];
-	for (i = 0; i < list.size(); i++)
-	  result[i] = "" + list.get(i);
+        jobj   = getData().get("files").getAsJsonObject();
+	result = jobj.keySet().toArray(new String[0]);
+	Arrays.sort(result);
       }
       else {
 	result = new String[0];
+      }
+
+      return result;
+    }
+
+    /**
+     * Returns the file names in the dataset associated with their cache IDs.
+     *
+     * @return		the map (cache - ID)
+     */
+    public Map<String,String> getFilesMap() {
+      Map<String,String>	result;
+      JsonObject  		jobj;
+
+      result = new HashMap<>();
+
+      if (getData().has("files")) {
+        jobj = getData().get("files").getAsJsonObject();
+        for (String key: jobj.keySet())
+	  result.put(key, jobj.get(key).getAsString());
       }
 
       return result;
