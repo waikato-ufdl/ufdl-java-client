@@ -6,7 +6,7 @@ managing the communication and executing actions.
 
 The following modules are available
 * **ufdl4j-core** - core API calls (users, teams, projects, datasets)
-* **ufdl4j-image** - image API calls (image classification, object detection)
+* **ufdl4j-image** - image API calls (image classification, image segmentaiton, object detection)
 * **ufdl4j-speech** - speech API calls
 
 ## API
