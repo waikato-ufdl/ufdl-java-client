@@ -83,7 +83,9 @@ public class ManagingImageClassificationDatasets {
 	System.out.println("--> adding metadata");
 	action.setMetadata(newDataset, file.getName(), "Full file path: " + file.getAbsolutePath());
 	System.out.println(action.getMetadata(newDataset, file.getName()));
- }
+      }
+      // reload dataset
+      newDataset = action.load(newDataset.getPK());
     }
 
     // get categories

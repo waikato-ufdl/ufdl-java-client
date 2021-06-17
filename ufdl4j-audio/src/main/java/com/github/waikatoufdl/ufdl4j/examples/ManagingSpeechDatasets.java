@@ -84,6 +84,8 @@ public class ManagingSpeechDatasets {
         action.setMetadata(newDataset, soundfile.getName(), "Sound file: " + soundfile.getAbsolutePath() + "\nTranscript file: " + transfile.getAbsolutePath());
         System.out.println(action.getMetadata(newDataset, soundfile.getName()));
       }
+      // reload dataset
+      newDataset = action.load(newDataset.getPK());
     }
 
     // get transcripts
