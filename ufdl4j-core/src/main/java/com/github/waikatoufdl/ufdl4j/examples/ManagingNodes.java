@@ -1,6 +1,6 @@
 /*
  * ManagingNodes.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
@@ -43,9 +43,11 @@ public class ManagingNodes {
     }
 
     // create 'localhost' if necessary
+    int hwpk;
     if (localhost == null) {
       System.out.println("--> creating node");
-      localhost = client.nodes().create("127.0.0.1", "1.0", "Pascal", 10, 10);
+      hwpk = client.hardware().load("Pascal").getPK();
+      localhost = client.nodes().create("127.0.0.1", "1.0", hwpk, 0, 10, 10);
       System.out.println(localhost);
     }
 
@@ -55,12 +57,14 @@ public class ManagingNodes {
 
     // updating blah
     System.out.println("--> updating node");
-    localhost = client.nodes().update(localhost, "127.0.0.1", "1.0", "Volta", 10, 10);
+    hwpk = client.hardware().load("Volta").getPK();
+    localhost = client.nodes().update(localhost, "127.0.0.1", "1.0", hwpk, 0, 10, 10);
     System.out.println(localhost);
 
     // partially updating blahnode
     System.out.println("--> partially updating node");
-    localhost = client.nodes().partialUpdate(localhost, null, null, "Pascal", 11, 11);
+    hwpk = client.hardware().load("Pascal").getPK();
+    localhost = client.nodes().partialUpdate(localhost, null, null, hwpk, 0, 11, 11);
     System.out.println(localhost);
 
     // delete blah

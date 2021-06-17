@@ -1,6 +1,6 @@
 /*
  * Nodes.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -84,7 +84,7 @@ public class Nodes
      * @return		the version
      */
     public String getDriverVersion() {
-      return getString("driver_version");
+      return getString("driver_version", "");
     }
 
     /**
@@ -93,7 +93,7 @@ public class Nodes
      * @return		the generation
      */
     public int getHardwareGeneration() {
-      return getInt("hardware_generation");
+      return getInt("hardware_generation", -1);
     }
 
     /**
@@ -102,7 +102,7 @@ public class Nodes
      * @return		the memory
      */
     public long getGPUMemory() {
-      return getLong("gpu_mem");
+      return getLong("gpu_mem", -1);
     }
 
     /**
@@ -111,7 +111,7 @@ public class Nodes
      * @return		the memory
      */
     public long getCPUMemory() {
-      return getLong("cpu_mem");
+      return getLong("cpu_mem", -1);
     }
 
     /**
@@ -276,13 +276,14 @@ public class Nodes
    *
    * @param ip		the IP address
    * @param generation 	the hardware generation
+   * @param index 	the GPU index
    * @param gpu 	the GPU memory
    * @param cpu 	the CPU memory
    * @param driver 	the driver version
    * @return		the Node object, null if failed to create
    * @throws Exception	if request fails or node already exists
    */
-  public Node create(String ip, String driver, String generation, int gpu, int cpu) throws Exception {
+  public Node create(String ip, String driver, int generation, int index, int gpu, int cpu) throws Exception {
     Node		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -294,6 +295,7 @@ public class Nodes
     data.addProperty("ip", ip);
     data.addProperty("driver_version", driver);
     data.addProperty("hardware_generation", generation);
+    data.addProperty("index", index);
     data.addProperty("gpu_mem", gpu);
     data.addProperty("cpu_mem", cpu);
     request = newPost(getPath() + "create")
@@ -313,14 +315,15 @@ public class Nodes
    * @param obj 	the node to update
    * @param ip		the IP address
    * @param generation 	the hardware generation
+   * @param index 	the gpu index
    * @param gpu 	the GPU memory
    * @param cpu 	the CPU memory
    * @param driver 	the driver version
    * @return		the node object
    * @throws Exception	if request fails
    */
-  public Node update(Node obj, String ip, String driver, String generation, int gpu, int cpu) throws Exception {
-    return update(obj.getPK(), ip, driver, generation, gpu, cpu);
+  public Node update(Node obj, String ip, String driver, int generation, int index, int gpu, int cpu) throws Exception {
+    return update(obj.getPK(), ip, driver, generation, index, gpu, cpu);
   }
 
   /**
@@ -329,13 +332,14 @@ public class Nodes
    * @param pk 		the PK of the node to update
    * @param ip		the IP address
    * @param generation 	the hardware generation
+   * @param index 	the GPU index
    * @param gpu 	the GPU memory
    * @param cpu 	the CPU memory
    * @param driver 	the driver version
    * @return		the node object
    * @throws Exception	if request fails
    */
-  public Node update(int pk, String ip, String driver, String generation, int gpu, int cpu) throws Exception {
+  public Node update(int pk, String ip, String driver, int generation, int index, int gpu, int cpu) throws Exception {
     Node		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -347,6 +351,7 @@ public class Nodes
     data.addProperty("ip", ip);
     data.addProperty("driver_version", driver);
     data.addProperty("hardware_generation", generation);
+    data.addProperty("index", index);
     data.addProperty("gpu_mem", gpu);
     data.addProperty("cpu_mem", cpu);
     request = newPut(getPath() + pk)
@@ -365,15 +370,16 @@ public class Nodes
    *
    * @param obj	the user to update
    * @param ip		the IP address, ignored if null
-   * @param generation 	the hardware generation, ignored if null
+   * @param generation 	the hardware generation, ignored if -1
+   * @param index 	the GPU index, ignored if null
    * @param gpu 	the GPU memory, ignored if null
    * @param cpu 	the CPU memory, ignored if null
    * @param driver 	the driver version, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Node partialUpdate(Node obj, String ip, String driver, String generation, Integer gpu, Integer cpu) throws Exception {
-    return partialUpdate(obj.getPK(), ip, driver, generation, gpu, cpu);
+  public Node partialUpdate(Node obj, String ip, String driver, int generation, Integer index, Integer gpu, Integer cpu) throws Exception {
+    return partialUpdate(obj.getPK(), ip, driver, generation, index, gpu, cpu);
   }
 
   /**
@@ -381,14 +387,15 @@ public class Nodes
    *
    * @param pk 		the PK of the user to update
    * @param ip		the IP address, ignored if null
-   * @param generation 	the hardware generation, ignored if null
+   * @param generation 	the hardware generation, ignored if -1
+   * @param index 	the GPU index, ignored if null
    * @param gpu 	the GPU memory, ignored if null
    * @param cpu 	the CPU memory, ignored if null
    * @param driver 	the driver version, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Node partialUpdate(int pk, String ip, String driver, String generation, Integer gpu, Integer cpu) throws Exception {
+  public Node partialUpdate(int pk, String ip, String driver, int generation, Integer index, Integer gpu, Integer cpu) throws Exception {
     Node		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -401,8 +408,10 @@ public class Nodes
       data.addProperty("ip", ip);
     if (driver != null)
       data.addProperty("driver_version", driver);
-    if (generation != null)
+    if (generation != -1)
       data.addProperty("hardware_generation", generation);
+    if (index != null)
+      data.addProperty("index", index);
     if (gpu != null)
       data.addProperty("gpu_mem", gpu);
     if (cpu != null)
