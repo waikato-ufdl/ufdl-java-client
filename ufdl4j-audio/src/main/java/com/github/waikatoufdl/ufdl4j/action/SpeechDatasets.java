@@ -62,49 +62,6 @@ public class SpeechDatasets
       }
       return result;
     }
-
-    /**
-     * Returns the transcripts associated with each sound file.
-     *
-     * @return 		the transcripts
-     */
-    public Map<String,String> transcripts() {
-      Map<String,String>	result;
-      JsonObject 		transcriptions;
-      JsonObject		transObj;
-
-      result = new HashMap<>();
-      if (m_Data.has("transcriptions")) {
-	transcriptions = m_Data.getAsJsonObject("transcriptions");
-	for (String name : transcriptions.keySet()) {
-	  transObj = transcriptions.get(name).getAsJsonObject();
-	  if (transObj.has("transcription"))
-	    result.put(name, transObj.get("transcription").getAsString());
-	  else
-	    result.put(name, "");
-	}
-      }
-
-      return result;
-    }
-
-    /**
-     * Returns the transcript associated with the specified sound file.
-     *
-     * @param name 	the name of the file to get the transcript for
-     * @return 		the transcript, empty string if it doesn't exist
-     */
-    public String transcript(String name) {
-      String			result;
-      Map<String,String>	all;
-
-      result = "";
-      all    = transcripts();
-      if (all.containsKey(name))
-        result = all.get(name);
-
-      return result;
-    }
   }
 
   /**

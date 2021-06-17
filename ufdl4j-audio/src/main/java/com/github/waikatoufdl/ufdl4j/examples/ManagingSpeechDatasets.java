@@ -10,7 +10,6 @@ import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 import com.github.waikatoufdl.ufdl4j.action.SpeechDatasets;
-import com.github.waikatoufdl.ufdl4j.action.SpeechDatasets.SpeechDataset;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -43,19 +42,23 @@ public class ManagingSpeechDatasets {
     else
       client = new Client(args[0], args[1], args[1]);
 
+    // get action
+    SpeechDatasets action = client.action(SpeechDatasets.class);
+
     // list datasets
+    Dataset availDataset = null;
     System.out.println("--> listing datasets");
-    for (Dataset dataset: client.datasets().list())
+    for (Dataset dataset: action.list()) {
+      if (availDataset == null)
+        availDataset = dataset;
       System.out.println(dataset);
+    }
 
     // grab first available project ID
     int project = -1;
     List<Project> projects = client.projects().list();
     if (projects.size() > 0)
       project = projects.get(0).getPK();
-
-    // get action
-    SpeechDatasets action = client.action(SpeechDatasets.class);
 
     // load license
     License gpl3 = client.licenses().load("GPL3");
@@ -92,18 +95,10 @@ public class ManagingSpeechDatasets {
     Map<String,String> transcripts = action.getTranscripts(newDataset);
     System.out.println(transcripts);
 
-    // re-load dataset
-    System.out.println("--> re-loading dataset");
-    newDataset = action.load(newDataset.getPK());
-    SpeechDataset spDataset = newDataset.as(SpeechDataset.class);
-    System.out.println("--> dataset transcripts");
-    System.out.println(spDataset);
-    System.out.println(spDataset.transcripts());
-
     // download dataset
     System.out.println("--> downloading dataset");
-    File output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + ".zip");
-    if (action.download(newDataset, output))
+    File output = new File(System.getProperty("java.io.tmpdir") + "/" + newDataset.getName() + ".zip");
+    if (action.download(newDataset, new String[]{"to-common-voice-sp", "-o", "annotations.csv"}, output))
       System.out.println("--> downloaded dataset to " + output);
 
     // get file from dataset

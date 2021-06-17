@@ -1,6 +1,6 @@
 /*
  * ManagingObjectDetectionDatasets.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
@@ -45,9 +45,12 @@ public class ManagingObjectDetectionDatasets {
     else
       client = new Client(args[0], args[1], args[1]);
 
+    // get action
+    ObjectDetectionDatasets action = client.action(ObjectDetectionDatasets.class);
+
     // list datasets
     System.out.println("--> listing datasets");
-    for (Dataset dataset: client.datasets().list())
+    for (Dataset dataset: action.list())
       System.out.println(dataset);
 
     // grab first available project ID
@@ -55,9 +58,6 @@ public class ManagingObjectDetectionDatasets {
     List<Project> projects = client.projects().list();
     if (projects.size() > 0)
       project = projects.get(0).getPK();
-
-    // get action
-    ObjectDetectionDatasets action = client.action(ObjectDetectionDatasets.class);
 
     // load license
     License gpl3 = client.licenses().load("GPL3");
@@ -113,7 +113,7 @@ public class ManagingObjectDetectionDatasets {
     // download dataset in MSCOCO format
     System.out.println("--> downloading dataset");
     File output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + ".zip");
-    if (action.download(newDataset, new String[]{"coco", "-o", "dataset.json"}, output))
+    if (action.download(newDataset, new String[]{"to-coco-od", "-o", "dataset.json"}, output))
       System.out.println("--> downloaded dataset to " + output);
 
     // get file from dataset
