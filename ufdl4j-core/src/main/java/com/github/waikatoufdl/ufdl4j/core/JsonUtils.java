@@ -1,6 +1,6 @@
 /*
  * JsonUtils.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.core;
@@ -46,6 +46,11 @@ public class JsonUtils {
    */
   public static List asList(JsonObject object, String key, List defValue) {
     List 	list;
+
+    if (!object.has(key))
+      return defValue;
+    if (object.get(key).isJsonNull())
+      return defValue;
 
     if (object.has(key) && object.get(key).isJsonArray()) {
       list = asList(object.getAsJsonArray(key));

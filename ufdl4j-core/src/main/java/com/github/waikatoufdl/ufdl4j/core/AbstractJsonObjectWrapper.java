@@ -1,6 +1,6 @@
 /*
  * AbstractJsonObjectWrapper.java
- * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2021 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.core;
@@ -47,6 +47,8 @@ public abstract class AbstractJsonObjectWrapper
   protected int getInt(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      throw new IllegalStateException("Null value: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsInt();
     else
@@ -58,9 +60,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as integer
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a number, the default value
+   * @return		the value associated with the key or, if not found, null or not a number, the default value
    */
   protected int getInt(String key, int defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsInt();
     else
@@ -76,6 +82,8 @@ public abstract class AbstractJsonObjectWrapper
   protected long getLong(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      throw new IllegalStateException("Null value: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsLong();
     else
@@ -87,9 +95,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as long
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a number, the default value
+   * @return		the value associated with the key or, if not found, null or not a number, the default value
    */
   protected long getLong(String key, long defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsLong();
     else
@@ -105,6 +117,8 @@ public abstract class AbstractJsonObjectWrapper
   protected float getFloat(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      throw new IllegalStateException("Null value: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsFloat();
     else
@@ -116,9 +130,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as float
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a number, the default value
+   * @return		the value associated with the key or, if not found, null or not a number, the default value
    */
   protected float getFloat(String key, float defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsFloat();
     else
@@ -134,6 +152,8 @@ public abstract class AbstractJsonObjectWrapper
   protected double getDouble(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      throw new IllegalStateException("Null value: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsDouble();
     else
@@ -145,9 +165,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as double
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a number, the default value
+   * @return		the value associated with the key or, if not found, null or not a number, the default value
    */
   protected double getDouble(String key, double defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isNumber())
       return m_Data.get(key).getAsDouble();
     else
@@ -163,6 +187,8 @@ public abstract class AbstractJsonObjectWrapper
   protected boolean getBoolean(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      throw new IllegalStateException("Null value: " + key);
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isBoolean())
       return m_Data.get(key).getAsBoolean();
     else
@@ -174,9 +200,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as boolean
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a boolean, the default value
+   * @return		the value associated with the key or, if not found, null or not a boolean, the default value
    */
   protected boolean getBoolean(String key, boolean defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isBoolean())
       return m_Data.get(key).getAsBoolean();
     else
@@ -186,12 +216,14 @@ public abstract class AbstractJsonObjectWrapper
   /**
    * Returns the specified long, throws an {@link IllegalStateException} if not present or not a string.
    *
-   * @param key		the key to retrieve as string
+   * @param key		the key to retrieve as string, can be null
    * @return		the value associated with the key
    */
   protected String getString(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      return null;
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString())
       return m_Data.get(key).getAsString();
     else
@@ -203,9 +235,13 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as string
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a string, the default value
+   * @return		the value associated with the key or, if not found, null or not a string, the default value
    */
   protected String getString(String key, String defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString())
       return m_Data.get(key).getAsString();
     else
@@ -216,11 +252,13 @@ public abstract class AbstractJsonObjectWrapper
    * Returns the specified long, throws an {@link IllegalStateException} if not present or not a number.
    *
    * @param key		the key to retrieve as long
-   * @return		the value associated with the key
+   * @return		the value associated with the key, null if null value found
    */
   protected LocalDateTime getDateTime(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      return null;
     if (m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString()) {
       try {
 	return LocalDateTime.parse(m_Data.get(key).getAsString(), DateTimeUtils.getDateTimeFormatter());
@@ -239,10 +277,14 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as date/time
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a date or failed to parse, the default value
+   * @return		the value associated with the key or, if not found, null or not a date or failed to parse, the default value
    * @see		DateTimeUtils#getDateTimeFormatter()
    */
   protected LocalDateTime getDateTime(String key, LocalDateTime defValue) {
+    if (!m_Data.has(key))
+      return defValue;
+    if (m_Data.get(key).isJsonNull())
+      return defValue;
     try {
       if (m_Data.has(key) && m_Data.get(key).isJsonPrimitive() && m_Data.get(key).getAsJsonPrimitive().isString())
 	return LocalDateTime.parse(m_Data.get(key).getAsString(), DateTimeUtils.getDateTimeFormatter());
@@ -259,11 +301,13 @@ public abstract class AbstractJsonObjectWrapper
    * If key not present, throws an {@link IllegalStateException}.
    *
    * @param key		the key to retrieve as string
-   * @return		the value associated with the key
+   * @return		the value associated with the key, null if null value found
    */
   protected List getList(String key) {
     if (!m_Data.has(key))
       throw new IllegalStateException("Key does not exist: " + key);
+    if (m_Data.get(key).isJsonNull())
+      return null;
     return getList(key, null);
   }
 
@@ -273,7 +317,7 @@ public abstract class AbstractJsonObjectWrapper
    *
    * @param key		the key to retrieve as string
    * @param defValue	the default value
-   * @return		the value associated with the key or, if not found or not a string, the default value
+   * @return		the value associated with the key or, if not found, null or not a string, the default value
    */
   protected List getList(String key, List defValue) {
     return JsonUtils.asList(m_Data, key, defValue);
