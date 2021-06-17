@@ -13,6 +13,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 
@@ -189,7 +190,8 @@ public abstract class AbstractAction
    * Executes the request. Automatically fills in authentication.
    *
    * @param request	the request to execute
-   * @return		null if successful, otherwise error message
+   * @return		the response
+   * @throws Exception	if an error occurred
    */
   protected JsonResponse execute(Request request) throws Exception {
     JsonResponse 	result;
@@ -218,9 +220,24 @@ public abstract class AbstractAction
    * Executes the request, downloading a file. Automatically fills in authentication.
    *
    * @param request	the request to execute
-   * @return		null if successful, otherwise error message
+   * @param output 	the file to write to
+   * @return		the response
+   * @throws Exception	if an error occurred
    */
   protected FileResponse download(Request request, File output) throws Exception {
+    return download(request, output, true);
+  }
+
+  /**
+   * Executes the request, downloading a file. Automatically fills in authentication.
+   *
+   * @param request	the request to execute
+   * @param output 	the file to write to
+   * @param keepEmpty 	whether to keep empty files or remove them automatically
+   * @return		the response
+   * @throws Exception	if an error occurred
+   */
+  protected FileResponse download(Request request, File output, boolean keepEmpty) throws Exception {
     FileResponse 	result;
 
     preExecute(request);
@@ -239,6 +256,11 @@ public abstract class AbstractAction
       result = request.execute(new FileResponse(output));
     }
 
+    if (!keepEmpty && output.exists() && (output.length() == 0)) {
+      if (!output.delete())
+        throw new IOException("Failed to remove empty file: " + output);
+    }
+
     return result;
   }
 
@@ -247,7 +269,8 @@ public abstract class AbstractAction
    *
    * @param request	the request to execute
    * @param stream 	the output stream to use (caller needs to close it)
-   * @return		null if successful, otherwise error message
+   * @return		the response
+   * @throws Exception	if an error occurred
    */
   protected StreamResponse stream(Request request, OutputStream stream) throws Exception {
     StreamResponse 	result;
