@@ -46,13 +46,9 @@ public class ManagingSpeechDatasets {
     SpeechDatasets action = client.action(SpeechDatasets.class);
 
     // list datasets
-    Dataset availDataset = null;
     System.out.println("--> listing datasets");
-    for (Dataset dataset: action.list()) {
-      if (availDataset == null)
-        availDataset = dataset;
+    for (Dataset dataset: action.list())
       System.out.println(dataset);
-    }
 
     // grab first available project ID
     int project = -1;
