@@ -34,6 +34,7 @@ The following modules are available
 ### ufdl4j-image
 
 * `com.github.waikatoufdl.ufdl4j.action.ImageClassificationDatasets` - managing image classification datasets
+* `com.github.waikatoufdl.ufdl4j.action.ImageSegmentationDatasets` - managing image segmentation datasets
 * `com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets` - managing object classifications datasets
 
 ### ufdl4j-speech
@@ -164,6 +165,7 @@ public static class Test {
 ### ufdl4j-image
 
 * [ManagingImageClassificationDatasets](ufdl4j-image/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingImageClassificationDatasets.java) - operations on image classification datasets
+* [ManagingImageSegmentationDatasets](ufdl4j-image/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingImageClassificationDatasets.java) - operations on image segmentation datasets
 * [ManagingObjectDetectionDatasets](ufdl4j-image/src/main/java/com/github/waikatoufdl/ufdl4j/examples/ManagingObjectDetectionDatasets.java) - same, but for object detection datasets
 
 ### ufdl4j-speech
