@@ -79,8 +79,8 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://github.com/waikato-ufdl/ufdl-java-client</connection>
-    <developerConnection>scm:git:https://github.com/waikato-ufdl/ufdl-java-client</developerConnection>
+    <connection>scm:git:ssh://git@github.com/waikato-ufdl/ufdl-java-client</connection>
+    <developerConnection>scm:git:ssh://git@github.com/waikato-ufdl/ufdl-java-client</developerConnection>
     <url>https://github.com/waikato-ufdl/ufdl-java-client</url>
     <tag>HEAD</tag>
   </scm>
