@@ -7,10 +7,10 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.FileResponse;
+import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
-import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 
 import java.io.File;
 import java.io.IOException;

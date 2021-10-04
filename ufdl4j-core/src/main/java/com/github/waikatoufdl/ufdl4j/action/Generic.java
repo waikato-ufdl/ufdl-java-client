@@ -6,8 +6,8 @@
 package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
-import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import okhttp3.MediaType;
 
 /**
@@ -50,7 +50,7 @@ public class Generic
    * @throws Exception	if request fails
    */
   protected String plain(Request request, String body, MediaType mediaType) throws Exception {
-    JsonResponse	response;
+    JsonResponse response;
 
     if (body != null)
       request.body(body, mediaType);

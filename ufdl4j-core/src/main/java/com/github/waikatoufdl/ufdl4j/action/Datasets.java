@@ -8,15 +8,11 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
-import com.github.fracpete.requests4j.response.BasicResponse;
-import com.github.fracpete.requests4j.response.FileResponse;
-import com.github.fracpete.requests4j.response.Response;
-import com.github.fracpete.requests4j.response.StreamResponse;
+import com.github.fracpete.requests4j.response.*;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
-import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
@@ -261,7 +257,7 @@ public class Datasets
    */
   public List<Dataset> list(Filter filter) throws Exception {
     List<Dataset>		result;
-    JsonResponse 	response;
+    JsonResponse response;
     JsonElement		element;
     JsonArray		array;
     Request 		request;

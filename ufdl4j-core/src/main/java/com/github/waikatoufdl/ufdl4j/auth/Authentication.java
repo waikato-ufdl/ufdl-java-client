@@ -6,9 +6,9 @@
 package com.github.waikatoufdl.ufdl4j.auth;
 
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
+import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.context.Server;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
-import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.google.gson.JsonObject;
 
 import java.util.logging.Level;
@@ -154,7 +154,7 @@ public class Authentication
    * @return		null if successful, otherwise error message
    */
   public String obtain() throws Exception {
-    JsonResponse	response;
+    JsonResponse 	response;
     JsonObject 		body;
     JsonObject 		tokens;
 

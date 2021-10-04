@@ -7,10 +7,10 @@ package com.github.waikatoufdl.ufdl4j.action;
 
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
+import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
-import com.github.waikatoufdl.ufdl4j.core.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.Utils;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -283,7 +283,7 @@ public class DockerImages
    */
   public DockerImage load(int pk) throws Exception {
     DockerImage		result;
-    JsonResponse 	response;
+    JsonResponse response;
     JsonElement		element;
     Request 		request;
 
