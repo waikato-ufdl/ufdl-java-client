@@ -399,7 +399,7 @@ public class Client
   public <T extends AbstractAction> T newAction(Class<T> action) throws Exception {
     T 	result;
 
-    result = action.newInstance();
+    result = action.getDeclaredConstructor().newInstance();
     result.setConnection(connection());
 
     return result;
