@@ -1,6 +1,6 @@
 /*
  * JobTypes.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -67,6 +67,24 @@ public class JobTypes
     }
 
     /**
+     * Returns the Python package.
+     *
+     * @return		the package
+     */
+    public String getPkg() {
+      return getString("pkg");
+    }
+
+    /**
+     * Returns the Python class.
+     *
+     * @return		the class
+     */
+    public String getCls() {
+      return getString("cls");
+    }
+
+    /**
      * Returns the short description.
      *
      * @return		the short description
@@ -83,7 +101,7 @@ public class JobTypes
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName();
+      return "pk=" + getPK() + ", name=" + getName() + ", pkg=" + getPkg() + ", cls=" + getCls();
     }
   }
 
@@ -142,9 +160,9 @@ public class JobTypes
     if (response.ok()) {
       element = response.json();
       if (element.isJsonArray()) {
-        array = element.getAsJsonArray();
-        for (i = 0; i < array.size(); i++)
-          result.add(new JobType(array.get(i).getAsJsonObject()));
+	array = element.getAsJsonArray();
+	for (i = 0; i < array.size(); i++)
+	  result.add(new JobType(array.get(i).getAsJsonObject()));
       }
     }
     else {
@@ -213,10 +231,12 @@ public class JobTypes
    * Creates a job type object.
    *
    * @param name 	the name
+   * @param pkg		the python package
+   * @param cls 	the python class
    * @return		the JobType object, null if failed to create
    * @throws Exception	if request fails or job type already exists
    */
-  public JobType create(String name) throws Exception {
+  public JobType create(String name, String pkg, String cls) throws Exception {
     JobType		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -226,6 +246,8 @@ public class JobTypes
 
     data = new JsonObject();
     data.addProperty("name", name);
+    data.addProperty("pkg", pkg);
+    data.addProperty("cls", cls);
     request = newPost(getPath() + "create")
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
@@ -242,11 +264,13 @@ public class JobTypes
    *
    * @param obj 	the job type to update
    * @param name 	the new name
+   * @param pkg		the new python package
+   * @param cls 	the new python class
    * @return		the job type object
    * @throws Exception	if request fails
    */
-  public JobType update(JobType obj, String name) throws Exception {
-    return update(obj.getPK(), name);
+  public JobType update(JobType obj, String name, String pkg, String cls) throws Exception {
+    return update(obj.getPK(), name, pkg, cls);
   }
 
   /**
@@ -254,10 +278,12 @@ public class JobTypes
    *
    * @param pk 		the PK of the job type to update
    * @param name 	the new name
+   * @param pkg		the new python package
+   * @param cls 	the new python class
    * @return		the job type object
    * @throws Exception	if request fails
    */
-  public JobType update(int pk, String name) throws Exception {
+  public JobType update(int pk, String name, String pkg, String cls) throws Exception {
     JobType		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -267,6 +293,8 @@ public class JobTypes
 
     data = new JsonObject();
     data.addProperty("name", name);
+    data.addProperty("pkg", pkg);
+    data.addProperty("cls", cls);
     request = newPut(getPath() + pk)
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
@@ -283,11 +311,13 @@ public class JobTypes
    *
    * @param obj		the type to update
    * @param name 	the new name, ignored if null
-   * @return		the user object, null if failed to create
+   * @param pkg		the new python package, ignored if null
+   * @param cls 	the new python class, ignored if null
+   * @return		the job type object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobType partialUpdate(JobType obj, String name) throws Exception {
-    return partialUpdate(obj.getPK(), name);
+  public JobType partialUpdate(JobType obj, String name, String pkg, String cls) throws Exception {
+    return partialUpdate(obj.getPK(), name, pkg, cls);
   }
 
   /**
@@ -295,10 +325,12 @@ public class JobTypes
    *
    * @param pk 		the PK of the user to update
    * @param name 	the new name, ignored if null
-   * @return		the user object, null if failed to create
+   * @param pkg		the new python package, ignored if null
+   * @param cls 	the new python class, ignored if null
+   * @return		the job type object, null if failed to create
    * @throws Exception	if request fails
    */
-  public JobType partialUpdate(int pk, String name) throws Exception {
+  public JobType partialUpdate(int pk, String name, String pkg, String cls) throws Exception {
     JobType		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -309,6 +341,10 @@ public class JobTypes
     data = new JsonObject();
     if (name != null)
       data.addProperty("name", name);
+    if (pkg != null)
+      data.addProperty("pkg", pkg);
+    if (cls != null)
+      data.addProperty("cls", cls);
     request = newPatch(getPath() + pk)
       .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);

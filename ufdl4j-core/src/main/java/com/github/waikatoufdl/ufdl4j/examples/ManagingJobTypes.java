@@ -1,6 +1,6 @@
 /*
  * ManagingJobTypes.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
@@ -45,7 +45,7 @@ public class ManagingJobTypes {
     // create 'blah' if necessary
     if (blahjobtype == null) {
       System.out.println("--> creating job type");
-      blahjobtype = client.jobTypes().create("blah");
+      blahjobtype = client.jobTypes().create("blah", "somepkg", "somepkg.SomeCls");
       System.out.println(blahjobtype);
     }
 
@@ -55,12 +55,12 @@ public class ManagingJobTypes {
 
     // updating blah
     System.out.println("--> updating job type");
-    blahjobtype = client.jobTypes().update(blahjobtype, "blah2");
+    blahjobtype = client.jobTypes().update(blahjobtype, "blah2", "somepkg", "somepkg.SomeCls");
     System.out.println(blahjobtype);
 
     // partially updating blahtype
     System.out.println("--> partially updating job type");
-    blahjobtype = client.jobTypes().partialUpdate(blahjobtype, "blah");
+    blahjobtype = client.jobTypes().partialUpdate(blahjobtype, "blah", null, null);
     System.out.println(blahjobtype);
 
     // delete 'blah'
