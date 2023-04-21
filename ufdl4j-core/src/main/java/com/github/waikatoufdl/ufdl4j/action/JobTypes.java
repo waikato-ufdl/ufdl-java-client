@@ -91,7 +91,7 @@ public class JobTypes
      */
     @Override
     public String getShortDescription() {
-      return getName();
+      return getName() + "/" + getPkg() + "/" + getCls();
     }
 
     /**
