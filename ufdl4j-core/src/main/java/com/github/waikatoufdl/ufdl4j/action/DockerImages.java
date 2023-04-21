@@ -1,6 +1,6 @@
 /*
  * DockerImages.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -115,12 +115,15 @@ public class DockerImages
     }
 
     /**
-     * Returns the CUDA version PK.
+     * Returns the CUDA version.
      *
      * @return		the version
      */
-    public int getCudaVersion() {
-      return getInt("cuda_version");
+    public CudaVersions.CudaVersion getCudaVersion() {
+      if (m_Data.has("cuda_version") && !m_Data.get("cuda_version").isJsonNull())
+        return new CudaVersions.CudaVersion(m_Data.getAsJsonObject("cuda_version"));
+      else
+        return null;
     }
 
     /**
@@ -128,8 +131,8 @@ public class DockerImages
      *
      * @return		the framework
      */
-    public int getFramework() {
-      return getInt("framework");
+    public Frameworks.Framework getFramework() {
+      return new Frameworks.Framework(m_Data.getAsJsonObject("framework"));
     }
 
     /**
@@ -142,9 +145,9 @@ public class DockerImages
     }
 
     /**
-     * Returns the task.
+     * Returns the tasks.
      *
-     * @return		the task
+     * @return		the tasks
      */
     public String[] getTasks() {
       String[]	result;
@@ -164,8 +167,11 @@ public class DockerImages
      *
      * @return		the generation, can be null if it runs on cpu
      */
-    public int getMinHardwareGeneration() {
-      return getInt("min_hardware_generation", -1);
+    public HardwareGenerations.HardwareGeneration getMinHardwareGeneration() {
+      if (m_Data.has("min_hardware_generation") && !m_Data.get("min_hardware_generation").isJsonNull())
+        return new HardwareGenerations.HardwareGeneration(m_Data.getAsJsonObject("min_hardware_generation"));
+      else
+        return null;
     }
 
     /**
@@ -182,8 +188,11 @@ public class DockerImages
      *
      * @return		the license
      */
-    public int getLicense() {
-      return getInt("licence", -1);
+    public String getLicense() {
+      if (m_Data.has("licence"))
+        return m_Data.get("licence").getAsString();
+      else
+        return null;
     }
 
     /**
@@ -203,7 +212,10 @@ public class DockerImages
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", domain=" + getDomain() + ", tasks=" + Utils.arrayToString(getTasks());
+      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", domain=" + getDomain()
+        + ", cuda=" + getCudaVersion() + ", license=" + getLicense() + ", minHardware=" + getMinHardwareGeneration()
+        + ", cpu=" + getCPU()
+        + ", tasks=[" + Utils.arrayToString(getTasks()) + "], framework=[" + getFramework() + "]";
     }
   }
 
@@ -339,20 +351,21 @@ public class DockerImages
    * @param registryUrl 	the url of the registry
    * @param registryUser 	the user to use for connecting to the registry
    * @param registryPassword 	the password to use for the registry
-   * @param cudaVersion the minimum cuda version PK
+   * @param cudaVersion the minimum cuda version, eg 10.0
    * @param framework 	the framework PK
    * @param domain 	the domain this image applies to
-   * @param tasks 	the tasks this image is for
-   * @param minHardware	the minimum hardware generation PK
+   * @param tasks 	the tasks this image is for, eg Train, Predict, Export
+   * @param minHardware	the minimum hardware generation, eg Fermi
    * @param cpu 	whether image runs on CPU as well
-   * @param license 	the license PK
+   * @param license 	the license name, eg GPL3
    * @return		the DockerImage object, null if failed to create
    * @throws Exception	if request fails or docker image already exists
    */
   public DockerImage create(String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
-                            int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
+                            String cudaVersion, int framework, String domain,
+                            String[] tasks, String minHardware, boolean cpu,
+                            String license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -395,22 +408,26 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry
    * @param registryUser 	the new user to use for connecting to the registry
    * @param registryPassword 	the new password to use for the registry
-   * @param cudaVersion the new minimum cuda version PK
+   * @param cudaVersion the new minimum cuda version, eg 10.0
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
-   * @param tasks 	the new tasks this image is for
-   * @param minHardware	the new minimum hardware generation PK
+   * @param tasks 	the new task this image is for, eg: Train, Predict, Export
+   * @param minHardware	the new minimum hardware generation, eg Fermi
    * @param cpu 	the new whether image runs on CPU as well
-   * @param license 	the new license PK
+   * @param license 	the new license name, eg GPL3
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(DockerImage obj, String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
-                            int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
-    return update(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, tasks, minHardware, cpu, license);
+                            String cudaVersion, int framework, String domain,
+                            String[] tasks, String minHardware, boolean cpu,
+                            String license) throws Exception {
+    return update(obj.getPK(), name, version, url,
+      registryUrl, registryUser, registryPassword,
+      cudaVersion, framework, domain,
+      tasks, minHardware, cpu,
+      license);
   }
 
   /**
@@ -423,20 +440,21 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry
    * @param registryUser 	the new user to use for connecting to the registry
    * @param registryPassword 	the new password to use for the registry
-   * @param cudaVersion the new minimum cuda version PK
+   * @param cudaVersion the new minimum cuda version, eg 10.0
    * @param framework 	the new framework PK
    * @param domain 	the new domain this image applies to
-   * @param tasks 	the new task this image is for
-   * @param minHardware	the new minimum hardware generation PK
+   * @param tasks 	the new task this image is for, eg: Train, Predict, Export
+   * @param minHardware	the new minimum hardware generation, eg Fermi
    * @param cpu 	the new whether image runs on CPU as well
-   * @param license 	the new license PK
+   * @param license 	the new license name, eg GPL3
    * @return		the dockerImage object
    * @throws Exception	if request fails
    */
   public DockerImage update(int pk, String name, String version, String url,
                             String registryUrl, String registryUser, String registryPassword,
-                            int cudaVersion, int framework, String domain,
-                            String[] tasks, int minHardware, boolean cpu, int license) throws Exception {
+                            String cudaVersion, int framework, String domain,
+                            String[] tasks, String minHardware, boolean cpu,
+                            String license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -479,22 +497,26 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry, ignored if null
    * @param registryUser 	the new user to use for connecting to the registry, ignored if null
    * @param registryPassword 	the new password to use for the registry, ignored if null
-   * @param cudaVersion the new minimum cuda version PK, ignored if null
+   * @param cudaVersion the new minimum cuda version, eg 10.0, ignored if null
    * @param framework 	the new framework PK, ignored if null
    * @param domain 	the new domain this image applies to, ignored if null
-   * @param tasks 	the new task this image is for, ignored if null
-   * @param minHardware	the new minimum hardware generation PK, ignored if null
+   * @param tasks 	the new tasks this image is for, eg Train, Predict Export, ignored if null
+   * @param minHardware	the new minimum hardware generation, eg Fermi, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
-   * @param license 	the new license PK, ignored if null
-   * @return		the user object, null if failed to create
+   * @param license 	the new license, eg GPL3, ignored if null
+   * @return		the docker image object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(DockerImage obj, String name, String version, String url,
                                    String registryUrl, String registryUser, String registryPassword,
-                                   Integer cudaVersion, Integer framework, String domain,
-                                   String[] tasks, Integer minHardware, Boolean cpu, Integer license) throws Exception {
-    return partialUpdate(obj.getPK(), name, version, url, registryUrl, registryUser, registryPassword,
-      cudaVersion, framework, domain, tasks, minHardware, cpu, license);
+                                   String cudaVersion, Integer framework, String domain,
+                                   String[] tasks, String minHardware, Boolean cpu,
+                                   String license) throws Exception {
+    return partialUpdate(obj.getPK(), name, version, url,
+      registryUrl, registryUser, registryPassword,
+      cudaVersion, framework, domain,
+      tasks, minHardware, cpu,
+      license);
   }
 
   /**
@@ -507,20 +529,21 @@ public class DockerImages
    * @param registryUrl 	the new url of the registry, ignored if null
    * @param registryUser 	the new user to use for connecting to the registry, ignored if null
    * @param registryPassword 	the new password to use for the registry, ignored if null
-   * @param cudaVersion the new minimum cuda version, ignored if null
+   * @param cudaVersion the new minimum cuda version, eg 10.0, ignored if null
    * @param framework 	the new framework PK, ignored if null
    * @param domain 	the new domain this image applies to, ignored if null
-   * @param tasks 	the new tasks this image is for, ignored if null
-   * @param minHardware	the new minimum hardware generation, ignored if null
+   * @param tasks 	the new tasks this image is for, eg Train, Predict Export, ignored if null
+   * @param minHardware	the new minimum hardware generation, eg Fermi, ignored if null
    * @param cpu 	the new whether image runs on CPU as well, ignored if null
-   * @param license 	the new license PK, ignored if null
-   * @return		the user object, null if failed to create
+   * @param license 	the new license, eg GPL3, ignored if null
+   * @return		the docker image object, null if failed to create
    * @throws Exception	if request fails
    */
   public DockerImage partialUpdate(int pk, String name, String version, String url,
                                    String registryUrl, String registryUser, String registryPassword,
-                                   Integer cudaVersion, Integer framework, String domain,
-                                   String[] tasks, Integer minHardware, Boolean cpu, Integer license) throws Exception {
+                                   String cudaVersion, Integer framework, String domain,
+                                   String[] tasks, String minHardware, Boolean cpu,
+                                   String license) throws Exception {
     DockerImage		result;
     JsonObject		data;
     JsonResponse 	response;
