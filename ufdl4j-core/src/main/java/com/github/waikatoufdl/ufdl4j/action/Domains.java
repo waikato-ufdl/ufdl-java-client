@@ -11,12 +11,14 @@ import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
+import com.github.waikatoufdl.ufdl4j.filter.DescriptionFilter;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,9 +153,9 @@ public class Domains
     if (response.ok()) {
       element = response.json();
       if (element.isJsonArray()) {
-        array = element.getAsJsonArray();
-        for (i = 0; i < array.size(); i++)
-          result.add(new Domain(array.get(i).getAsJsonObject()));
+	array = element.getAsJsonArray();
+	for (i = 0; i < array.size(); i++)
+	  result.add(new Domain(array.get(i).getAsJsonObject()));
       }
     }
     else {
@@ -194,27 +196,51 @@ public class Domains
   }
 
   /**
-   * For loading a specific license by name.
+   * For loading a specific domain by name.
    *
-   * @param name 	the license name
-   * @return		the license object, null if failed to create
+   * @param nameOrDesc 	the domain name (name or description)
+   * @return		the domain object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Domain load(String name) throws Exception {
+  public Domain load(String nameOrDesc) throws Exception {
     Domain	result;
 
-    getLogger().info("loading domain with name: " + name);
+    getLogger().info("loading domain with name/description: " + nameOrDesc);
 
     result = null;
 
-    for (Domain domain : list(new NameFilter(name))) {
+    for (Domain domain : list(new NameFilter(nameOrDesc))) {
       result = domain;
       break;
     }
 
+    if (result == null) {
+      for (Domain domain : list(new DescriptionFilter(nameOrDesc))) {
+	result = domain;
+	break;
+      }
+    }
+
     if (result == null)
-      getLogger().warning("failed to load domain: " + name);
+      getLogger().warning("failed to load domain: " + nameOrDesc);
 
     return result;
+  }
+
+  /**
+   * Returns the name of the domain.
+   *
+   * @param nameOrDesc 	the name or description of the domain
+   * @return		the name
+   * @throws Exception	if name/description is unknown
+   */
+  public String name(String nameOrDesc) throws Exception {
+    Domain	domain;
+
+    domain = load(nameOrDesc);
+    if (domain == null)
+      throw new IOException("Failed to located domain using name or description: " + nameOrDesc);
+
+    return domain.getName();
   }
 }
