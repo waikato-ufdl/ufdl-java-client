@@ -1,6 +1,6 @@
 /*
  * Client.java
- * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j;
@@ -401,6 +401,7 @@ public class Client
 
     result = action.getDeclaredConstructor().newInstance();
     result.setConnection(connection());
+    result.setClient(this);
 
     return result;
   }

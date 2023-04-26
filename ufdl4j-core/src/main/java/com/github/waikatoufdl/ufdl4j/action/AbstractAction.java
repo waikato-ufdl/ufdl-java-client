@@ -1,6 +1,6 @@
 /*
  * AbstractAction.java
- * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -9,6 +9,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.FileResponse;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.fracpete.requests4j.response.StreamResponse;
+import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.context.Connection;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 
@@ -34,12 +35,16 @@ public abstract class AbstractAction
   /** the connection. */
   protected Connection m_Connection;
 
+  /** the client. */
+  protected Client m_Client;
+
   /**
    * Initializes the action.
    */
   protected AbstractAction() {
     super();
     m_Connection = null;
+    m_Client     = null;
   }
 
   /**
@@ -72,6 +77,24 @@ public abstract class AbstractAction
    */
   public Connection getConnection() {
     return m_Connection;
+  }
+
+  /**
+   * Sets the client this action is used by.
+   *
+   *  @param value	the client
+   */
+  public void setClient(Client value) {
+    m_Client = value;
+  }
+
+  /**
+   * Returns the client this is action is used by.
+   *
+   * @return		the client
+   */
+  public Client getClient() {
+    return m_Client;
   }
 
   /**
@@ -258,7 +281,7 @@ public abstract class AbstractAction
 
     if (!keepEmpty && output.exists() && (output.length() == 0)) {
       if (!output.delete())
-        throw new IOException("Failed to remove empty file: " + output);
+	throw new IOException("Failed to remove empty file: " + output);
     }
 
     return result;
