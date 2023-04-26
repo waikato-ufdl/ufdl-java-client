@@ -382,7 +382,7 @@ public class DockerImages
     data.addProperty("registry_password", registryPassword);
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
+    data.addProperty("domain", getClient().domains().name(domain));
     data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
@@ -471,7 +471,7 @@ public class DockerImages
     data.addProperty("registry_password", registryPassword);
     data.addProperty("cuda_version", cudaVersion);
     data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
+    data.addProperty("domain", getClient().domains().name(domain));
     data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     data.addProperty("min_hardware_generation", minHardware);
     data.addProperty("cpu", cpu);
@@ -569,7 +569,7 @@ public class DockerImages
     if (framework != null)
       data.addProperty("framework", framework);
     if (domain != null)
-      data.addProperty("domain", domain);
+      data.addProperty("domain", getClient().domains().name(domain));
     if (tasks != null)
       data.add("tasks", JsonUtils.toArray(Arrays.asList(tasks)));
     if (minHardware != null)

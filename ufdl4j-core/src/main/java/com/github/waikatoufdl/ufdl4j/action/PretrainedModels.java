@@ -303,7 +303,7 @@ public class PretrainedModels
    *
    * @param name 	the name
    * @param framework   the framework PK
-   * @param domain 	the domain (short, eg od or ic)
+   * @param domain 	the domain name/desc
    * @param license	the license PK
    * @param url		the download URL
    * @param description	the model description
@@ -319,7 +319,7 @@ public class PretrainedModels
    *
    * @param name 	the name
    * @param framework   the framework PK
-   * @param domain 	the domain (short, eg od or ic)
+   * @param domain 	the domain name/desc
    * @param license	the license PK
    * @param url		the download URL
    * @param description	the model description
@@ -338,7 +338,7 @@ public class PretrainedModels
     data = new JsonObject();
     data.addProperty("name", name);
     data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
+    data.addProperty("domain", getClient().domains().name(domain));
     data.addProperty("licence", license);
     data.addProperty("url", url);
     data.addProperty("description", description);
@@ -361,7 +361,7 @@ public class PretrainedModels
    * @param model 	the pretrained model to update
    * @param name 	the new name
    * @param framework   the new framework PK
-   * @param domain 	the new domain (short, eg od or ic)
+   * @param domain 	the new domain name/desc
    * @param license	the new license name (eg GPL3)
    * @param url		the new download URL
    * @param description	the new model description
@@ -379,7 +379,7 @@ public class PretrainedModels
    * @param pk 		the PK of the pretrained model to update
    * @param name 	the new name
    * @param framework   the new framework PK
-   * @param domain 	the new domain (short, eg od or ic)
+   * @param domain 	the new domain name/desc
    * @param license	the new license name (eg GPL3)
    * @param url		the new download URL
    * @param description	the new model description
@@ -398,7 +398,7 @@ public class PretrainedModels
     data = new JsonObject();
     data.addProperty("name", name);
     data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
+    data.addProperty("domain", getClient().domains().name(domain));
     data.addProperty("licence", license);
     data.addProperty("url", url);
     data.addProperty("description", description);
@@ -420,7 +420,7 @@ public class PretrainedModels
    * @param model	the model to update
    * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
-   * @param domain 	the new domain(short, eg od or ic), ignored if null
+   * @param domain 	the new domain name/desc, ignored if null
    * @param license	the new license name (eg GPL3), ignored if null
    * @param url		the new download URL, ignored if null
    * @param description	the new model description, ignored if null
@@ -438,7 +438,7 @@ public class PretrainedModels
    * @param pk 		the PK of the user to update
    * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
-   * @param domain 	the new domain, ignored if null
+   * @param domain 	the new domain name/desc, ignored if null
    * @param license	the new license PK, ignored if null
    * @param url		the new download URL, ignored if null
    * @param description	the new model description, ignored if null
@@ -460,7 +460,7 @@ public class PretrainedModels
     if (framework != null)
       data.addProperty("framework", framework);
     if (domain != null)
-      data.addProperty("domain", domain);
+      data.addProperty("domain", getClient().domains().name(domain));
     if (license != null)
       data.addProperty("licence", license);
     if (url != null)
