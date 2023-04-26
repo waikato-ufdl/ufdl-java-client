@@ -8,6 +8,8 @@ package com.github.waikatoufdl.ufdl4j.examples;
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.PretrainedModels.PretrainedModel;
 
+import java.io.File;
+
 /**
  * Example code for managing pretrained models.
  *
@@ -49,7 +51,7 @@ public class ManagingPretrainedModel {
         "blah",
         client.frameworks().list().get(0).getPK(),
         "ic",
-        client.licenses().list().get(0).getPK(),
+        client.licenses().list().get(0).getName(),
         "http://example.com/where",
         "blah");
       System.out.println(blahpre);
@@ -62,7 +64,7 @@ public class ManagingPretrainedModel {
       "blah",
       client.frameworks().list().get(0).getPK(),
       "od",
-      client.licenses().list().get(0).getPK(),
+      client.licenses().list().get(0).getName(),
       "http://example.com/where/else",
       "blah",
       "");
@@ -90,6 +92,16 @@ public class ManagingPretrainedModel {
 
     // hard delete 'blah'
     System.out.println("hard deleting pretrained model '" + blahpre + "'? " + client.pretrainedModels().delete(blahpre, true));
+
+    // download model
+    String mobilenetv3 = "mobilenet_v3_small-8427ecf0";
+    File modelFile = new File(System.getProperty("java.io.tmpdir") + "/" + mobilenetv3 + ".pth");
+    client.pretrainedModels().download(mobilenetv3, modelFile);
+    if (modelFile.exists()) {
+      System.out.println(modelFile + ": " + modelFile.length() + " bytes");
+      System.out.println("Deleting: " + modelFile);
+      modelFile.delete();
+    }
 
     client.close();
   }

@@ -1,6 +1,6 @@
 /*
  * PretrainedModels.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +75,12 @@ public class PretrainedModels
     }
 
     /**
-     * Returns the framework PK.
+     * Returns the framework.
      *
      * @return		the framework
      */
-    public int getFramework() {
-      return getInt("framework");
+    public Frameworks.Framework getFramework() {
+      return new Frameworks.Framework(m_Data.getAsJsonObject("framework"));
     }
 
     /**
@@ -171,7 +172,7 @@ public class PretrainedModels
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", framework=" + getFramework() + ", domain=" + getDomain() + ", url=" + getURL();
+      return "pk=" + getPK() + ", name=" + getName() + ", framework=[" + getFramework() + "], domain=" + getDomain() + ", url=" + getURL();
     }
   }
 
@@ -302,14 +303,14 @@ public class PretrainedModels
    *
    * @param name 	the name
    * @param framework   the framework PK
-   * @param domain 	the domain
+   * @param domain 	the domain (short, eg od or ic)
    * @param license	the license PK
    * @param url		the download URL
    * @param description	the model description
    * @return		the PretrainedModel object, null if failed to create
    * @throws Exception	if request fails or pretrained model already exists
    */
-  public PretrainedModel create(String name, int framework, String domain, int license, String url, String description) throws Exception {
+  public PretrainedModel create(String name, int framework, String domain, String license, String url, String description) throws Exception {
     return create(name, framework, domain, license, url, description, null);
   }
 
@@ -318,7 +319,7 @@ public class PretrainedModels
    *
    * @param name 	the name
    * @param framework   the framework PK
-   * @param domain 	the domain
+   * @param domain 	the domain (short, eg od or ic)
    * @param license	the license PK
    * @param url		the download URL
    * @param description	the model description
@@ -326,7 +327,7 @@ public class PretrainedModels
    * @return		the PretrainedModel object, null if failed to create
    * @throws Exception	if request fails or pretrained model already exists
    */
-  public PretrainedModel create(String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
+  public PretrainedModel create(String name, int framework, String domain, String license, String url, String description, String metadata) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -360,15 +361,15 @@ public class PretrainedModels
    * @param model 	the pretrained model to update
    * @param name 	the new name
    * @param framework   the new framework PK
-   * @param domain 	the new domain
-   * @param license	the new license PK
+   * @param domain 	the new domain (short, eg od or ic)
+   * @param license	the new license name (eg GPL3)
    * @param url		the new download URL
    * @param description	the new model description
    * @param metadata	the new metadata
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(PretrainedModel model, String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
+  public PretrainedModel update(PretrainedModel model, String name, int framework, String domain, String license, String url, String description, String metadata) throws Exception {
     return update(model.getPK(), name, framework, domain, license, url, description, metadata);
   }
 
@@ -378,15 +379,15 @@ public class PretrainedModels
    * @param pk 		the PK of the pretrained model to update
    * @param name 	the new name
    * @param framework   the new framework PK
-   * @param domain 	the new domain
-   * @param license	the new license PK
+   * @param domain 	the new domain (short, eg od or ic)
+   * @param license	the new license name (eg GPL3)
    * @param url		the new download URL
    * @param description	the new model description
    * @param metadata	the new metadata
    * @return		the pretrained model object
    * @throws Exception	if request fails
    */
-  public PretrainedModel update(int pk, String name, int framework, String domain, int license, String url, String description, String metadata) throws Exception {
+  public PretrainedModel update(int pk, String name, int framework, String domain, String license, String url, String description, String metadata) throws Exception {
     PretrainedModel		result;
     JsonObject		data;
     JsonResponse 	response;
@@ -419,15 +420,15 @@ public class PretrainedModels
    * @param model	the model to update
    * @param name 	the new name, ignored if null
    * @param framework   the new framework PK, ignored if null
-   * @param domain 	the new domain, ignored if null
-   * @param license	the new license PK, ignored if null
+   * @param domain 	the new domain(short, eg od or ic), ignored if null
+   * @param license	the new license name (eg GPL3), ignored if null
    * @param url		the new download URL, ignored if null
    * @param description	the new model description, ignored if null
    * @param metadata	the new metadata, ignored if null
    * @return		the user object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(PretrainedModel model, String name, Integer framework, String domain, Integer license, String url, String description, String metadata) throws Exception {
+  public PretrainedModel partialUpdate(PretrainedModel model, String name, Integer framework, String domain, String license, String url, String description, String metadata) throws Exception {
     return partialUpdate(model.getPK(), name, framework, domain, license, url, description, metadata);
   }
 
@@ -445,7 +446,7 @@ public class PretrainedModels
    * @return		the pretrained model object, null if failed to create
    * @throws Exception	if request fails
    */
-  public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, Integer license, String url, String description, String metadata) throws Exception {
+  public PretrainedModel partialUpdate(int pk, String name, Integer framework, String domain, String license, String url, String description, String metadata) throws Exception {
     PretrainedModel	result;
     JsonObject		data;
     JsonResponse 	response;
@@ -487,6 +488,20 @@ public class PretrainedModels
    * @throws Exception	if request fails, eg invalid pretrained model PK
    */
   public boolean download(PretrainedModel model, File output) throws Exception {
+    return download(model.getPK(), output);
+  }
+
+  /**
+   * For downloading a specific pretrained model.
+   *
+   * @param name 	the pretrained model to download
+   * @return		true if successfully downloaded
+   * @throws Exception	if request fails, eg invalid pretrained model PK
+   */
+  public boolean download(String name, File output) throws Exception {
+    PretrainedModel model = load(name);
+    if (model == null)
+      throw new IOException("Failed to download model: " + name);
     return download(model.getPK(), output);
   }
 
