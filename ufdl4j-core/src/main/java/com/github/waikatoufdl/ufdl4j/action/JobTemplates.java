@@ -281,15 +281,6 @@ public class JobTemplates
     }
 
     /**
-     * Returns the template body.
-     *
-     * @return		the body
-     */
-    public String getBody() {
-      return getString("body");
-    }
-
-    /**
      * Returns the creator ID.
      *
      * @return		the ID
