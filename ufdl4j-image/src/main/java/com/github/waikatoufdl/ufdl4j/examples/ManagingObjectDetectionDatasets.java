@@ -1,17 +1,19 @@
 /*
  * ManagingObjectDetectionDatasets.java
- * Copyright (C) 2020-2021 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
+import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotation;
 import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
+import com.github.waikatoufdl.ufdl4j.filter.DomainFilter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -130,6 +132,13 @@ public class ManagingObjectDetectionDatasets {
       stream.flush();
       stream.close();
     }
+
+    // list datasets
+    Domains.Domain domain = client.domains().load("od");
+    DomainFilter domainFilter = new DomainFilter(domain.getPK());
+    System.out.println("--> listing datasets for domain " + domain);
+    for (Dataset dataset: client.datasets().list(domainFilter))
+      System.out.println(dataset);
 
     // delete file from dataset
     if (args.length > 3) {
