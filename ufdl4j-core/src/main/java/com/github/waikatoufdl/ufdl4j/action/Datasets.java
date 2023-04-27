@@ -16,6 +16,8 @@ import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithDomain;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithIntVersion;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
@@ -49,7 +51,7 @@ public class Datasets
    */
   public static class Dataset
     extends AbstractJsonObjectWrapperWithPK
-    implements SoftDeleteObject, JsonObjectWithShortDescription, JsonObjectWithName {
+    implements SoftDeleteObject, JsonObjectWithShortDescription, JsonObjectWithName, JsonObjectWithDomain, JsonObjectWithIntVersion {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -77,6 +79,7 @@ public class Datasets
      *
      * @return		the domain
      */
+    @Override
     public String getDomain() {
       return getString("domain");
     }
@@ -123,6 +126,7 @@ public class Datasets
      *
      * @return		the version
      */
+    @Override
     public int getVersion() {
       return getInt("version", -1);
     }

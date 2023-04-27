@@ -10,6 +10,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithDomain;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithVersion;
@@ -40,7 +41,7 @@ public class DockerImages
    */
   public static class DockerImage
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription, JsonObjectWithName, JsonObjectWithVersion {
+    implements JsonObjectWithShortDescription, JsonObjectWithName, JsonObjectWithVersion, JsonObjectWithDomain {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -145,6 +146,7 @@ public class DockerImages
      *
      * @return		the domain
      */
+    @Override
     public String getDomain() {
       return getString("domain");
     }

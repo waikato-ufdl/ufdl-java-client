@@ -12,6 +12,8 @@ import com.github.waikatoufdl.ufdl4j.action.Jobs.Job;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithDomain;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithIntVersion;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
@@ -151,7 +153,7 @@ public class JobTemplates
    */
   public static class JobTemplate
     extends AbstractJsonObjectWrapperWithPK
-    implements SoftDeleteObject, JsonObjectWithShortDescription {
+    implements SoftDeleteObject, JsonObjectWithShortDescription, JsonObjectWithIntVersion, JsonObjectWithDomain {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -187,6 +189,7 @@ public class JobTemplates
      *
      * @return		the version
      */
+    @Override
     public int getVersion() {
       return getInt("version");
     }
@@ -214,6 +217,7 @@ public class JobTemplates
      *
      * @return		the domain
      */
+    @Override
     public String getDomain() {
       return getString("domain");
     }
