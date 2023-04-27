@@ -1,6 +1,6 @@
 /*
  * ManagingDatasets.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
@@ -9,6 +9,7 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.Datasets.Dataset;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
+import com.github.waikatoufdl.ufdl4j.action.Teams;
 
 import java.util.List;
 
@@ -43,10 +44,24 @@ public class ManagingDatasets {
       System.out.println(dataset);
 
     // grab first available project ID
-    int project = -1;
+    Project project = null;
     List<Project> projects = client.projects().list();
     if (projects.size() > 0)
-      project = projects.get(0).getPK();
+      project = projects.get(0);
+    // create dummy project if none present
+    if (project == null) {
+      // get team
+      Teams.Team team = null;
+      for (Teams.Team t : client.teams().list()) {
+        team = t;
+        break;
+      }
+      // create dummy team
+      if (team == null)
+        team = client.teams().create("blahteam");
+      // create project
+      project = client.projects().create("blahproject", team.getPK());
+    }
 
     // load license
     License gpl3 = client.licenses().load("GPL3");
@@ -54,7 +69,7 @@ public class ManagingDatasets {
     // create dataset
     System.out.println("--> creating dataset");
     Dataset newDataset = client.datasets().create(
-      "dummy-" + System.currentTimeMillis(), "dataset", project, gpl3, true, "");
+      "dummy-" + System.currentTimeMillis(), "dataset", project.getPK(), gpl3, true, "");
     System.out.println(newDataset);
 
     // update dataset
