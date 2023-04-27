@@ -10,6 +10,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.Utils;
@@ -38,7 +39,7 @@ public class DockerImages
    */
   public static class DockerImage
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription {
+    implements JsonObjectWithShortDescription, JsonObjectWithName {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -56,6 +57,7 @@ public class DockerImages
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
@@ -65,6 +67,7 @@ public class DockerImages
      *
      * @return		the name
      */
+    @Override
     public String getName() {
       return getString("name");
     }

@@ -10,6 +10,7 @@ import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameAndVersionFilter;
@@ -35,7 +36,7 @@ public class Frameworks
    */
   public static class Framework
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription {
+    implements JsonObjectWithShortDescription, JsonObjectWithName {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -53,6 +54,7 @@ public class Frameworks
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
@@ -62,6 +64,7 @@ public class Frameworks
      *
      * @return		the name
      */
+    @Override
     public String getName() {
       return getString("name");
     }

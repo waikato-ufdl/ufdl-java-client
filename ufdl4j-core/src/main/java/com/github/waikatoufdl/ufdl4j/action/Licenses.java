@@ -11,6 +11,7 @@ import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.CustomDisplayEnum;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -423,7 +424,7 @@ public class Licenses
    */
   public static class License
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription {
+    implements JsonObjectWithShortDescription, JsonObjectWithName {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -441,6 +442,7 @@ public class Licenses
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
@@ -450,6 +452,7 @@ public class Licenses
      *
      * @return		the user
      */
+    @Override
     public String getName() {
       return getString("name", "");
     }

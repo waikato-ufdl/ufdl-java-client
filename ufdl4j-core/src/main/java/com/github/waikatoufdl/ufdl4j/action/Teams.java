@@ -11,6 +11,7 @@ import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.action.Users.User;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -38,7 +39,7 @@ public class Teams
    */
   public static class Team
     extends AbstractJsonObjectWrapperWithPK
-    implements SoftDeleteObject, JsonObjectWithShortDescription {
+    implements SoftDeleteObject, JsonObjectWithShortDescription, JsonObjectWithName {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -56,6 +57,7 @@ public class Teams
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
@@ -74,6 +76,7 @@ public class Teams
      *
      * @return		the name
      */
+    @Override
     public String getName() {
       return getString("name", "");
     }

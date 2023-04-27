@@ -1,6 +1,6 @@
 /*
  * Log.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -52,6 +52,7 @@ public class Log
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
