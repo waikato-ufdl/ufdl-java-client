@@ -1,12 +1,14 @@
 /*
  * ManagingManagingPretrainedModelss.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
+import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.action.PretrainedModels.PretrainedModel;
+import com.github.waikatoufdl.ufdl4j.filter.DomainFilter;
 
 import java.io.File;
 
@@ -42,6 +44,14 @@ public class ManagingPretrainedModel {
       System.out.println(template);
       if (template.getName().equals("blah"))
         blahpre = template;
+    }
+
+    // listing templates
+    Domains.Domain d = client.domains().load("od");
+    DomainFilter dfilter = new DomainFilter(d.getPK());
+    System.out.println("--> listing pretrained models for domain " + d);
+    for (PretrainedModel template : client.pretrainedModels().list(dfilter)) {
+      System.out.println(template);
     }
 
     // create 'blah' if necessary
