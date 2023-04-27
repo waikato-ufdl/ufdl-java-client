@@ -238,6 +238,20 @@ public class Client
   }
 
   /**
+   * Creates an instance of a datasets action if not yet present, sets the connection
+   * and returns the instance.
+   *
+   * @param action	the type action to instantiate/return
+   * @param <T>		the type of action
+   * @return		the action instance
+   * @throws Exception	if instantiation fails
+   * @see		#connection()
+   */
+  public <T extends Datasets> T datasets(Class<T> action) throws Exception {
+    return action(action);
+  }
+
+  /**
    * Returns the projects action.
    *
    * @return		the projects action
