@@ -73,7 +73,7 @@ public class ManagingDatasets {
     System.out.println(newDataset);
 
     // update dataset
-    System.out.println("--> creating dataset");
+    System.out.println("--> partial update dataset");
     newDataset = client.datasets().partialUpdate(newDataset, null, "new desription", null, null, null, null);
     System.out.println(newDataset);
 
