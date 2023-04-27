@@ -1,6 +1,6 @@
 /*
  * JobTemplates.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -9,6 +9,7 @@ import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.action.Jobs.Job;
+import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
@@ -30,7 +31,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +43,108 @@ public class JobTemplates
   extends AbstractAction {
 
   private static final long serialVersionUID = 7013386269355130329L;
+
+  /**
+   * Container class for parameter definitions.
+   */
+  public static class Parameter
+    extends AbstractJsonObjectWrapper
+    implements JsonObjectWithShortDescription {
+
+    private static final long serialVersionUID = -5737527598417159651L;
+
+    /** the name of the parameter. */
+    protected String m_Name;
+
+    /**
+     * Initializes the wrapper.
+     *
+     * @param data the underlying JSON to use
+     */
+    public Parameter(String name, JsonObject data) {
+      super(data);
+      m_Name = name;
+    }
+
+    /**
+     * Returns the name of the parameter.
+     *
+     * @return		the name
+     */
+    public String getName() {
+      return m_Name;
+    }
+
+    /**
+     * Returns the types of this parameter.
+     *
+     * @return		the list of types
+     */
+    public List<String> getTypes() {
+      return getStringList("types", new ArrayList<>());
+    }
+
+    /**
+     * Returns the help for the parameter.
+     *
+     * @return		the help
+     */
+    public String getHelp() {
+      return getString("help", "");
+    }
+
+    /**
+     * Returns the default type, if any.
+     *
+     * @return		the default type, null if not available
+     * @see		#getDefault()
+     */
+    public String getDefaultType() {
+      return getString("default_type", null);
+    }
+
+    /**
+     * Returns the default value, if any.
+     *
+     * @return		the default (type depends on type), null if not available
+     * @see		#getDefaultType()
+     */
+    public Object getDefault() {
+      if (hasValue("default"))
+	return m_Data.get("default");
+      else
+	return null;
+    }
+
+    /**
+     * Returns whether this parameter is a constant.
+     *
+     * @return		true if a constant
+     */
+    public boolean isConstant() {
+      return getBoolean("const", false);
+    }
+
+    /**
+     * Returns the short description.
+     *
+     * @return		the short description
+     */
+    @Override
+    public String getShortDescription() {
+      return getName() + "/" + getTypes();
+    }
+
+    /**
+     * Returns a short description of the state.
+     *
+     * @return the description
+     */
+    @Override
+    public String toString() {
+      return "name=" + getName() + ", types=" + getTypes() + ", default=" + getDefault() + ", default_type=" + getDefaultType() + ", const=" + isConstant();
+    }
+  }
 
   /**
    * Container class for job template information.
@@ -135,55 +237,18 @@ public class JobTemplates
     }
 
     /**
-     * Returns the inputs as a list of maps (name/type/options).
-     *
-     * @return		the inputs
-     */
-    public List<Map<String,String>> getInputs() {
-      List<Map<String,String>>  result;
-      JsonArray			inputs;
-      JsonObject		inputObj;
-      int			i;
-      Map<String,String>	inputMap;
-
-      result = new ArrayList<>();
-      inputs = getData().getAsJsonArray("inputs");
-      for (i = 0; i < inputs.size(); i++) {
-	inputObj = inputs.get(i).getAsJsonObject();
-	inputMap = new HashMap<>();
-	inputMap.put("name", inputObj.get("name").getAsString());
-	inputMap.put("type", inputObj.get("type").getAsString());
-	inputMap.put("options", inputObj.has("options") ? inputObj.get("options").getAsString() : "");
-	inputMap.put("help", inputObj.has("help") ? inputObj.get("help").getAsString() : "");
-	result.add(inputMap);
-      }
-
-      return result;
-    }
-
-    /**
-     * Returns the parameters as a list of maps (name/type/default).
+     * Returns the parameters of this template.
      *
      * @return		the parameters
      */
-    public List<Map<String,String>> getParameters() {
-      List<Map<String,String>>  result;
-      JsonArray 		parameters;
-      JsonObject 		paramObj;
-      int			i;
-      Map<String,String> 	paramMap;
+    public List<Parameter> getParameters() {
+      List<Parameter>	result;
+      JsonObject	params;
 
       result = new ArrayList<>();
-      parameters = getData().getAsJsonArray("parameters");
-      for (i = 0; i < parameters.size(); i++) {
-	paramObj = parameters.get(i).getAsJsonObject();
-	paramMap = new HashMap<>();
-	paramMap.put("name", paramObj.get("name").getAsString());
-	paramMap.put("type", paramObj.get("type").getAsString());
-	paramMap.put("default", paramObj.has("default") ? paramObj.get("default").getAsString() : "");
-	paramMap.put("help", paramObj.has("help") ? paramObj.get("help").getAsString() : "");
-	result.add(paramMap);
-      }
+      params = m_Data.getAsJsonObject("parameters");
+      for (String name: params.keySet())
+	result.add(new Parameter(name, params.getAsJsonObject(name)));
 
       return result;
     }
@@ -268,7 +333,7 @@ public class JobTemplates
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", inputs=" + getInputs() + ", params=" + getParameters();
+      return "pk=" + getPK() + ", name=" + getName() + ", version=" + getVersion() + ", params=" + getParameters();
     }
   }
 
@@ -327,9 +392,9 @@ public class JobTemplates
     if (response.ok()) {
       element = response.json();
       if (element.isJsonArray()) {
-        array = element.getAsJsonArray();
-        for (i = 0; i < array.size(); i++)
-          result.add(new JobTemplate(array.get(i).getAsJsonObject()));
+	array = element.getAsJsonArray();
+	for (i = 0; i < array.size(); i++)
+	  result.add(new JobTemplate(array.get(i).getAsJsonObject()));
       }
     }
     else {
@@ -386,8 +451,8 @@ public class JobTemplates
 
     filter = new GenericFilter(
       new AbstractExpression[]{
-        new ExactString("name", name),
-        new ExactNumber("version", version),
+	new ExactString("name", name),
+	new ExactNumber("version", version),
       }
     );
     for (JobTemplate template : list(filter)) {
@@ -397,207 +462,6 @@ public class JobTemplates
 
     if (result == null)
       getLogger().warning("failed to load job template: " + name + "/" + version);
-
-    return result;
-  }
-
-  /**
-   * Creates a job template object.
-   *
-   * @param name 	the name
-   * @param version	the version
-   * @param description	the description
-   * @param scope 	the scope
-   * @param framework   the framework PK
-   * @param domain 	the domain
-   * @param type	the type
-   * @param executor 	the executor class
-   * @param packages 	the required packages (pip)
-   * @param body 	the actual template
-   * @param license 	the license PK
-   * @return		the JobTemplate object, null if failed to create
-   * @throws Exception	if request fails or job template already exists
-   */
-  public JobTemplate create(String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
-    JobTemplate		result;
-    JsonObject		data;
-    JsonResponse 	response;
-    Request 		request;
-
-    getLogger().info("creating job template: " + name);
-
-    data = new JsonObject();
-    data.addProperty("name", name);
-    data.addProperty("version", version);
-    data.addProperty("description", description);
-    data.addProperty("scope", scope);
-    data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
-    data.addProperty("type", type);
-    data.addProperty("executor_class", executor);
-    data.addProperty("required_packages", packages);
-    data.addProperty("licence", license);
-    data.addProperty("body", body);
-    request = newPost(getPath() + "create")
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
-    response = execute(request);
-    if (response.ok())
-      result = new JobTemplate(response.jsonObject());
-    else
-      throw new FailedRequestException("Failed to create job template: " + name, response);
-
-    return result;
-  }
-
-  /**
-   * Updates the job template.
-   *
-   * @param obj 	the job template to update
-   * @param name 	the new name
-   * @param version	the new version
-   * @param description	the new description
-   * @param scope 	the new scope
-   * @param framework   the new framework PK
-   * @param domain 	the new domain
-   * @param type	the new type
-   * @param executor 	the new executor class
-   * @param packages 	the new required packages (pip)
-   * @param body 	the new actual template
-   * @param license 	the new license PK
-   * @return		the job template object
-   * @throws Exception	if request fails
-   */
-  public JobTemplate update(JobTemplate obj, String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
-    return update(obj.getPK(), name, version, description, scope, framework, domain, type, executor, packages, body, license);
-  }
-
-  /**
-   * Updates the job template.
-   *
-   * @param pk 		the PK of the job template to update
-   * @param name 	the new name
-   * @param version	the new version
-   * @param description	the new description
-   * @param scope 	the new scope
-   * @param framework   the new framework PK
-   * @param domain 	the new domain
-   * @param type	the new type
-   * @param executor 	the new executor class
-   * @param packages 	the new required packages (pip)
-   * @param body 	the new actual template
-   * @param license 	the new license PK
-   * @return		the job template object
-   * @throws Exception	if request fails
-   */
-  public JobTemplate update(int pk, String name, int version, String description, String scope, int framework, String domain, String type, String executor, String packages, String body, int license) throws Exception {
-    JobTemplate		result;
-    JsonObject		data;
-    JsonResponse 	response;
-    Request 		request;
-
-    getLogger().info("updating job template: " + pk);
-
-    data = new JsonObject();
-    data.addProperty("name", name);
-    data.addProperty("version", version);
-    data.addProperty("description", description);
-    data.addProperty("scope", scope);
-    data.addProperty("framework", framework);
-    data.addProperty("domain", domain);
-    data.addProperty("type", type);
-    data.addProperty("executor_class", executor);
-    data.addProperty("required_packages", packages);
-    data.addProperty("licence", license);
-    data.addProperty("body", body);
-    request = newPut(getPath() + pk)
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
-    response = execute(request);
-    if (response.ok())
-      result = new JobTemplate(response.jsonObject());
-    else
-      throw new FailedRequestException("Failed to update job template: " + pk, response);
-
-    return result;
-  }
-
-  /**
-   * (Partially) Updates the job template identified by the object, using only the non-null arguments.
-   *
-   * @param obj	the user to update
-   * @param name 	the new name, ignored if null
-   * @param version	the new version, ignored if null
-   * @param description	the new description, ignored if null
-   * @param scope 	the new scope, ignored if null
-   * @param framework   the new framework PK, ignored if null
-   * @param domain 	the new domain, ignored if null
-   * @param type	the new type, ignored if null
-   * @param executor 	the new executor class, ignored if null
-   * @param packages 	the new required packages (pip), ignored if null
-   * @param body 	the new actual template, ignored if null
-   * @param license 	the new license PK, ignored if null
-   * @return		the user object, null if failed to create
-   * @throws Exception	if request fails
-   */
-  public JobTemplate partialUpdate(JobTemplate obj, String name, Integer version, String description, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
-    return partialUpdate(obj.getPK(), name, version, description, scope, framework, domain, type, executor, packages, body, license);
-  }
-
-  /**
-   * (Partially) Updates the job template identified by the PK, using only the non-null arguments.
-   *
-   * @param pk 		the PK of the user to update
-   * @param name 	the new name, ignored if null
-   * @param version	the new version, ignored if null
-   * @param description	the new description, ignored if null
-   * @param scope 	the new scope, ignored if null
-   * @param framework   the new framework PK, ignored if null
-   * @param domain 	the new domain, ignored if null
-   * @param type	the new type, ignored if null
-   * @param executor 	the new executor class, ignored if null
-   * @param packages 	the new required packages (pip), ignored if null
-   * @param body 	the new actual template, ignored if null
-   * @param license 	the new license PK, ignored if null
-   * @return		the job template object, null if failed to create
-   * @throws Exception	if request fails
-   */
-  public JobTemplate partialUpdate(int pk, String name, Integer version, String description, String scope, Integer framework, String domain, String type, String executor, String packages, String body, Integer license) throws Exception {
-    JobTemplate		result;
-    JsonObject		data;
-    JsonResponse 	response;
-    Request 		request;
-
-    getLogger().info("partially updating job template: " + pk);
-
-    data = new JsonObject();
-    if (name != null)
-      data.addProperty("name", name);
-    if (version != null)
-      data.addProperty("version", version);
-    if (description != null)
-      data.addProperty("description", description);
-    if (scope != null)
-      data.addProperty("scope", scope);
-    if (framework != null)
-      data.addProperty("framework", framework);
-    if (domain != null)
-      data.addProperty("domain", domain);
-    if (type != null)
-      data.addProperty("type", type);
-    if (executor != null)
-      data.addProperty("executor_class", executor);
-    if (packages != null)
-      data.addProperty("required_packages", packages);
-    if (license != null)
-      data.addProperty("licence", license);
-    if (body != null)
-      data.addProperty("body", body);
-    request = newPatch(getPath() + pk)
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
-    response = execute(request);
-    if (response.ok())
-      result = new JobTemplate(response.jsonObject());
-    else
-      throw new FailedRequestException("Failed to partially update job template: " + pk, response);
 
     return result;
   }
@@ -672,178 +536,6 @@ public class JobTemplates
       return true;
     else
       throw new FailedRequestException("Failed to reinstate job template: " + pk, response);
-  }
-
-  /**
-   * For adding an input to a job template.
-   *
-   * @param jobTemplate the job template to update
-   * @param name	the name of the input
-   * @param type 	the type of the input
-   * @param options 	the (optional) options
-   * @param help 	the help for the input
-   * @return		true if successfully added
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean addInput(JobTemplate jobTemplate, String name, String type, String options, String help) throws Exception {
-    return addInput(jobTemplate.getPK(), name, type, options, help);
-  }
-
-  /**
-   * For adding an input to a job template.
-   *
-   * @param pk 		the job template to update
-   * @param name	the name of the input
-   * @param type 	the type of the input
-   * @param options 	the (optional) options
-   * @param help 	the help for the input
-   * @return		true if successfully added
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean addInput(int pk, String name, String type, String options, String help) throws Exception {
-    JsonResponse 	response;
-    JsonObject		data;
-    Request 		request;
-
-    if (pk == -1)
-      throw new IllegalArgumentException("Invalid PK: " + pk);
-
-    getLogger().info("Adding input '" + name + "' to job template with PK: " + pk);
-
-    data = new JsonObject();
-    data.addProperty("type", type);
-    data.addProperty("options", options);
-    data.addProperty("help", help);
-    request  = newPost(getPath() + pk + "/inputs/" + name)
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
-    response = execute(request);
-    if (response.ok())
-      return true;
-    else
-      throw new FailedRequestException("Failed to add input '" + name + "' to job template: " + pk, response);
-  }
-
-  /**
-   * For removing an input from a job template.
-   *
-   * @param jobTemplate the job template to update
-   * @param name	the name of the input
-   * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean deleteInput(JobTemplate jobTemplate, String name) throws Exception {
-    return deleteInput(jobTemplate.getPK(), name);
-  }
-
-  /**
-   * For removing an input from a job template.
-   *
-   * @param pk 		the job template to update
-   * @param name	the name of the input
-   * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean deleteInput(int pk, String name) throws Exception {
-    JsonResponse 	response;
-    Request 		request;
-
-    if (pk == -1)
-      throw new IllegalArgumentException("Invalid PK: " + pk);
-
-    getLogger().info("Removing input '" + name + "' from job template with PK: " + pk);
-
-    request  = newDelete(getPath() + pk + "/inputs/" + name);
-    response = execute(request);
-    if (response.ok())
-      return true;
-    else
-      throw new FailedRequestException("Failed to remove input '" + name + "' from job template: " + pk, response);
-  }
-
-  /**
-   * For adding a parameter to a job template.
-   *
-   * @param jobTemplate the job template to update
-   * @param name	the name of the parameter
-   * @param type 	the type of the parameter
-   * @param defaultValue 	the default value
-   * @param help 	the help for the parameter
-   * @return		true if successfully added
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean addParameter(JobTemplate jobTemplate, String name, String type, String defaultValue, String help) throws Exception {
-    return addParameter(jobTemplate.getPK(), name, type, defaultValue, help);
-  }
-
-  /**
-   * For adding a parameter to a job template.
-   *
-   * @param pk 		the job template to update
-   * @param name	the name of the parameter
-   * @param type 	the type of the parameter
-   * @param defaultValue 	the default value
-   * @param help 	the help for the parameter
-   * @return		true if successfully added
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean addParameter(int pk, String name, String type, String defaultValue, String help) throws Exception {
-    JsonResponse 	response;
-    JsonObject		data;
-    Request 		request;
-
-    if (pk == -1)
-      throw new IllegalArgumentException("Invalid PK: " + pk);
-
-    getLogger().info("Adding parameter '" + name + "' to job template with PK: " + pk);
-
-    data = new JsonObject();
-    data.addProperty("type", type);
-    data.addProperty("default", defaultValue);
-    data.addProperty("help", help);
-    request  = newPost(getPath() + pk + "/parameters/" + name)
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
-    response = execute(request);
-    if (response.ok())
-      return true;
-    else
-      throw new FailedRequestException("Failed to add parameter '" + name + "' to job template: " + pk, response);
-  }
-
-  /**
-   * For removing a parameter from a job template.
-   *
-   * @param jobTemplate the job template to update
-   * @param name	the name of the parameter
-   * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean deleteParameter(JobTemplate jobTemplate, String name) throws Exception {
-    return deleteParameter(jobTemplate.getPK(), name);
-  }
-
-  /**
-   * For removing a parameter from a job template.
-   *
-   * @param pk 		the job template to update
-   * @param name	the name of the parameter
-   * @return		true if successfully deleted
-   * @throws Exception	if request fails, eg invalid job template PK
-   */
-  public boolean deleteParameter(int pk, String name) throws Exception {
-    JsonResponse 	response;
-    Request 		request;
-
-    if (pk == -1)
-      throw new IllegalArgumentException("Invalid PK: " + pk);
-
-    getLogger().info("Removing parameter '" + name + "' from job template with PK: " + pk);
-
-    request  = newDelete(getPath() + pk + "/parameters/" + name);
-    response = execute(request);
-    if (response.ok())
-      return true;
-    else
-      throw new FailedRequestException("Failed to remove parameter '" + name + "' from job template: " + pk, response);
   }
 
   /**

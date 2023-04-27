@@ -1,12 +1,17 @@
 /*
  * ManagingManagingJobTemplatess.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.JobTemplates.JobTemplate;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Example code for managing job templates.
@@ -35,46 +40,36 @@ public class ManagingJobTemplates {
 
     // listing templates
     System.out.println("--> listing job templates");
-    JobTemplate blahtemplate = null;
+    JobTemplate testTemplate = null;
     for (JobTemplate template : client.jobTemplates().list()) {
       System.out.println(template);
-      if (template.getName().equals("blah"))
-        blahtemplate = template;
+      if (template.getName().equals("yolo_v5_objectdetection-train-test"))
+        testTemplate = template;
     }
 
-    // create 'blah' if necessary
-    if (blahtemplate == null) {
-      System.out.println("--> creating job template");
-      blahtemplate = client.jobTemplates().create("blah", 1, "dummy template", "public", 1, "ic", "train", "my.funky.Executor", "", "echo ${num}", client.licenses().list().get(0).getPK());
-      System.out.println(blahtemplate);
-      client.jobTemplates().addInput(blahtemplate, "dataset", "dataset", " to-subdir", "help");
-      client.jobTemplates().addParameter(blahtemplate, "num", "int", "10", "help");
+    // import 'yolo_v5_objectdetection-train-test' if necessary
+    InputStream is = ClassLoader.getSystemResourceAsStream("com/github/waikatoufdl/ufdl4j/examples/0012_yolo_v5_objectdetection_train.json");
+    JsonObject template = (JsonObject) JsonParser.parseReader(new InputStreamReader(is));
+    if (testTemplate == null) {
+      System.out.println("--> importing job template");
+      testTemplate = client.jobTemplates().importTemplate(template);
+      System.out.println(testTemplate);
     }
 
     // load blah
     System.out.println("--> loading job template");
-    blahtemplate = client.jobTemplates().load("blah", 1);
-    System.out.println(blahtemplate);
-
-    // updating blah
-    System.out.println("--> updating job template");
-    blahtemplate = client.jobTemplates().update(blahtemplate, "blah2", 1, "dummy template", "public", 1, "ic", "train", "my.funky.Executor", "", "echo 1", client.licenses().list().get(0).getPK());
-    System.out.println(blahtemplate);
-
-    // partially updating blahtemplate
-    System.out.println("--> partially updating job template");
-    blahtemplate = client.jobTemplates().partialUpdate(blahtemplate, "blah", null, null, "project", null, null, null, null, null, null, null);
-    System.out.println(blahtemplate);
+    testTemplate = client.jobTemplates().load("yolo_v5_objectdetection-train-test", 1);
+    System.out.println(testTemplate);
 
     // soft delete 'blah'
-    System.out.println("soft deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, false));
+    System.out.println("soft deleting job template '" + testTemplate + "'? " + client.jobTemplates().delete(testTemplate, false));
 
     // reinstate 'blah'
-    System.out.println("reinstating job template '" + blahtemplate + "'? " + client.jobTemplates().reinstate(blahtemplate));
+    System.out.println("reinstating job template '" + testTemplate + "'? " + client.jobTemplates().reinstate(testTemplate));
 
     // hard delete 'blah'
     // TODO hard delete doesn't work at the moment
-    //System.out.println("hard deleting job template '" + blahtemplate + "'? " + client.jobTemplates().delete(blahtemplate, true));
+    //System.out.println("hard deleting job template '" + testTemplate + "'? " + client.jobTemplates().delete(testTemplate, true));
 
     client.close();
   }
