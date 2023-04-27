@@ -1,6 +1,6 @@
 /*
  * Datasets.java
- * Copyright (C) 2019-2021 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -8,7 +8,11 @@ package com.github.waikatoufdl.ufdl4j.action;
 import com.github.fracpete.requests4j.attachment.FileAttachment;
 import com.github.fracpete.requests4j.core.MediaTypeHelper;
 import com.github.fracpete.requests4j.request.Request;
-import com.github.fracpete.requests4j.response.*;
+import com.github.fracpete.requests4j.response.BasicResponse;
+import com.github.fracpete.requests4j.response.FileResponse;
+import com.github.fracpete.requests4j.response.JsonResponse;
+import com.github.fracpete.requests4j.response.Response;
+import com.github.fracpete.requests4j.response.StreamResponse;
 import com.github.waikatoufdl.ufdl4j.action.Licenses.License;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
@@ -64,6 +68,15 @@ public class Datasets
      */
     public int getPK() {
       return getInt("pk");
+    }
+
+    /**
+     * Returns the domain.
+     *
+     * @return		the domain
+     */
+    public String getDomain() {
+      return getString("domain");
     }
 
     /**
@@ -204,7 +217,7 @@ public class Datasets
      */
     @Override
     public String getShortDescription() {
-      return getName() + "/" + getVersion();
+      return getName() + "/" + getVersion() + "/" + getDomain();
     }
 
     /**
@@ -214,7 +227,7 @@ public class Datasets
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", name=" + getName() + ", project=" + getProject() + ", license=" + getLicense() + ", desc=" + getDescription();
+      return "pk=" + getPK() + ", domain=" + getDomain() + ", name=" + getName() + ", project=" + getProject() + ", license=" + getLicense() + ", desc=" + getDescription();
     }
   }
 
