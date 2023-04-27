@@ -12,6 +12,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithVersion;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.Utils;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -39,7 +40,7 @@ public class DockerImages
    */
   public static class DockerImage
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription, JsonObjectWithName {
+    implements JsonObjectWithShortDescription, JsonObjectWithName, JsonObjectWithVersion {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -77,6 +78,7 @@ public class DockerImages
      *
      * @return		the version
      */
+    @Override
     public String getVersion() {
       return getString("version");
     }

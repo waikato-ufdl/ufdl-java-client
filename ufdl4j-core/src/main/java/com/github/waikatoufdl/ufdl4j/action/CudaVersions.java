@@ -11,6 +11,7 @@ import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithVersion;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.VersionFilter;
 import com.google.gson.JsonArray;
@@ -35,7 +36,7 @@ public class CudaVersions
    */
   public static class CudaVersion
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription {
+    implements JsonObjectWithShortDescription, JsonObjectWithVersion {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -53,6 +54,7 @@ public class CudaVersions
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
@@ -62,6 +64,7 @@ public class CudaVersions
      *
      * @return		the version
      */
+    @Override
     public String getVersion() {
       return getString("version");
     }

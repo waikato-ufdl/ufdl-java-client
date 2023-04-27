@@ -12,6 +12,7 @@ import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithVersion;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.github.waikatoufdl.ufdl4j.filter.NameAndVersionFilter;
 import com.google.gson.JsonArray;
@@ -36,7 +37,7 @@ public class Frameworks
    */
   public static class Framework
     extends AbstractJsonObjectWrapperWithPK
-    implements JsonObjectWithShortDescription, JsonObjectWithName {
+    implements JsonObjectWithShortDescription, JsonObjectWithName, JsonObjectWithVersion {
 
     private static final long serialVersionUID = 3523630902439390574L;
 
@@ -74,6 +75,7 @@ public class Frameworks
      *
      * @return		the version
      */
+    @Override
     public String getVersion() {
       return getString("version");
     }
