@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -324,6 +325,29 @@ public abstract class AbstractJsonObjectWrapper
    */
   protected List getList(String key, List defValue) {
     return JsonUtils.asList(m_Data, key, defValue);
+  }
+
+  /**
+   * Returns the specified array as list. In case of primitives (boolean/string/number),
+   * they get returned as such, otherwise as JsonElement.
+   *
+   * @param key		the key to retrieve as string
+   * @param defValue	the default value
+   * @return		the value associated with the key or, if not found, null or not a string, the default value
+   */
+  protected List<String> getStringList(String key, List<String> defValue) {
+    List<String>	result;
+    List 		list;
+
+    list = getList(key);
+    if (list == null)
+      return defValue;
+
+    result = new ArrayList<>();
+    for (Object item: list)
+      result.add("" + item);
+
+    return result;
   }
 
   /**
