@@ -210,15 +210,6 @@ public class JobTemplates
     }
 
     /**
-     * Returns the framework.
-     *
-     * @return		the framework
-     */
-    public int getFramework() {
-      return getInt("framework");
-    }
-
-    /**
      * Returns the domain.
      *
      * @return		the domain
