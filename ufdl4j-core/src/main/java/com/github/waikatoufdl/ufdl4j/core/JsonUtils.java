@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -129,18 +130,49 @@ public class JsonUtils {
     Object	obj;
     String	key;
 
-      result = new JsonObject();
+    result = new JsonObject();
     for (Object keyObj: map.keySet()) {
       key = "" + keyObj;
       obj = map.get(keyObj);
       if (obj instanceof Number)
-        result.addProperty(key, (Number) obj);
+	result.addProperty(key, (Number) obj);
       else if (obj instanceof Boolean)
 	result.addProperty(key, (Boolean) obj);
       else if (obj instanceof String)
 	result.addProperty(key, (String) obj);
       else if (obj instanceof Map)
 	result.add(key, mapToJson((Map) obj));
+    }
+
+    return result;
+  }
+
+  /**
+   * Turns a Json object into a map.
+   *
+   * @param obj		the json object to convert
+   * @return		the generated map
+   */
+  public static Map jsonToMap(JsonObject obj) {
+    Map			result;
+    JsonElement		elem;
+    JsonPrimitive	prim;
+
+    result = new HashMap();
+    for (String key: obj.keySet()) {
+      elem = obj.get(key);
+      if (elem.isJsonPrimitive()) {
+        prim = elem.getAsJsonPrimitive();
+        if (prim.isNumber())
+	  result.put(key, prim.getAsNumber());
+        else if (prim.isBoolean())
+          result.put(key, prim.getAsBoolean());
+        else if (prim.isString())
+          result.put(key, prim.getAsString());
+      }
+      else if (elem instanceof JsonObject) {
+	result.put(key, jsonToMap((JsonObject) elem));
+      }
     }
 
     return result;
