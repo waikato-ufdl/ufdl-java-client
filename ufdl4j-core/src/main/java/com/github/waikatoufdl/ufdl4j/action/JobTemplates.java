@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.waikatoufdl.ufdl4j.core.JsonUtils.mapToJson;
+
 /**
  * Encapsulates job template operations.
  *
@@ -580,29 +582,27 @@ public class JobTemplates
    * Creates a job from the given template, docker image and values.
    *
    * @param jobTemplate	the job template
-   * @param dockerImage	the image to use
    * @param inputValues	the input values (name -> value)
    * @param paramValues	the parameter values (name -> value)
    * @param description the description, ignored if null or empty
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(JobTemplate jobTemplate, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues, String description) throws Exception {
-    return newJob(jobTemplate.getPK(), dockerImage, inputValues, paramValues, description);
+  public Job newJob(JobTemplate jobTemplate, Map<String,Map<String,String>> inputValues, Map<String,Map<String,String>> paramValues, String description) throws Exception {
+    return newJob(jobTemplate.getPK(), inputValues, paramValues, description);
   }
 
   /**
    * Creates a job from the given template, docker image and values.
    *
    * @param pk		the PK of the job template
-   * @param dockerImage	the image to use
    * @param inputValues	the input values (name -> value)
    * @param paramValues	the parameter values (name -> value)
    * @param description the description, ignored if null or empty
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(int pk, int dockerImage, Map<String,String> inputValues, Map<String,String> paramValues, String description) throws Exception {
+  public Job newJob(int pk, Map<String,Map<String,String>> inputValues, Map<String,Map<String,String>> paramValues, String description) throws Exception {
     Job			result;
     JsonObject		data;
     JsonObject		sub;
@@ -612,21 +612,20 @@ public class JobTemplates
     getLogger().info("creating job from template: " + pk);
 
     data = new JsonObject();
-    data.addProperty("docker_image", dockerImage);
     if ((description != null) && !description.isEmpty())
       data.addProperty("description", description);
 
     // input values
     sub = new JsonObject();
     for (String key: inputValues.keySet())
-      sub.addProperty(key, inputValues.get(key));
+      sub.add(key, mapToJson(inputValues.get(key)));
     data.add("input_values", sub);
 
     // parameter values
     if (paramValues.size() > 0) {
       sub = new JsonObject();
       for (String key: paramValues.keySet())
-	sub.addProperty(key, paramValues.get(key));
+	sub.add(key, mapToJson(paramValues.get(key)));
       data.add("parameter_values", sub);
     }
 
