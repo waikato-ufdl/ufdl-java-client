@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.Map;
 
 /**
  * Ancestor for actions.
@@ -108,6 +109,21 @@ public abstract class AbstractAction
     String	url;
 
     url = m_Connection.server().build(path);
+    return m_Connection.session().get(url).allowRedirects(true);
+  }
+
+  /**
+   * Creates a new GET request.
+   *
+   * @param path	the path to use (server gets automatically added)
+   * @param params	the query parameters to add
+   * @return		the GET request
+   * @throws MalformedURLException	if invalid URL
+   */
+  protected Request newGet(String path, Map<String,String> params) throws MalformedURLException {
+    String	url;
+
+    url = m_Connection.server().build(path, params);
     return m_Connection.session().get(url).allowRedirects(true);
   }
 
