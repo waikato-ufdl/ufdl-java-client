@@ -112,7 +112,7 @@ public class ManagingSpeechDatasets {
 
     // list datasets
     Domains.Domain domain = client.domains().load("sp");
-    DomainFilter domainFilter = new DomainFilter(domain.getPK());
+    DomainFilter domainFilter = new DomainFilter(domain);
     System.out.println("--> listing datasets for domain " + domain);
     for (Dataset dataset: client.datasets().list(domainFilter))
       System.out.println(dataset);
