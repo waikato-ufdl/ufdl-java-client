@@ -50,8 +50,8 @@ public class ManagingPretrainedModel {
     Domains.Domain d = client.domains().load("od");
     DomainFilter dfilter = new DomainFilter(d);
     System.out.println("--> listing pretrained models for domain " + d);
-    for (PretrainedModel template : client.pretrainedModels().list(dfilter)) {
-      System.out.println(template);
+    for (PretrainedModel pretrained : client.pretrainedModels().list(dfilter)) {
+      System.out.println(pretrained);
     }
 
     // create 'blah' if necessary
