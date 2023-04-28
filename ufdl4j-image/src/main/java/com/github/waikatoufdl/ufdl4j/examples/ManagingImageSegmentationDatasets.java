@@ -143,7 +143,7 @@ public class ManagingImageSegmentationDatasets {
 
     // list datasets
     Domains.Domain domain = client.domains().load("is");
-    DomainFilter domainFilter = new DomainFilter(domain.getPK());
+    DomainFilter domainFilter = new DomainFilter(domain);
     System.out.println("--> listing datasets for domain " + domain);
     for (Dataset dataset: client.datasets().list(domainFilter))
       System.out.println(dataset);

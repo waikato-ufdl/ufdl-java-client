@@ -48,7 +48,7 @@ public class ManagingPretrainedModel {
 
     // listing templates
     Domains.Domain d = client.domains().load("od");
-    DomainFilter dfilter = new DomainFilter(d.getPK());
+    DomainFilter dfilter = new DomainFilter(d);
     System.out.println("--> listing pretrained models for domain " + d);
     for (PretrainedModel template : client.pretrainedModels().list(dfilter)) {
       System.out.println(template);

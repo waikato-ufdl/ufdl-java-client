@@ -1,10 +1,11 @@
 /*
  * DomainFilter.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.filter;
 
+import com.github.waikatoufdl.ufdl4j.action.Domains;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactNumber;
@@ -30,7 +31,16 @@ public class DomainFilter
   /**
    * Initializes the filter.
    *
-   * @param domain	the name to filter
+   * @param domain	the domain to filter
+   */
+  public DomainFilter(Domains.Domain domain) {
+    this(domain.getPK());
+  }
+
+  /**
+   * Initializes the filter.
+   *
+   * @param domain	the domain to filter
    */
   public DomainFilter(int domain) {
     this(domain, null);
@@ -39,7 +49,7 @@ public class DomainFilter
   /**
    * Initializes the filter.
    *
-   * @param domain	the name to filter
+   * @param domain	the domain to filter
    * @param order 	how to order the results, can be null
    */
   public DomainFilter(int domain, OrderBy[] order) {
