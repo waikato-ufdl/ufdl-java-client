@@ -33,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -385,6 +386,57 @@ public class JobTemplates
     }
     else {
       throw new FailedRequestException("Failed to list job templates!" + (filter == null ? "" : "\nFilter: " + filter.toJsonObject()), response);
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns all the templates that match the contract name.
+   *
+   * @param contract	the contract name, eg Train or Predict
+   * @return		the matching templates
+   * @throws Exception	if request fails
+   */
+  public List<JobTemplate> getAllMatchingTemplates(String contract) throws Exception {
+    return getAllMatchingTemplates(contract, null);
+  }
+
+  /**
+   * Returns all the templates that match the contract name.
+   *
+   * @param contract	the contract name, eg Train or Predict
+   * @param types 	the types, ignored if null
+   * @return		the matching templates
+   * @throws Exception	if request fails
+   */
+  public List<JobTemplate> getAllMatchingTemplates(String contract, Map<String,String> types) throws Exception {
+    List<JobTemplate>	result;
+    JsonResponse 	response;
+    JsonElement		element;
+    JsonArray		array;
+    Request 		request;
+    int			i;
+
+    if (types == null)
+      types = new HashMap<>();
+
+    getLogger().info("Getting all matching templates for contract=" + contract + " and types=" + types);
+
+    result   = null;
+    request  = newGet(getPath() + "get-all-matching-templates/" + contract, types);
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonArray()) {
+	array  = element.getAsJsonArray();
+	result = new ArrayList<>();
+	for (i = 0; i < array.size(); i++)
+	  result.add(new JobTemplate(array.get(i).getAsJsonObject()));
+      }
+    }
+    else {
+      throw new FailedRequestException("Failed to get all matching templates for contract=" + contract + " and types=" + types, response);
     }
 
     return result;
