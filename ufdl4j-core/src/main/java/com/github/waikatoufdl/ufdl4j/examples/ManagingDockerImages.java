@@ -9,6 +9,7 @@ import com.github.waikatoufdl.ufdl4j.Client;
 import com.github.waikatoufdl.ufdl4j.action.DockerImages.DockerImage;
 import com.github.waikatoufdl.ufdl4j.action.Frameworks;
 import com.github.waikatoufdl.ufdl4j.action.HardwareGenerations.HardwareGeneration;
+import com.github.waikatoufdl.ufdl4j.filter.DomainFilter;
 
 /**
  * Example code for managing docker images.
@@ -38,7 +39,7 @@ public class ManagingDockerImages {
     // listing images
     System.out.println("--> listing docker images");
     DockerImage blahimg = null;
-    for (DockerImage image : client.docker().list()) {
+    for (DockerImage image : client.docker().list(new DomainFilter(client.domains().load("ic")))) {
       System.out.println(image);
       if (image.getName().equals("blah"))
         blahimg = image;
