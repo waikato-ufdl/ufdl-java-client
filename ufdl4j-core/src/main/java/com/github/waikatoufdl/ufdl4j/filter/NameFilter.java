@@ -6,6 +6,7 @@
 package com.github.waikatoufdl.ufdl4j.filter;
 
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.filter.field.ExactString;
 import com.google.gson.JsonObject;
@@ -23,6 +24,15 @@ public class NameFilter
 
   /** the name. */
   protected String m_Name;
+
+  /**
+   * Initializes the filter.
+   *
+   * @param obj		the object to obtain the name from for filtering
+   */
+  public NameFilter(JsonObjectWithName obj) {
+    this(obj.getName());
+  }
 
   /**
    * Initializes the filter.
