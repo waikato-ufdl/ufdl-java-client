@@ -1,6 +1,6 @@
 /*
  * Jobs.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.github.waikatoufdl.ufdl4j.core.JsonUtils.jsonToMap;
 
 /**
  * Encapsulates job operations.
@@ -114,15 +116,6 @@ public class Jobs
     }
 
     /**
-     * Returns the docker image PK.
-     *
-     * @return		the image
-     */
-    public int getDockerImage() {
-      return getData().get("docker_image").getAsJsonObject().get("pk").getAsInt();
-    }
-
-    /**
      * Returns the job template PK.
      *
      * @return		the template
@@ -154,14 +147,14 @@ public class Jobs
      *
      * @return		the values
      */
-    public Map<String,String> getInputValues() {
-      Map<String,String>	result;
-      JsonObject		values;
+    public Map<String,Map> getInputValues() {
+      Map<String,Map>	result;
+      JsonObject			values;
 
       result = new HashMap<>();
       values = getData().getAsJsonObject("input_values");
       for (String key: values.keySet())
-        result.put(key, "" + values.get(key));
+        result.put(key, jsonToMap(values.get(key).getAsJsonObject()));
 
       return result;
     }
@@ -171,15 +164,15 @@ public class Jobs
      *
      * @return		the values
      */
-    public Map<String,String> getParameterValues() {
-      Map<String,String>	result;
-      JsonObject		values;
+    public Map<String,Map> getParameterValues() {
+      Map<String,Map>	result;
+      JsonObject			values;
 
       result = new HashMap<>();
       if (getData().has("parameter_values")) {
 	values = getData().getAsJsonObject("parameter_values");
 	for (String key : values.keySet())
-	  result.put(key, "" + values.get(key));
+	  result.put(key, jsonToMap(values.get(key).getAsJsonObject()));
       }
 
       return result;
@@ -266,7 +259,7 @@ public class Jobs
      */
     @Override
     public String toString() {
-      return "pk=" + getPK() + ", template=" + getJobTemplate() + ", docker=" + getDockerImage() + ", input=" + getInputValues() + ", params=" + getParameterValues();
+      return "pk=" + getPK() + ", template=" + getJobTemplate() + ", input=" + getInputValues() + ", params=" + getParameterValues();
     }
   }
 
