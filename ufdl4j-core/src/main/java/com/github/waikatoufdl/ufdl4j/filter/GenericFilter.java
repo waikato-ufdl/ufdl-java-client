@@ -1,6 +1,6 @@
 /*
  * Filter.java
- * Copyright (C) 2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2020-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.filter;
@@ -38,6 +38,35 @@ public class GenericFilter
   }
 
   /**
+   * Initializes the filter with the expression, no sorting, excludes inactive elements.
+   *
+   * @param expression		the expression
+   */
+  public GenericFilter(AbstractExpression expression) {
+    this(expression, new OrderBy[0], false);
+  }
+
+  /**
+   * Initializes the filter with the expression, no sorting, excludes inactive elements.
+   *
+   * @param expression		the expression
+   */
+  public GenericFilter(AbstractExpression expression, OrderBy[] order) {
+    this(expression, order, false);
+  }
+
+  /**
+   * Initializes the filter with the expressions and ordering.
+   *
+   * @param expression		the expression
+   * @param order 		the ordering to use, ignored if null
+   * @param includeInactive 	whether to include inactive elements
+   */
+  public GenericFilter(AbstractExpression expression, OrderBy[] order, boolean includeInactive) {
+    this(new AbstractExpression[]{expression}, order, includeInactive);
+  }
+
+  /**
    * Initializes the filter with the expressions, no sorting, excludes inactive elements.
    *
    * @param expressions		the expressions
@@ -55,7 +84,6 @@ public class GenericFilter
   public GenericFilter(AbstractExpression[] expressions, OrderBy[] order) {
     this(expressions, order, false);
   }
-
 
   /**
    * Initializes the filter with the expressions and ordering.
