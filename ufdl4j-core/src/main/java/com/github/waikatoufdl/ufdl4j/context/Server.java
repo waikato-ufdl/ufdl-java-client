@@ -1,6 +1,6 @@
 /*
  * Server.java
- * Copyright (C) 2019-2020 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2019-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.context;
@@ -9,6 +9,7 @@ import com.github.fracpete.requests4j.Session;
 import com.github.waikatoufdl.ufdl4j.core.AbstractLoggingObject;
 import okhttp3.HttpUrl;
 
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -63,6 +64,17 @@ public class Server
    * @return		the full URL
    */
   public String build(String path) {
+    return build(path, null);
+  }
+
+  /**
+   * Combines the URL with the path.
+   *
+   * @param path	the path to use
+   * @param params	the query parameters, ignored if null
+   * @return		the full URL
+   */
+  public String build(String path, Map<String,String> params) {
     String		result;
     HttpUrl.Builder 	builder;
     String[]		segments;
@@ -73,6 +85,12 @@ public class Server
       segments = path.split("\\/");
       for (i = 0; i < segments.length; i++)
 	builder.addPathSegment(segments[i]);
+
+      // query parameters
+      if ((params != null) && (params.size() > 0)) {
+	for (String key: params.keySet())
+	  builder.addQueryParameter(key, params.get(key));
+      }
 
       result = builder.build().toString();
     }
