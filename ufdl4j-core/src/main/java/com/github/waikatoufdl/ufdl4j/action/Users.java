@@ -446,41 +446,38 @@ public class Users
   }
 
   /**
-   * For deleting a specific user.
+   * For deleting a specific user, ie disabling its active flag.
    *
    * @param user 	the user to delete
-   * @param hard 	whether to remove it or just flagged it as inactive
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid user PK
    */
-  public boolean delete(User user, boolean hard) throws Exception {
-    return delete(user.getPK(), hard);
+  public boolean delete(User user) throws Exception {
+    return delete(user.getPK());
   }
 
   /**
-   * For deleting a specific user.
+   * For deleting a specific user, ie disabling its active flag.
    *
    * @param pk 		the ID of the user
-   * @param hard 	whether to remove it or just flagged it as inactive
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid user PK
    */
-  public boolean delete(int pk, boolean hard) throws Exception {
+  public boolean delete(int pk) throws Exception {
     JsonResponse 	response;
     Request 		request;
 
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("deleting user with PK (hard=" + hard + "): " + pk);
+    getLogger().info("deleting user with PK: " + pk);
 
-    // TODO hard delete
     request  = newDelete(getPath() + pk + "/");
     response = execute(request);
     if (response.ok())
       return true;
     else
-      throw new FailedRequestException("Failed to delete user (hard=" + hard + "): " + pk, response);
+      throw new FailedRequestException("Failed to delete user: " + pk, response);
   }
 
   /**

@@ -50,7 +50,7 @@ public class ManagingUsers {
     }
 
     // (soft) delete 'blahuser'
-    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser, false));
+    System.out.println("deleting user '" + blahuser + "'? " + client.users().delete(blahuser));
 
     // reinstate 'blahuser'
     System.out.println("reinstating user '" + blahuser + "'? " + client.users().reinstate(blahuser));
