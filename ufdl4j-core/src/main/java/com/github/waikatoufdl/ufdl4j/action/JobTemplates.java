@@ -606,7 +606,7 @@ public class JobTemplates
     if (pk == -1)
       throw new IllegalArgumentException("Invalid PK: " + pk);
 
-    getLogger().info("get outputs for job template with PK: " + pk);
+    getLogger().info("get types for job template with PK: " + pk);
 
     request  = newGet(getPath() + pk + "/get-types");
     response = execute(request);
@@ -618,7 +618,7 @@ public class JobTemplates
       return result;
     }
     else {
-      throw new FailedRequestException("Failed to get outputs for job template: " + pk, response);
+      throw new FailedRequestException("Failed to get types for job template: " + pk, response);
     }
   }
 
