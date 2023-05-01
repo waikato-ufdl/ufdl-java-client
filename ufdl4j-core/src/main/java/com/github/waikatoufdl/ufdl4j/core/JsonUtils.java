@@ -156,23 +156,45 @@ public class JsonUtils {
   public static Map jsonToMap(JsonObject obj) {
     Map			result;
     JsonElement		elem;
-    JsonPrimitive	prim;
+    Object		val;
 
     result = new HashMap();
     for (String key: obj.keySet()) {
       elem = obj.get(key);
-      if (elem.isJsonPrimitive()) {
-        prim = elem.getAsJsonPrimitive();
-        if (prim.isNumber())
-	  result.put(key, prim.getAsNumber());
-        else if (prim.isBoolean())
-          result.put(key, prim.getAsBoolean());
-        else if (prim.isString())
-          result.put(key, prim.getAsString());
-      }
-      else if (elem instanceof JsonObject) {
-	result.put(key, jsonToMap((JsonObject) elem));
-      }
+      val  = toObject(elem);
+      if (val != null)
+        result.put(key, val);
+    }
+
+    return result;
+  }
+
+  /**
+   * Tries to convert the Json object into a Java one.
+   *
+   * @param obj		the Json object to convert
+   * @return		the Java object or null if failed to convert
+   */
+  public static Object toObject(JsonElement obj) {
+    Object		result;
+    JsonPrimitive 	prim;
+
+    result = null;
+
+    if (obj.isJsonPrimitive()) {
+      prim = obj.getAsJsonPrimitive();
+      if (prim.isBoolean())
+	result = prim.getAsBoolean();
+      else if (prim.isNumber())
+	result = prim.getAsNumber();
+      else if (prim.isString())
+	result = prim.getAsString();
+    }
+    else if (obj.isJsonObject()) {
+      result = jsonToMap(obj.getAsJsonObject());
+    }
+    else if (obj.isJsonArray()) {
+      result = JsonUtils.asList(obj.getAsJsonArray());
     }
 
     return result;
