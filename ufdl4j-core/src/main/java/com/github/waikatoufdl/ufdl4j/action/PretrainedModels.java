@@ -100,8 +100,8 @@ public class PretrainedModels
      *
      * @return		the license
      */
-    public int getLicense() {
-      return getInt("licence");
+    public String getLicense() {
+      return getString("licence");
     }
 
     /**
