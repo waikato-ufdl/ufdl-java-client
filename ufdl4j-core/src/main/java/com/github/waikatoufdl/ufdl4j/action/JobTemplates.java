@@ -15,6 +15,7 @@ import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithDomain;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithIntVersion;
 import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithShortDescription;
+import com.github.waikatoufdl.ufdl4j.core.JsonUtils;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.AbstractExpression;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
@@ -86,7 +87,24 @@ public class JobTemplates
      * @return		the list of types
      */
     public List<String> getTypes() {
-      return getStringList("types", new ArrayList<>());
+      List<String>	result;
+      List		list;
+      JsonElement	elem;
+
+      result = new ArrayList<>();
+      if (hasValue("types")) {
+        elem = m_Data.get("types");
+        if (elem.isJsonArray()) {
+          list = JsonUtils.asList(elem.getAsJsonArray());
+          for (Object item: list)
+	    result.add("" + item);
+	}
+        else if (elem.isJsonObject()){
+	  result.addAll(m_Data.get("types").getAsJsonObject().keySet());
+	}
+      }
+
+      return result;
     }
 
     /**
@@ -115,10 +133,22 @@ public class JobTemplates
      * @see		#getDefaultType()
      */
     public Object getDefault() {
-      if (hasValue("default"))
-	return m_Data.get("default");
-      else
-	return null;
+      Object		result;
+      JsonElement	element;
+      JsonObject	def;
+
+      result = null;
+
+      if (hasValue("default")) {
+        element = m_Data.get("default");
+        if (element.isJsonObject()) {
+	  def = element.getAsJsonObject();
+	  if (def.has("value"))
+	    result = JsonUtils.toObject(def.get("value"));
+	}
+      }
+
+      return result;
     }
 
     /**
@@ -504,6 +534,135 @@ public class JobTemplates
       getLogger().warning("failed to load job template: " + name + "/" + version);
 
     return result;
+  }
+
+  /**
+   * Retrieves all the parameters for the template.
+   *
+   * @param jobTemplate the job template to get the parameters for
+   * @return		the parameters
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public List<Parameter> getAllParameters(JobTemplate jobTemplate) throws Exception {
+    return getAllParameters(jobTemplate.getPK());
+  }
+
+  /**
+   * Retrieves all the parameters for the template.
+   *
+   * @param pk 		the ID of the job template
+   * @return		the parameters
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public List<Parameter> getAllParameters(int pk) throws Exception {
+    List<Parameter>	result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonObject 		obj;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("get all parameters for job template with PK: " + pk);
+
+    request  = newGet(getPath() + pk + "/get-all-parameters");
+    response = execute(request);
+    if (response.ok()) {
+      obj    = response.jsonObject();
+      result = new ArrayList<>();
+      for (String key: obj.keySet())
+        result.add(new Parameter(key, obj.getAsJsonObject(key)));
+      return result;
+    }
+    else {
+      throw new FailedRequestException("Failed to get all parameters for job template: " + pk, response);
+    }
+  }
+
+  /**
+   * Retrieves the types for the template.
+   *
+   * @param jobTemplate the job template to get the parameters for
+   * @return		the types
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public Map<String,String> getTypes(JobTemplate jobTemplate) throws Exception {
+    return getTypes(jobTemplate.getPK());
+  }
+
+  /**
+   * Retrieves the types for the template.
+   *
+   * @param pk 		the ID of the job template
+   * @return		the types
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public Map<String,String> getTypes(int pk) throws Exception {
+    Map<String,String>	result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonObject 		obj;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("get outputs for job template with PK: " + pk);
+
+    request  = newGet(getPath() + pk + "/get-types");
+    response = execute(request);
+    if (response.ok()) {
+      obj    = response.jsonObject();
+      result = new HashMap<>();
+      for (String key: obj.keySet())
+	result.put(key, obj.getAsJsonPrimitive(key).getAsString());
+      return result;
+    }
+    else {
+      throw new FailedRequestException("Failed to get outputs for job template: " + pk, response);
+    }
+  }
+
+  /**
+   * Retrieves the outputs for the template.
+   *
+   * @param jobTemplate the job template to get the parameters for
+   * @return		the outputs
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public Map<String,String> getOutputs(JobTemplate jobTemplate) throws Exception {
+    return getOutputs(jobTemplate.getPK());
+  }
+
+  /**
+   * Retrieves the outputs for the template.
+   *
+   * @param pk 		the ID of the job template
+   * @return		the outputs
+   * @throws Exception	if request fails, eg invalid job template PK
+   */
+  public Map<String,String> getOutputs(int pk) throws Exception {
+    Map<String,String>	result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonObject 		obj;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("get outputs for job template with PK: " + pk);
+
+    request  = newGet(getPath() + pk + "/get-outputs");
+    response = execute(request);
+    if (response.ok()) {
+      obj    = response.jsonObject();
+      result = new HashMap<>();
+      for (String key: obj.keySet())
+	result.put(key, obj.getAsJsonPrimitive(key).getAsString());
+      return result;
+    }
+    else {
+      throw new FailedRequestException("Failed to get outputs for job template: " + pk, response);
+    }
   }
 
   /**

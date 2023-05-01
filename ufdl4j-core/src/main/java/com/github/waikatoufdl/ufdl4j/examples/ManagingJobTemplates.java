@@ -6,12 +6,15 @@
 package com.github.waikatoufdl.ufdl4j.examples;
 
 import com.github.waikatoufdl.ufdl4j.Client;
+import com.github.waikatoufdl.ufdl4j.action.JobTemplates;
 import com.github.waikatoufdl.ufdl4j.action.JobTemplates.JobTemplate;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Example code for managing job templates.
@@ -55,6 +58,24 @@ public class ManagingJobTemplates {
       testTemplate = client.jobTemplates().importTemplate(template);
       System.out.println(testTemplate);
     }
+
+    // get parameters for template
+    System.out.println("--> get parameters for template " + testTemplate.getName());
+    List<JobTemplates.Parameter> params = client.jobTemplates().getAllParameters(testTemplate);
+    for (JobTemplates.Parameter param: params)
+      System.out.println(param);
+
+    // get types for template
+    System.out.println("--> get types for template " + testTemplate.getName());
+    Map<String,String> types = client.jobTemplates().getTypes(testTemplate);
+    for (String type: types.keySet())
+      System.out.println(type + " = " + types.get(type));
+
+    // get outputs for template
+    System.out.println("--> get outputs for template " + testTemplate.getName());
+    Map<String,String> outputs = client.jobTemplates().getOutputs(testTemplate);
+    for (String output: outputs.keySet())
+      System.out.println(output + " = " + outputs.get(output));
 
     // load blah
     System.out.println("--> loading job template");
