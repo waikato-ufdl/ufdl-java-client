@@ -133,6 +133,39 @@ public class Types {
   }
 
   /**
+   * Returns a Model signature.
+   *
+   * @param domain	the domain
+   * @param framework 	the framework
+   * @return		the signature
+   */
+  public static String model(Domains.Domain domain, Frameworks.Framework framework) {
+    return model(domain.getDescription(), framework.getName(), framework.getVersion());
+  }
+
+  /**
+   * Returns a Model signature.
+   *
+   * @param domDesc	the domain description
+   * @param fwName 	the name of the framework
+   * @param fwVersion 	the version of the framework
+   * @return		the signature
+   */
+  public static String model(String domDesc, String fwName, String fwVersion) {
+    return "Model<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+  }
+
+  /**
+   * Returns a JobOutput signature.
+   *
+   * @param signature	the signature to wrap
+   * @return		the signature
+   */
+  public static String jobOutput(String signature) {
+    return "JobOutput<" + signature + ">";
+  }
+
+  /**
    * Returns the signature for a Train contract.
    *
    * @param domain	the domain
