@@ -359,7 +359,7 @@ public class Teams
    * For deleting a specific team.
    *
    * @param team 	the team to delete
-   * @param hard 	whether hard or soft delete
+   * @param hard 	whether hard or soft delete TODO does not work reliably
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid team PK
    */
@@ -371,7 +371,7 @@ public class Teams
    * For deleting a specific team.
    *
    * @param pk 		the ID of the team
-   * @param hard 	whether hard or soft delete
+   * @param hard 	whether hard or soft delete TODO does not work reliably
    * @return		true if successfully deleted
    * @throws Exception	if request fails, eg invalid team PK
    */
