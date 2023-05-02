@@ -93,13 +93,13 @@ public class JobTemplates
 
       result = new ArrayList<>();
       if (hasValue("types")) {
-        elem = m_Data.get("types");
-        if (elem.isJsonArray()) {
-          list = JsonUtils.asList(elem.getAsJsonArray());
-          for (Object item: list)
+	elem = m_Data.get("types");
+	if (elem.isJsonArray()) {
+	  list = JsonUtils.asList(elem.getAsJsonArray());
+	  for (Object item: list)
 	    result.add("" + item);
 	}
-        else if (elem.isJsonObject()){
+	else if (elem.isJsonObject()){
 	  result.addAll(m_Data.get("types").getAsJsonObject().keySet());
 	}
       }
@@ -127,6 +127,15 @@ public class JobTemplates
     }
 
     /**
+     * Checks whether a default value is available.
+     *
+     * @return		true if available
+     */
+    public boolean hasDefault() {
+      return (getDefault() != null);
+    }
+
+    /**
      * Returns the default value, if any.
      *
      * @return		the default (type depends on type), null if not available
@@ -140,8 +149,8 @@ public class JobTemplates
       result = null;
 
       if (hasValue("default")) {
-        element = m_Data.get("default");
-        if (element.isJsonObject()) {
+	element = m_Data.get("default");
+	if (element.isJsonObject()) {
 	  def = element.getAsJsonObject();
 	  if (def.has("value"))
 	    result = JsonUtils.toObject(def.get("value"));
@@ -571,7 +580,7 @@ public class JobTemplates
       obj    = response.jsonObject();
       result = new ArrayList<>();
       for (String key: obj.keySet())
-        result.add(new Parameter(key, obj.getAsJsonObject(key)));
+	result.add(new Parameter(key, obj.getAsJsonObject(key)));
       return result;
     }
     else {
