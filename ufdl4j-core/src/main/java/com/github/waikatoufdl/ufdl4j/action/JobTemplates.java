@@ -166,7 +166,22 @@ public class JobTemplates
      * @return		true if a constant
      */
     public boolean isConstant() {
-      return getBoolean("const", false);
+      boolean		result;
+      JsonElement	element;
+      JsonObject	def;
+
+      result = false;
+
+      if (hasValue("default")) {
+	element = m_Data.get("default");
+	if (element.isJsonObject()) {
+	  def = element.getAsJsonObject();
+	  if (def.has("const"))
+	    result = def.getAsJsonPrimitive("const").getAsBoolean();
+	}
+      }
+
+      return result;
     }
 
     /**
