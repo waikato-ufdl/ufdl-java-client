@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +121,32 @@ public class JsonUtils {
   }
 
   /**
+   * Turns a Java array into a JSON array.
+   *
+   * @param obj		the Java array to convert
+   * @return		the JSON array
+   */
+  public static JsonArray arrayToJson(Object obj) {
+    JsonArray	result;
+    Object	o;
+    int		i;
+
+    result = new JsonArray();
+
+    for (i = 0; i < Array.getLength(obj); i++) {
+      o = Array.get(obj, i);
+      if (o instanceof Boolean)
+        result.add((Boolean) o);
+      else if (o instanceof Number)
+        result.add((Number) o);
+      else
+        result.add("" + o);
+    }
+
+    return result;
+  }
+
+  /**
    * Turns a map into a json object.
    *
    * @param map		the map to convert
@@ -142,6 +169,9 @@ public class JsonUtils {
 	result.addProperty(key, (String) obj);
       else if (obj instanceof Map)
 	result.add(key, mapToJson((Map) obj));
+      else if (obj.getClass().isArray()) {
+	result.add(key, arrayToJson(obj));
+      }
     }
 
     return result;
@@ -163,7 +193,7 @@ public class JsonUtils {
       elem = obj.get(key);
       val  = toObject(elem);
       if (val != null)
-        result.put(key, val);
+	result.put(key, val);
     }
 
     return result;
