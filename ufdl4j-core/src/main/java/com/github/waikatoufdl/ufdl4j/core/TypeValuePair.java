@@ -22,8 +22,8 @@ public class TypeValuePair {
    * @param value	the value
    * @return		the generated map
    */
-  public static Map<String,String> typeValuePair(String type, String value) {
-    Map<String,String>  result;
+  public static Map<String,Object> typeValuePair(String type, Object value) {
+    Map<String,Object>  result;
 
     result = new HashMap<>();
     result.put("type", type);
