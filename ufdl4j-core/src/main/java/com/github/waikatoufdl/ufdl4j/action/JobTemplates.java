@@ -771,7 +771,7 @@ public class JobTemplates
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(JobTemplate jobTemplate, Map<String,Map<String,String>> inputValues, Map<String,Map<String,String>> paramValues, String description) throws Exception {
+  public Job newJob(JobTemplate jobTemplate, Map<String,Map<String,Object>> inputValues, Map<String,Map<String,Object>> paramValues, String description) throws Exception {
     return newJob(jobTemplate.getPK(), inputValues, paramValues, description);
   }
 
@@ -785,7 +785,7 @@ public class JobTemplates
    * @return		the Job object, null if failed to create
    * @throws Exception	if request fails
    */
-  public Job newJob(int pk, Map<String,Map<String,String>> inputValues, Map<String,Map<String,String>> paramValues, String description) throws Exception {
+  public Job newJob(int pk, Map<String,Map<String,Object>> inputValues, Map<String,Map<String,Object>> paramValues, String description) throws Exception {
     Job			result;
     JsonObject		data;
     JsonObject		sub;
