@@ -13,9 +13,9 @@ import com.github.fracpete.requests4j.response.BasicResponse;
 import com.github.fracpete.requests4j.response.JsonResponse;
 import com.github.fracpete.requests4j.response.Response;
 import com.github.fracpete.requests4j.response.StreamResponse;
-import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapper;
 import com.github.waikatoufdl.ufdl4j.core.AbstractJsonObjectWrapperWithPK;
 import com.github.waikatoufdl.ufdl4j.core.FailedRequestException;
+import com.github.waikatoufdl.ufdl4j.core.JsonObjectWithName;
 import com.github.waikatoufdl.ufdl4j.core.SoftDeleteObject;
 import com.github.waikatoufdl.ufdl4j.filter.Filter;
 import com.google.gson.JsonArray;
@@ -46,7 +46,8 @@ public class Jobs
    * Container class for a single job output.
    */
   public static class JobOutput
-    extends AbstractJsonObjectWrapper {
+    extends AbstractJsonObjectWrapperWithPK
+    implements JsonObjectWithName {
 
     private static final long serialVersionUID = 1081824028559386319L;
 
@@ -60,10 +61,21 @@ public class Jobs
     }
 
     /**
+     * Returns the primary key.
+     *
+     * @return		the primary key
+     */
+    @Override
+    public int getPK() {
+      return getInt("pk");
+    }
+
+    /**
      * Returns the name of the output.
      *
      * @return		the name
      */
+    @Override
     public String getName() {
       return getString("name");
     }
@@ -111,6 +123,7 @@ public class Jobs
      *
      * @return		the primary key
      */
+    @Override
     public int getPK() {
       return getInt("pk");
     }
