@@ -152,13 +152,13 @@ public class ManagingJobs {
     JobTemplate tftemplate = null;
     Map<String,String> params = new HashMap<>();
     params.put("dataset", pk(dataset(domain(domain))));
-    String frameworkType = dockerImage(domain, tfframework, "1.14");
+    String frameworkType = dockerImage(domain, tfframework, null);
     boolean found = false;
     for (JobTemplate template: client.jobTemplates().getAllMatchingTemplates("Train", params)) {
       if (template.getName().contains("resnet101")) {
         for (JobTemplates.Parameter p : template.getParameters()) {
           for (String type : p.getTypes()) {
-            if (type.equals(frameworkType)) {
+            if (type.startsWith(frameworkType)) {
               found = true;
               tftemplate = template;
               System.out.println("Found: " + tftemplate);
@@ -178,11 +178,12 @@ public class ManagingJobs {
 
     // create job
     System.out.println("--> creating job");
-    Map<String,Map<String,String>> inputs = new HashMap<>();
+    Map<String,Map<String,Object>> inputs = new HashMap<>();
     inputs.put("dataset", typeValuePair(pk(dataset(domain(domain))), "" + tfdataset.getPK()));
-    Map<String,Map<String,String>> parameters = new HashMap<>();
-    parameters.put("docker_image", typeValuePair(pk(dockerImage(domain, tfframework, "1.14")), "" + tfimg.getPK()));
-    parameters.put("pretrained_model", typeValuePair(pk(pretrainedModel(domain, tfframework)), "" + tfpretrained.getPK()));
+    Map<String,Map<String,Object>> parameters = new HashMap<>();
+    parameters.put("docker_image", typeValuePair(pk(dockerImage(domain, tfframework)), tfimg.getPK()));
+    parameters.put("pretrained_model", typeValuePair(pk(pretrainedModel(domain, tfframework)), tfpretrained.getPK()));
+    parameters.put("num_train_steps", typeValuePair("int", 5000));
     Job tfjob = client.jobTemplates().newJob(tftemplate, inputs, parameters, "example job using tftest");
     System.out.println(tfjob);
 
