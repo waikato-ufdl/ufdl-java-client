@@ -152,7 +152,7 @@ public class ManagingJobs {
     JobTemplate tftemplate = null;
     Map<String,String> params = new HashMap<>();
     params.put("dataset", pk(dataset(domain(domain))));
-    String frameworkType = dockerImage(domain, tfframework);
+    String frameworkType = dockerImage(domain, tfframework, "1.14");
     boolean found = false;
     for (JobTemplate template: client.jobTemplates().getAllMatchingTemplates("Train", params)) {
       if (template.getName().contains("resnet101")) {
@@ -181,7 +181,7 @@ public class ManagingJobs {
     Map<String,Map<String,String>> inputs = new HashMap<>();
     inputs.put("dataset", typeValuePair(pk(dataset(domain(domain))), "" + tfdataset.getPK()));
     Map<String,Map<String,String>> parameters = new HashMap<>();
-    parameters.put("docker_image", typeValuePair(pk(dockerImage(domain, tfframework)), "" + tfimg.getPK()));
+    parameters.put("docker_image", typeValuePair(pk(dockerImage(domain, tfframework, "1.14")), "" + tfimg.getPK()));
     parameters.put("pretrained_model", typeValuePair(pk(pretrainedModel(domain, tfframework)), "" + tfpretrained.getPK()));
     Job tfjob = client.jobTemplates().newJob(tftemplate, inputs, parameters, "example job using tftest");
     System.out.println(tfjob);

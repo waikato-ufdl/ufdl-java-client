@@ -91,10 +91,11 @@ public class Types {
    *
    * @param domain	the domain
    * @param framework 	the framework
+   * @param version	the version of the docker image, generates only a fragment if null (up to the version)
    * @return		the signature
    */
-  public static String dockerImage(Domains.Domain domain, Frameworks.Framework framework) {
-    return dockerImage(domain.getDescription(), framework.getName(), framework.getVersion());
+  public static String dockerImage(Domains.Domain domain, Frameworks.Framework framework, String version) {
+    return dockerImage(domain.getDescription(), framework.getName(), framework.getVersion(), version);
   }
 
   /**
@@ -103,10 +104,11 @@ public class Types {
    * @param domDesc	the domain description
    * @param fwName 	the name of the framework
    * @param fwVersion 	the version of the framework
+   * @param version	the version of the docker image, generates only a fragment if null (up to the version)
    * @return		the signature
    */
-  public static String dockerImage(String domDesc, String fwName, String fwVersion) {
-    return "DockerImage<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+  public static String dockerImage(String domDesc, String fwName, String fwVersion, String version) {
+    return "DockerImage<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + (version == null ? "" : ", '" + version + "'>");
   }
 
   /**
