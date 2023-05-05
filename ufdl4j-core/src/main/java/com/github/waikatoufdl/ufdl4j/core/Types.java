@@ -15,6 +15,44 @@ import com.github.waikatoufdl.ufdl4j.action.Frameworks;
  */
 public class Types {
 
+  public static final String OPEN = "<";
+
+  public static final String CLOSE = ">";
+
+  public static final String PK = "PK" + OPEN;
+
+  public static final String NAME = "Name" + OPEN;
+
+  public static final String DOMAIN = "Domain" + OPEN;
+
+  public static final String FRAMEWORK = "Framework" + OPEN;
+
+  public static final String DATASET = "Dataset" + OPEN;
+
+  public static final String DOCKER_IMAGE = "DockerImage" + OPEN;
+
+  public static final String PRETRAINED_MODEL = "PretrainedModel" + OPEN;
+
+  public static final String MODEL = "Model" + OPEN;
+
+  public static final String JOB_OUTPUT = "JobOutput" + OPEN;
+
+  public static final String ARRAY = "Array" + OPEN;
+
+  public static final String CONTRACT_TRAIN = "Train";
+
+  public static final String CONTRACT_PREDICT = "Predict";
+
+  public static final String PRIMITIVE_BOOL = "bool";
+
+  public static final String PRIMITIVE_INT = "int";
+
+  public static final String PRIMITIVE_FLOAT = "float";
+
+  public static final String PRIMITIVE_STR = "str";
+
+  public static final String ARRAY_STR = ARRAY + PRIMITIVE_STR + CLOSE;
+
   /**
    * Wraps the signature in a PK signature.
    *
@@ -22,7 +60,7 @@ public class Types {
    * @return		the signature
    */
   public static String pk(String signature) {
-    return "PK<" + signature + ">";
+    return PK + signature + CLOSE;
   }
 
   /**
@@ -32,7 +70,7 @@ public class Types {
    * @return		the signature
    */
   public static String name(String signature) {
-    return "Name<" + signature + ">";
+    return NAME + signature + CLOSE;
   }
 
   /**
@@ -52,7 +90,7 @@ public class Types {
    * @return		the signature
    */
   public static String domain(String description) {
-    return "Domain<'" + description + "'>";
+    return DOMAIN + "'" + description + "'" + CLOSE;
   }
 
   /**
@@ -73,7 +111,7 @@ public class Types {
    * @return		the signature
    */
   public static String framework(String name, String version) {
-    return "Framework<'" + name + "', '" + version + "'>";
+    return FRAMEWORK + "'" + name + "', '" + version + "'" + CLOSE;
   }
 
   /**
@@ -83,7 +121,7 @@ public class Types {
    * @return		the signature
    */
   public static String dataset(String signature) {
-    return "Dataset<" + signature + ">";
+    return DATASET + signature + CLOSE;
   }
 
   /**
@@ -106,7 +144,7 @@ public class Types {
    * @return		the signature
    */
   public static String dockerImage(String domDesc, String fwName, String fwVersion) {
-    return "DockerImage<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+    return DOCKER_IMAGE + domain(domDesc) + ", " + framework(fwName, fwVersion) + CLOSE;
   }
 
   /**
@@ -131,7 +169,7 @@ public class Types {
    * @return		the signature
    */
   public static String dockerImage(String domDesc, String fwName, String fwVersion, String version) {
-    return "DockerImage<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + (version == null ? "" : ", '" + version + "'>");
+    return DOCKER_IMAGE + domain(domDesc) + ", " + framework(fwName, fwVersion) + (version == null ? "" : ", '" + version + "'" + CLOSE);
   }
 
   /**
@@ -154,7 +192,7 @@ public class Types {
    * @return		the signature
    */
   public static String pretrainedModel(String domDesc, String fwName, String fwVersion) {
-    return "PretrainedModel<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+    return PRETRAINED_MODEL + domain(domDesc) + ", " + framework(fwName, fwVersion) + CLOSE;
   }
 
   /**
@@ -177,7 +215,7 @@ public class Types {
    * @return		the signature
    */
   public static String model(String domDesc, String fwName, String fwVersion) {
-    return "Model<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+    return MODEL + domain(domDesc) + ", " + framework(fwName, fwVersion) + CLOSE;
   }
 
   /**
@@ -187,7 +225,7 @@ public class Types {
    * @return		the signature
    */
   public static String jobOutput(String signature) {
-    return "JobOutput<" + signature + ">";
+    return JOB_OUTPUT + signature + CLOSE;
   }
 
   /**
@@ -198,7 +236,7 @@ public class Types {
    * @return		the signature
    */
   public static String train(Domains.Domain domain, Frameworks.Framework framework) {
-    return contract("Train", domain.getDescription(), framework.getName(), framework.getVersion());
+    return contract(CONTRACT_TRAIN, domain.getDescription(), framework.getName(), framework.getVersion());
   }
 
   /**
@@ -210,7 +248,7 @@ public class Types {
    * @return		the signature
    */
   public static String train(String domDesc, String fwName, String fwVersion) {
-    return contract("Train", domDesc, fwName, fwVersion);
+    return contract(CONTRACT_TRAIN, domDesc, fwName, fwVersion);
   }
 
   /**
@@ -221,7 +259,7 @@ public class Types {
    * @return		the signature
    */
   public static String predict(Domains.Domain domain, Frameworks.Framework framework) {
-    return contract("Predict", domain.getDescription(), framework.getName(), framework.getVersion());
+    return contract(CONTRACT_PREDICT, domain.getDescription(), framework.getName(), framework.getVersion());
   }
 
   /**
@@ -233,7 +271,7 @@ public class Types {
    * @return		the signature
    */
   public static String predict(String domDesc, String fwName, String fwVersion) {
-    return contract("Predict", domDesc, fwName, fwVersion);
+    return contract(CONTRACT_PREDICT, domDesc, fwName, fwVersion);
   }
 
   /**
@@ -258,6 +296,6 @@ public class Types {
    * @return		the signature
    */
   public static String contract(String contract, String domDesc, String fwName, String fwVersion) {
-    return contract + "<" + domain(domDesc) + ", " + framework(fwName, fwVersion) + ">";
+    return contract + OPEN + domain(domDesc) + ", " + framework(fwName, fwVersion) + CLOSE;
   }
 }
