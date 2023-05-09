@@ -1,6 +1,6 @@
 /*
  * ImageSegmentationDatasets.java
- * Copyright (C) 2021 University of Waikato, Hamilton, NZ
+ * Copyright (C) 2021-2023 University of Waikato, Hamilton, NZ
  */
 
 package com.github.waikatoufdl.ufdl4j.action;
@@ -112,7 +112,7 @@ public class ImageSegmentationDatasets
   }
 
   /**
-   * For settings the labels to a specific dataset by primary key.
+   * For setting the labels to a specific dataset by primary key.
    *
    * @param pk 		the primary key of the dataset to set the labels for
    * @param labels 	the labels to add to each image
