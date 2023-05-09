@@ -704,7 +704,7 @@ public class Jobs
   }
 
   /**
-   * For aborting a specific job.
+   * For aborting a specific job (removes output and basically restarts it).
    *
    * @param job 	the job to abort
    * @return		the Job
@@ -715,7 +715,7 @@ public class Jobs
   }
 
   /**
-   * For aborting a specific job.
+   * For aborting a specific job (removes output and basically restarts it).
    *
    * @param pk 		the ID of the job to abort
    * @return		the Job
