@@ -741,7 +741,51 @@ public class Jobs
 	result = new Job(element.getAsJsonObject());
     }
     else {
-      throw new FailedRequestException("Failed to abor job: " + pk, response);
+      throw new FailedRequestException("Failed to abort job: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For canceling a specific job.
+   *
+   * @param job 	the job to cancel
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job cancel(Job job) throws Exception {
+    return cancel(job.getPK());
+  }
+
+  /**
+   * For canceling a specific job.
+   *
+   * @param pk 		the ID of the job to cancel
+   * @return		the Job
+   * @throws Exception	if request fails, eg invalid job PK
+   */
+  public Job cancel(int pk) throws Exception {
+    Job			result;
+    JsonResponse 	response;
+    Request 		request;
+    JsonElement		element;
+
+    if (pk == -1)
+      throw new IllegalArgumentException("Invalid PK: " + pk);
+
+    getLogger().info("Canceling job with PK: " + pk);
+
+    result   = null;
+    request  = newDelete(getPath() + pk + "/cancel");
+    response = execute(request);
+    if (response.ok()) {
+      element = response.json();
+      if (element.isJsonObject())
+        result = new Job(element.getAsJsonObject());
+    }
+    else {
+      throw new FailedRequestException("Failed to cancel job: " + pk, response);
     }
 
     return result;
