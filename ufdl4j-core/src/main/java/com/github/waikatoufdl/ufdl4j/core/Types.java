@@ -53,6 +53,20 @@ public class Types {
 
   public static final String ARRAY_STR = ARRAY + PRIMITIVE_STR + CLOSE;
 
+  public static final String ARRAY_STR_LIMITED = ARRAY + PRIMITIVE_STR + ", ";
+
+  public static final String ARRAY_INT = ARRAY + PRIMITIVE_INT + CLOSE;
+
+  public static final String ARRAY_INT_LIMITED = ARRAY + PRIMITIVE_INT + ", ";
+
+  public static final String ARRAY_FLOAT = ARRAY + PRIMITIVE_FLOAT + CLOSE;
+
+  public static final String ARRAY_FLOAT_LIMITED = ARRAY + PRIMITIVE_FLOAT + ", ";
+
+  public static final String ARRAY_BOOL = ARRAY + PRIMITIVE_BOOL + CLOSE;
+
+  public static final String ARRAY_BOOL_LIMITED = ARRAY + PRIMITIVE_BOOL + ", ";
+
   /**
    * Wraps the signature in a PK signature.
    *
@@ -297,5 +311,30 @@ public class Types {
    */
   public static String contract(String contract, String domDesc, String fwName, String fwVersion) {
     return contract + OPEN + domain(domDesc) + ", " + framework(fwName, fwVersion) + CLOSE;
+  }
+
+  /**
+   * Returns the size defined by the array (if any).
+   *
+   * @param arraySpec	the array specification (eg: Array<str, 2>)
+   * @return		the size, -1 if unspecified
+   */
+  public static int getArraySize(String arraySpec) {
+    int		result;
+    String	size;
+
+    result = -1;
+
+    if (arraySpec.startsWith(ARRAY)) {
+      if (arraySpec.contains(",")) {
+	size = arraySpec.substring(arraySpec.indexOf(","), arraySpec.lastIndexOf(CLOSE));
+	result = Integer.parseInt(size);
+      }
+    }
+    else {
+      throw new IllegalArgumentException("Not an array specification: " + arraySpec);
+    }
+
+    return result;
   }
 }
