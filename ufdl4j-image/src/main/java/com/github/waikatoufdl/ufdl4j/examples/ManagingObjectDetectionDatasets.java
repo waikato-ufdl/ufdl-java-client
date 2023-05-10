@@ -15,8 +15,11 @@ import com.github.waikatoufdl.ufdl4j.action.ObjectDetectionDatasets.Annotations;
 import com.github.waikatoufdl.ufdl4j.action.Projects.Project;
 import com.github.waikatoufdl.ufdl4j.filter.DomainFilter;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -72,33 +75,49 @@ public class ManagingObjectDetectionDatasets {
     System.out.println(newDataset);
 
     // add files to dataset
+    List<String> files = new ArrayList<>();
     if (args.length > 3) {
-      Random rnd = new Random(1);
-      for (int i = 3; i < args.length; i++) {
-        File file = new File(args[i]);
-        System.out.println("--> adding file");
-        action.addFile(newDataset, file, file.getName());
-        // add annotations
-	Annotations annotations = new Annotations();
-	int num = rnd.nextInt(10) + 1;
-	for (int n = 0; n < num; n++) {
-	  annotations.add(new Annotation(
-	    rnd.nextInt(100),
-	    rnd.nextInt(100),
-	    rnd.nextInt(100) + 1,
-	    rnd.nextInt(100) + 1,
-	    "label" + rnd.nextInt(5)));
-	}
-	action.setAnnotations(newDataset, file.getName(), annotations);
-	// metadata
-	System.out.println("--> adding metadata");
-	action.setMetadata(newDataset, file.getName(), "Full file path: " + file.getAbsolutePath());
-	System.out.println(action.getMetadata(newDataset, file.getName()));
-      }
-      // remove annotations
-      System.out.println("--> removing annotations");
-      System.out.println(action.deleteAnnotations(newDataset, new File(args[3]).getName()));
+      for (int i = 3; i < args.length; i++)
+        files.add(args[i]);
     }
+    else {
+      files.add("src/main/resources/com/github/waikatoufdl/ufdl4j/PKLot-2012-10-27_08_25_41.jpg");
+      files.add("src/main/resources/com/github/waikatoufdl/ufdl4j/PKLot-2012-12-07_16_47_25.jpg");
+      files.add("src/main/resources/com/github/waikatoufdl/ufdl4j/PKLot-2013-04-11_16_50_12.jpg");
+    }
+    Random rnd = new Random(1);
+    File file;
+    for (String f: files) {
+      file = new File(f);
+      System.out.println("--> adding file");
+      action.addFile(newDataset, file, file.getName());
+      // add file type
+      System.out.println("--> adding file type");
+      BufferedImage img = ImageIO.read(file);
+      int width = img.getWidth();
+      int height = img.getHeight();
+      action.setFileType(newDataset, file.getName(), null, width, height, null);
+      // add annotations
+      Annotations annotations = new Annotations();
+      int num = rnd.nextInt(10) + 1;
+      for (int n = 0; n < num; n++) {
+	annotations.add(new Annotation(
+	  rnd.nextInt(100),
+	  rnd.nextInt(100),
+	  rnd.nextInt(100) + 1,
+	  rnd.nextInt(100) + 1,
+	  "label" + rnd.nextInt(5)));
+      }
+      action.setAnnotations(newDataset, file.getName(), annotations);
+      // metadata
+      System.out.println("--> adding metadata");
+      action.setMetadata(newDataset, file.getName(), "Full file path: " + file.getAbsolutePath());
+      System.out.println(action.getMetadata(newDataset, file.getName()));
+    }
+    // remove some annotations
+    file = new File(files.get(0));
+    System.out.println("--> removing annotations for '" + file.getName() + "'");
+    System.out.println(action.deleteAnnotations(newDataset, file.getName()));
 
     // get all annotations
     System.out.println("--> get all annotations");
@@ -106,9 +125,9 @@ public class ManagingObjectDetectionDatasets {
     System.out.println(all);
 
     // get annotations for second image
-    if (args.length > 4) {
+    if (files.size() > 1) {
       System.out.println("--> get annotations for image");
-      List<Annotation> anns = action.getAnnotations(newDataset, new File(args[4]).getName());
+      List<Annotation> anns = action.getAnnotations(newDataset, new File(files.get(1)).getName());
       System.out.println(anns);
     }
 
@@ -119,19 +138,17 @@ public class ManagingObjectDetectionDatasets {
       System.out.println("--> downloaded dataset to " + output);
 
     // get file from dataset
-    if (args.length > 3) {
-      File file = new File(args[3]);
-      output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + "-" + file.getName());
-      System.out.println("--> downloading file");
-      if (action.getFile(newDataset, file.getName(), output))
-	System.out.println("--> downloaded file: " + output);
-      System.out.println("--> streaming file");
-      FileOutputStream stream = new FileOutputStream(output);
-      if (action.getFile(newDataset, file.getName(), stream))
-	System.out.println("--> streamed file: " + output);
-      stream.flush();
-      stream.close();
-    }
+    file = new File(files.get(0));
+    output = new File(System.getProperty("java.io.tmpdir") + "/" + newName + "-" + file.getName());
+    System.out.println("--> downloading file");
+    if (action.getFile(newDataset, file.getName(), output))
+      System.out.println("--> downloaded file: " + output);
+    System.out.println("--> streaming file");
+    FileOutputStream stream = new FileOutputStream(output);
+    if (action.getFile(newDataset, file.getName(), stream))
+      System.out.println("--> streamed file: " + output);
+    stream.flush();
+    stream.close();
 
     // list datasets
     Domains.Domain domain = client.domains().load("od");
@@ -141,12 +158,10 @@ public class ManagingObjectDetectionDatasets {
       System.out.println(dataset);
 
     // delete file from dataset
-    if (args.length > 3) {
-      File file = new File(args[3]);
-      System.out.println("--> deleting file");
-      if (action.deleteFile(newDataset, file.getName()))
-	System.out.println("--> deleted file: " + file.getName());
-    }
+    file = new File(files.get(0));
+    System.out.println("--> deleting file");
+    if (action.deleteFile(newDataset, file.getName()))
+      System.out.println("--> deleted file: " + file.getName());
 
     client.close();
   }
