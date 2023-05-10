@@ -55,10 +55,10 @@ public class ObjectDetectionDatasets
       super(new JsonObject());
       JsonArray points = new JsonArray();
       for (int[] coordinate: coordinates) {
-        JsonArray pair = new JsonArray();
-        pair.add(coordinate[0]);
-        pair.add(coordinate[1]);
-        points.add(pair);
+	JsonArray pair = new JsonArray();
+	pair.add(coordinate[0]);
+	pair.add(coordinate[1]);
+	points.add(pair);
       }
       m_Data.add("points", points);
     }
@@ -77,10 +77,10 @@ public class ObjectDetectionDatasets
       result = new ArrayList<>();
 
       if (m_Data.has("points")) {
-        points = m_Data.getAsJsonArray("points");
-        for (i = 0; i < points.size(); i++) {
-          pair = points.get(i).getAsJsonArray();
-          if (pair.size() == 2)
+	points = m_Data.getAsJsonArray("points");
+	for (i = 0; i < points.size(); i++) {
+	  pair = points.get(i).getAsJsonArray();
+	  if (pair.size() == 2)
 	    result.add(new int[]{pair.get(0).getAsInt(), pair.get(1).getAsInt()});
 	}
       }
@@ -101,9 +101,9 @@ public class ObjectDetectionDatasets
       result = new StringBuilder();
       coords = getCoordinates();
       for (int[] coord: coords) {
-        if (result.length() > 0)
-          result.append(",");
-        result.append("(").append(coord[0]).append(",").append(coord[1]).append(")");
+	if (result.length() > 0)
+	  result.append(",");
+	result.append("(").append(coord[0]).append(",").append(coord[1]).append(")");
       }
 
       return result.toString();
@@ -158,7 +158,7 @@ public class ObjectDetectionDatasets
       m_Data.addProperty("height", height);
       m_Data.addProperty("label", label);
       if (polygon != null)
-        m_Data.add("polygon", polygon.getData());
+	m_Data.add("polygon", polygon.getData());
     }
 
     /**
@@ -231,9 +231,9 @@ public class ObjectDetectionDatasets
      */
     public Polygon getPolygon() {
       if (!hasPolygon())
-        return null;
+	return null;
       else
-        return new Polygon(m_Data.getAsJsonObject("polygon"));
+	return new Polygon(m_Data.getAsJsonObject("polygon"));
     }
 
     /**
@@ -374,8 +374,8 @@ public class ObjectDetectionDatasets
       result = new Annotations();
       list = JsonUtils.asList(response.json().getAsJsonArray());
       for (Object item: list) {
-        if (item instanceof JsonObject)
-	result.add(new Annotation((JsonObject) item));
+	if (item instanceof JsonObject)
+	  result.add(new Annotation((JsonObject) item));
       }
     }
     else {
@@ -386,7 +386,108 @@ public class ObjectDetectionDatasets
   }
 
   /**
-   * For settings the annotations for an image of a dataset.
+   * For setting the file type (extension, dimensions, video length) for an image/video of a dataset.
+   *
+   * @param dataset	the dataset to get the annotations for
+   * @param name 	the name of the image to get the annotations for
+   * @param format	the image/video format (= file extension), ignored if null
+   * @param width	the image/video width
+   * @param height	the image/video height
+   * @param length 	the video length in seconds, ignored if null (not null implies video)
+   * @return 		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean setFileType(Dataset dataset, String name, String format, int width, int height, Integer length) throws Exception {
+    return setFileType(dataset.getPK(), name, format, width, height, length);
+  }
+
+  /**
+   * For setting the file type (extension, dimensions, video length) for an image/video of a dataset by primary key.
+   *
+   * @param pk 		the primary key of the dataset to get the annotations for
+   * @param name 	the name of the image to get the annotations for
+   * @param format	the image/video format (= file extension), ignored if null
+   * @param width	the image/video width
+   * @param height	the image/video height
+   * @param length 	the video length in seconds, ignored if null (not null implies video)
+   * @return 		true if successful
+   * @throws Exception	if request fails
+   */
+  public boolean setFileType(int pk, String name, String format, int width, int height, Integer length) throws Exception {
+    boolean		result;
+    Request 		request;
+    JsonObject		data;
+    JsonArray		array;
+    JsonResponse 	response;
+
+    getLogger().info("setting file type for '" + name + "' from: " + pk);
+
+    result   = false;
+    data     = new JsonObject();
+    if (format != null)
+      data.addProperty("format", format);
+    if ((length != null) && (length > 0))
+      data.addProperty("length", length);
+    array = new JsonArray();
+    array.add(width);
+    array.add(height);
+    data.add("dimensions", array);
+    request  = newPost(getPath() + pk + "/file-type/" + name)
+      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
+    response = execute(request);
+    if (response.ok())
+      result = true;
+    else
+      throw new FailedRequestException("Failed to set file type of '" + name + "' from: " + pk, response);
+
+    return result;
+  }
+
+  /**
+   * For loading the file types for a specific dataset.
+   *
+   * @param dataset	the dataset to get the annotations for
+   * @return		the file types (image -> file types)
+   * @throws Exception	if request fails
+   */
+  public Map<String,Map> getFileTypes(Dataset dataset) throws Exception {
+    return getFileTypes(dataset.getPK());
+  }
+
+  /**
+   * For loading the file types for a specific dataset by primary key.
+   *
+   * @param pk 		the primary key of the dataset to get the annotations for
+   * @return		the file types (image -> file types)
+   * @throws Exception	if request fails
+   */
+  public Map<String,Map> getFileTypes(int pk) throws Exception {
+    Map<String,Map>		result;
+    Request 			request;
+    JsonResponse 		response;
+    JsonObject 			obj;
+
+    getLogger().info("loading file types for: " + pk);
+
+    result   = null;
+    request  = newGet(getPath() + pk + "/file-types");
+    response = execute(request);
+    if (response.ok()) {
+      result = new HashMap<>();
+      obj = response.json().getAsJsonObject();
+      for (String key : obj.keySet()) {
+	result.put(key, JsonUtils.jsonToMap(obj.getAsJsonObject(key)));
+      }
+    }
+    else {
+      throw new FailedRequestException("Failed to get annotations for: " + pk, response);
+    }
+
+    return result;
+  }
+
+  /**
+   * For setting the annotations for an image of a dataset.
    *
    * @param dataset	the dataset to get the annotations for
    * @param name 	the name of the image to get the annotations for
@@ -399,7 +500,7 @@ public class ObjectDetectionDatasets
   }
 
   /**
-   * For settings the annotations for an image of a dataset by primary key.
+   * For setting the annotations for an image of a dataset by primary key.
    *
    * @param pk 		the primary key of the dataset to get the annotations for
    * @param name 	the name of the image to get the annotations for
@@ -410,20 +511,17 @@ public class ObjectDetectionDatasets
   public boolean setAnnotations(int pk, String name, Annotations annotations) throws Exception {
     boolean		result;
     Request 		request;
-    JsonObject		data;
     JsonArray		array;
     JsonResponse 	response;
 
     getLogger().info("setting annotations for '" + name + "' from: " + pk);
 
     result   = false;
-    data     = new JsonObject();
     array    = new JsonArray();
-    data.add("annotations", array);
     for (Annotation ann: annotations)
       array.add(ann.getData());
     request  = newPost(getPath() + pk + "/annotations/" + name)
-      .body(data.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
+      .body(array.toString(), MediaTypeHelper.APPLICATION_JSON_UTF8);
     response = execute(request);
     if (response.ok())
       result = true;
